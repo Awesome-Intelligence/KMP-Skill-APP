@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Android 专属：manifest 的 android:label 用它（其余 UI 文案在 kit/src/commonMain/composeResources） -->
+    <string name="app_name">Android-Kit</string>
+</resources>

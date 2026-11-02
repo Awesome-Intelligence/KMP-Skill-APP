@@ -1,0 +1,200 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  JAVA_VERSION: '17'
+  ANDROID_COMPILE_SDK: '37'
+
+jobs:
+  build:
+    name: Build (Android)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Cache Gradle packages
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Build with Gradle
+        run: ./gradlew :app:assembleDebug --no-daemon
+
+      # Koog 引擎是独立模块，app 默认不引它，所以这里单独编一遍 android 产物
+      - name: Compile Koog engine (Android)
+        run: ./gradlew :kit-agent-koog:compileAndroidMain --no-daemon
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          retention-days: 7
+
+  desktop:
+    name: Build (Desktop)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Compile desktop
+        run: ./gradlew :kit:compileKotlinDesktop :kit-agent-koog:compileKotlinDesktop --no-daemon
+
+      - name: Run desktop tests
+        run: ./gradlew :kit:desktopTest :kit-agent-koog:desktopTest --no-daemon
+
+      - name: Package desktop
+        run: ./gradlew :kit:packageDeb --no-daemon
+
+      - name: Upload desktop package
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: desktop-deb
+          path: kit/build/compose/binaries/main/deb/*.deb
+          retention-days: 7
+
+  ios:
+    name: Build (iOS)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # iOS 目标只在 macOS host 上能编（Kotlin/Native 限制）
+      # linkDebugFramework* 产出的 .framework 就是 Xcode 要 import 的东西
+      - name: Link iOS frameworks
+        run: ./gradlew :kit:linkDebugFrameworkIosArm64 :kit:linkDebugFrameworkIosSimulatorArm64 --no-daemon
+
+      # Koog 引擎的 iOS 产物（独立模块，kit 的 framework 不含它）
+      - name: Compile Koog engine (iOS)
+        run: ./gradlew :kit-agent-koog:compileKotlinIosArm64 --no-daemon
+
+      - name: Upload iOS frameworks
+        uses: actions/upload-artifact@v4
+        if: success()
+        with:
+          name: ios-frameworks
+          path: kit/build/bin/ios*/debugFramework/
+          retention-days: 7
+
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run lint
+        run: ./gradlew lintDebug --no-daemon
+
+      - name: Upload lint report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: lint-report
+          path: app/build/reports/lint-results-debug.html
+          retention-days: 7
+
+  unit-test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Run unit tests
+        run: ./gradlew testDebugUnitTest --no-daemon
+
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-report
+          path: app/build/reports/tests/testDebugUnitTest/
+          retention-days: 14
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: test-results
+          path: app/build/test-results/testDebugUnitTest/
+          retention-days: 14

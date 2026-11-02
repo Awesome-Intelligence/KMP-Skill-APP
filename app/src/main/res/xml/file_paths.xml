@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <!-- 分享用的长图等临时文件 -->
+    <cache-path name="share" path="share/" />
+</paths>

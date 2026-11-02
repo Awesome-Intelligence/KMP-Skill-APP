@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Corner Radius -->
+    <dimen name="corner_radius">16dp</dimen>
+    <dimen name="corner_radius_medium">12dp</dimen>
+    <dimen name="corner_radius_small">10dp</dimen>
+    <dimen name="corner_radius_tertiary">8dp</dimen>
+    <dimen name="corner_radius_badge">4dp</dimen>
+    <dimen name="corner_radius_editor">6dp</dimen>
+    <dimen name="corner_radius_large">20dp</dimen>
+
+    <!-- Spacing - 4pt Grid -->
+    <dimen name="spacing1">4dp</dimen>
+    <dimen name="spacing2">8dp</dimen>
+    <dimen name="spacing3">12dp</dimen>
+    <dimen name="spacing4">16dp</dimen>
+    <dimen name="spacing5">20dp</dimen>
+    <dimen name="spacing6">24dp</dimen>
+    <dimen name="spacing8">32dp</dimen>
+
+    <!-- Elevation / Shadow -->
+    <dimen name="card_elevation">2dp</dimen>
+    <dimen name="elevated_elevation">6dp</dimen>
+    <dimen name="dragging_elevation">8dp</dimen>
+
+    <!-- Component Sizes -->
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_min_width">120dp</dimen>
+    <dimen name="icon_button_size">48dp</dimen>
+    <dimen name="icon_size_small">16dp</dimen>
+    <dimen name="icon_size_medium">24dp</dimen>
+    <dimen name="avatar_size_small">48dp</dimen>
+    <dimen name="avatar_size_medium">64dp</dimen>
+    <dimen name="avatar_size_large">80dp</dimen>
+    <dimen name="avatar_size_xlarge">120dp</dimen>
+
+    <!-- Bottom Navigation -->
+    <dimen name="bottom_nav_height">64dp</dimen>
+    <dimen name="bottom_nav_icon_size">24dp</dimen>
+
+    <!-- FAB -->
+    <dimen name="fab_size">56dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!-- Progress Bar -->
+    <dimen name="progress_height">8dp</dimen>
+    <dimen name="progress_corner">4dp</dimen>
+</resources>

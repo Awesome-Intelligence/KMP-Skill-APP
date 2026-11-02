@@ -1,0 +1,27 @@
+# Android 构建产物
+build/
+.gradle/
+local.properties
+*.apk
+*.aab
+*.keystore
+!debug.keystore
+
+# IDE
+.idea/
+*.iml
+.DS_Store
+
+# Kotlin
+.kotlin/
+
+# agent 网关（backend/）
+backend/node_modules/
+backend/.env
+
+# ────────────────────────────────────────────────────────────────
+# 注意：这里**不**忽略 .claude/ / .agents/ / rules/ / skills/
+# 原项目用 `.claude/*` + `!.claude/scripts/` 的写法，
+# 结果 GOOGLE_STYLE.md 和所有 skill 一直是未跟踪状态 —— 换台机器就没了。
+# 规则和 skill 是 kit 的核心内容，必须进版本库。
+# ────────────────────────────────────────────────────────────────
