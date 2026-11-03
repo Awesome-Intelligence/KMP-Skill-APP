@@ -53,6 +53,12 @@ export async function invokeSkill(
       prompt: `输入参数：\n${JSON.stringify(input, null, 2)}`,
       options: {
         systemPrompt,
+        // skill.tools 是白名单，语义上要"只有这些工具能用"：
+        //   tools       —— 限定模型能看到的工具集（[] = 一个都不给）
+        //   allowedTools —— 同一批工具免审批直接跑
+        // 只给 allowedTools 是不够的：它只管"免审批"，不限制工具集，
+        // 那样 tools: [] 的纯对话 skill 照样能调 Read/Write/Bash。
+        tools: skill.tools,
         allowedTools: skill.tools,
         maxTurns: skill.maxTurns ?? 8,
         model: skill.model ?? process.env.AGENT_MODEL ?? "claude-opus-5-5",
