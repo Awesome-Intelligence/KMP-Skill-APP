@@ -77,9 +77,9 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation("androidx.core:core-ktx:1.16.0")
-            implementation("androidx.activity:activity-compose:1.10.0")
-            implementation("androidx.documentfile:documentfile:1.0.1")
+            implementation("androidx.core:core-ktx:1.19.1")
+            implementation("androidx.activity:activity-compose:1.13.0")
+            implementation("androidx.documentfile:documentfile:1.1.0")
             implementation("io.ktor:ktor-client-okhttp:3.6.1")
         }
 

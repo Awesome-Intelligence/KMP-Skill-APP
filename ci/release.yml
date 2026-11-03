@@ -32,29 +32,22 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: 'gradle'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+        uses: android-actions/setup-android@v4
 
-      - name: Cache Gradle packages
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+      # Gradle 缓存交给 setup-java 的 cache: 'gradle'（它已经缓存 ~/.gradle/caches + ~/.gradle/wrapper），
+      # 别再叠一个 actions/cache —— 两个 action 写同一个目录、key 还不一样，只会互相打架。
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -81,7 +74,7 @@ jobs:
           mv app-release.apk "Android-Kit-$VERSION_NAME.apk"
 
       - name: Upload release APK
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: release-apk
           path: app/build/outputs/apk/release/Android-Kit-*.apk
@@ -89,7 +82,7 @@ jobs:
 
       - name: Upload mapping file
         if: success()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: mapping-file
           path: app/build/outputs/mapping/release/mapping.txt
@@ -101,7 +94,7 @@ jobs:
           VERSION_NAME: ${{ github.event.inputs.version || github.ref_name }}
           IS_PRERELEASE: ${{ github.event.inputs.is_prerelease || 'false' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: ${{ github.event.inputs.version && format('v{0}', github.event.inputs.version) || github.ref_name }}
           name: Release ${{ github.event.inputs.version || github.ref_name }}
@@ -117,10 +110,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -134,7 +127,7 @@ jobs:
         run: ./gradlew :kit:packageDeb --no-daemon
 
       - name: Upload desktop packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: desktop-deb
           path: kit/build/compose/binaries/main/deb/*.deb
@@ -146,10 +139,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -162,7 +155,7 @@ jobs:
         run: ./gradlew :kit:packageDmg --no-daemon
 
       - name: Upload desktop packages
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: desktop-dmg
           path: kit/build/compose/binaries/main/dmg/*.dmg
@@ -174,10 +167,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -191,7 +184,7 @@ jobs:
         run: ./gradlew :kit:linkReleaseFrameworkIosArm64 :kit:linkReleaseFrameworkIosSimulatorArm64 --no-daemon
 
       - name: Upload iOS frameworks
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         if: success()
         with:
           name: ios-frameworks

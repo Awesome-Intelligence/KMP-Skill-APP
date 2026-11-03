@@ -12,7 +12,8 @@ android {
     defaultConfig {
         applicationId = "com.androidkit.app"
         minSdk = 26
-        targetSdk = 35
+        // Google Play 自 2026-08-31 起要求新应用/更新 targetSdk ≥ 36
+        targetSdk = 36
         versionCode = 1
         // CI 用 -PVERSION_NAME=1.2.3 覆盖（release.yml 就是这么传的）
         versionName = (project.findProperty("VERSION_NAME") as String?) ?: "1.0.0"
@@ -74,7 +75,7 @@ dependencies {
     implementation(project(":kit"))
     // app 的 agent 运行时：Koog（模型走云端 API，loop 和工具都跑在手机上）
     implementation(project(":kit-agent-koog"))
-    implementation("androidx.core:core-ktx:1.16.0")
-    implementation("androidx.core:core-splashscreen:1.0.1")
-    implementation("androidx.activity:activity-compose:1.10.0")
+    implementation("androidx.core:core-ktx:1.19.1")
+    implementation("androidx.core:core-splashscreen:1.2.0")
+    implementation("androidx.activity:activity-compose:1.13.0")
 }
