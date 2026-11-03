@@ -168,7 +168,7 @@ private fun createSession(): AgentSession? {
     val baseUrl = env("ANTHROPIC_BASE_URL") ?: "https://api.anthropic.com"
     val model = env("ANTHROPIC_MODEL")
         ?: env("ANTHROPIC_DEFAULT_SONNET_MODEL")
-        ?: "claude-opus-5"
+        ?: "claude-opus-5-5"
     val skill = SkillDefinition(
         id = "chat_demo",
         name = "对话演示",

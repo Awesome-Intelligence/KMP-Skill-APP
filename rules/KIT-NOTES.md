@@ -145,6 +145,12 @@ Anthropic API，工具在本机执行 —— 数据不出端。原因：用户�
   （`enum`/`array`/`object` 都有对应类型；认不出来的类型一律当 string）。
 - **Koog 的模型表里没有 `claude-opus-5-5`**（只有 `claude-opus-5`）。`resolveModel()` 找不到就
   就地 `AnthropicModels.addCustomModel()` 登记一个，并把 `modelVersionsMap[model] = model.id`。
+  登记时的上下文/输出上限**抄同族模型**（逐级剥版本后缀找最近的已知 id：
+  `claude-opus-5-5` → `claude-opus-5` → 1M 上下文 / 128K 输出），
+  别写死 200K/64K 那套老数字 —— 声明小了 Koog 会提前截历史，声明大了被 API 拒。
+  另外 Opus 5.x 已经从 API 里删掉 `temperature`/`top_p`（发过去 400），
+  所以登记时把 `LLMCapability.Temperature` 去掉；但 `Thinking` 必须留着 ——
+  Opus 5.5 的 adaptive thinking 响应里一定带 thinking 块，Koog 要靠这个能力位解析并原样回传。
 - **多轮靠 prompt 里带历史**：每轮新起 agent，prompt = system + 历史，跑完从
   `session.context().llm.prompt.messages` 把新消息收回历史。
 - `baseUrl` 可配 → 上架场景的转发代理方案（key 留在代理上）照旧成立。
@@ -239,6 +245,12 @@ class SearchTool(private val store: Store) : SkillTool<SearchArgs>(
   `Message.User` 的内容在 `.parts`，不是 `.content`。
 - **Koog 的模型表里没有 `claude-opus-5-5`**（只有 `claude-opus-5`）。`resolveModel()` 找不到就
   就地 `AnthropicModels.addCustomModel()` 登记一个，并把 `modelVersionsMap[model] = model.id`。
+  登记时的上下文/输出上限**抄同族模型**（逐级剥版本后缀找最近的已知 id：
+  `claude-opus-5-5` → `claude-opus-5` → 1M 上下文 / 128K 输出），
+  别写死 200K/64K 那套老数字 —— 声明小了 Koog 会提前截历史，声明大了被 API 拒。
+  另外 Opus 5.x 已经从 API 里删掉 `temperature`/`top_p`（发过去 400），
+  所以登记时把 `LLMCapability.Temperature` 去掉；但 `Thinking` 必须留着 ——
+  Opus 5.5 的 adaptive thinking 响应里一定带 thinking 块，Koog 要靠这个能力位解析并原样回传。
 - `baseUrl` 可配 → 上架场景的转发代理方案（key 留在代理上）照旧成立。
 
 ### 还没做的

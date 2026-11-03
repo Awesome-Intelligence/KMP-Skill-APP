@@ -122,26 +122,55 @@ internal class KoogAgentSession(
     }
 }
 
-/** 模型 id → Koog 的 LLModel。Koog 不认识的 id（比如 claude-opus-5-5）就地登记一个。 */
+/**
+ * 模型 id → Koog 的 LLModel。
+ *
+ * Koog 1.3.0 的模型表只到 `claude-opus-5`，不认识 `claude-opus-5-5` 这类新 id。
+ * 这时就近找"同族最接近的已知模型"当模板，逐级剥版本后缀：
+ * `claude-opus-5-5` → `claude-opus-5` → `claude-opus`。
+ *
+ * 模板只用来抄上下文/输出上限和能力集，id 换成新的那个。
+ * 千万别写死老数字 —— Opus 5.5 是 1M 上下文 / 128K 输出，
+ * 声明小了 Koog 会提前截历史，声明大了直接被 API 拒。
+ */
 internal fun resolveModel(id: String, modelVersions: MutableMap<LLModel, String>): LLModel {
     AnthropicModels.models.firstOrNull { it.id == id }?.let { model ->
         // 自定义模型是全局注册的，别处可能已经注册过；本 runtime 的版本表里还没有就补一条
         if (modelVersions[model] == null) modelVersions[model] = model.id
         return model
     }
+    val template = closestKnownModel(id)
     val model = LLModel(
         provider = LLMProvider.Anthropic,
         id = id,
-        capabilities = listOf(
-            LLMCapability.Completion,
-            LLMCapability.Tools,
-            LLMCapability.ToolChoice,
-            LLMCapability.Temperature,
-        ),
-        contextLength = 200_000L,
-        maxOutputTokens = 64_000L,
+        // Opus 5.x 把 temperature/top_p 从 API 里删了，带过去直接 400 —— 这个能力别声明
+        capabilities = (template?.capabilities ?: DEFAULT_CAPABILITIES) - LLMCapability.Temperature,
+        contextLength = template?.contextLength ?: DEFAULT_CONTEXT_LENGTH,
+        maxOutputTokens = template?.maxOutputTokens ?: DEFAULT_MAX_OUTPUT_TOKENS,
     )
     AnthropicModels.addCustomModel(model)
     modelVersions[model] = model.id
     return model
 }
+
+/** 逐级剥版本后缀找同族已知模型。找不到同族就返回 null（走保守默认值）。 */
+private fun closestKnownModel(id: String): LLModel? {
+    var candidate = id
+    while (true) {
+        AnthropicModels.models.firstOrNull { it.id == candidate }?.let { return it }
+        val cut = candidate.lastIndexOf('-')
+        if (cut <= 0) return null
+        candidate = candidate.substring(0, cut)
+    }
+}
+
+/** 连族谱都对不上的 id（自定义代理模型之类）用这套保守值：宁可少截历史，也不要撑爆上下文。 */
+private val DEFAULT_CAPABILITIES = listOf(
+    LLMCapability.Completion,
+    LLMCapability.Tools,
+    LLMCapability.ToolChoice,
+    LLMCapability.Thinking,
+    LLMCapability.PromptCaching,
+)
+private const val DEFAULT_CONTEXT_LENGTH = 200_000L
+private const val DEFAULT_MAX_OUTPUT_TOKENS = 64_000L

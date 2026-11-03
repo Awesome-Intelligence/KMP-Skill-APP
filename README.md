@@ -192,7 +192,7 @@ kit 代码在真实 Gradle 工程里跑通过（2026-11-02 复核）：
 | `:kit:compileAndroidMain`（Android 目标 + androidMain 专属代码） | ✅ BUILD SUCCESSFUL |
 | `:kit:compileKotlinDesktop`（桌面目标） | ✅ BUILD SUCCESSFUL |
 | `:kit:desktopTest`（KitDateFormat 4 + StoreCodec 4） | ✅ 8 个用例通过 |
-| `:kit-agent-koog:desktopTest`（SkillTool 3 + KoogAgentSession 1） | ✅ 4 个用例通过 |
+| `:kit-agent-koog:desktopTest`（SkillTool 3 + KoogAgentSession 2） | ✅ 5 个用例通过 |
 | `scripts/verify-kit.py` | ✅ 通过（62 个 kt 文件，133 个 string key） |
 | `:chat-demo:run --args="--check"`（agent 全链路） | ✅ ToolUse(now) → Text → Result |
 | iOS | ⚠️ 本机是 Windows 编不了，靠 CI 的 macOS job 验 |
@@ -217,5 +217,6 @@ kit 代码在真实 Gradle 工程里跑通过（2026-11-02 复核）：
 ## 依赖前提
 
 - JDK 17
-- AGP 9.4.0 / Kotlin 2.4.10 / Compose Multiplatform 1.13.0-beta01
-- compileSdk 37.1 / minSdk 26 / targetSdk 35
+- AGP 9.5.0 / Kotlin 2.4.21 / Compose Multiplatform 1.13.0-beta01 / Gradle 9.8.2
+- compileSdk 37.1 / minSdk 26 / targetSdk 36（Play 自 2026-08-31 起要求 ≥ 36）
+- 版本号统一在 `gradle/libs.versions.toml` 里改

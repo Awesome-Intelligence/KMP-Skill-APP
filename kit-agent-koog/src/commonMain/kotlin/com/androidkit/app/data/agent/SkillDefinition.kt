@@ -13,5 +13,7 @@ data class SkillDefinition(
     val tools: List<SkillTool<*>> = emptyList(),
     val model: String = "claude-opus-5-5",
     val maxTurns: Int = 8, // 一次 send 里最多几轮模型调用，防失控
-    val maxTokens: Int = 4096,
+    // Opus 5.5 的 thinking 是默认开的（adaptive，且不能关），thinking 的 token 也算在
+    // max_tokens 里 —— 4096 会被思考吃光，正文几乎写不出来。
+    val maxTokens: Int = 16_000,
 )
