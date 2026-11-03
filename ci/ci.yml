@@ -8,7 +8,9 @@ on:
 
 env:
   JAVA_VERSION: '17'
-  ANDROID_COMPILE_SDK: '37'
+  # 刻意不设 ANDROID_COMPILE_SDK：compileSdk 的唯一出处是各模块 build.gradle.kts，
+  # 这里再写一份就是第二处真相（而且这份 ci.yml 会被 install-kit.sh 原样拷进别的项目，
+  # 那边 compileSdk 未必一样）。AGP 会按 build.gradle.kts 里声明的版本自动装对应平台。
 
 jobs:
   build:

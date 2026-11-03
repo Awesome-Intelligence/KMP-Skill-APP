@@ -23,7 +23,9 @@ concurrency:
 
 env:
   JAVA_VERSION: '17'
-  ANDROID_COMPILE_SDK: '37'
+  # 刻意不设 ANDROID_COMPILE_SDK：compileSdk 的唯一出处是各模块 build.gradle.kts，
+  # 这里再写一份就是第二处真相（而且这份 ci.yml 会被 install-kit.sh 原样拷进别的项目，
+  # 那边 compileSdk 未必一样）。AGP 会按 build.gradle.kts 里声明的版本自动装对应平台。
 
 jobs:
   release:
@@ -52,6 +54,8 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # 这个 job 需要仓库里配好 secret KEYSTORE_BASE64（keystore 文件的 base64）。
+      # 没配的话 base64 -d 会得到一个空文件，报错会出现在后面的签名步骤，很难往回找。
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
