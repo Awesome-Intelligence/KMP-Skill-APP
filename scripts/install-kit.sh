@@ -65,6 +65,13 @@ copy_module kit commonMain androidMain desktopMain iosMain
 copy_module kit-agent-koog commonMain commonTest androidMain desktopMain iosMain
 # 根构建配置参考（插件版本声明 —— 合并进你自己的 build.gradle.kts）
 cp "$KIT/build.gradle.kts" "$TARGET/kit-root-plugins.gradle.kts"
+# 版本目录：kit 的 build.gradle.kts 全靠 libs.* 取版本，目标项目没有这份就编不过
+mkdir -p "$TARGET/gradle"
+if [[ -f "$TARGET/gradle/libs.versions.toml" ]]; then
+  echo "!! 目标项目已有 gradle/libs.versions.toml —— 手动把 kit 的依赖条目合进去（别覆盖）"
+else
+  cp "$KIT/gradle/libs.versions.toml" "$TARGET/gradle/libs.versions.toml"
+fi
 
 # ── 2. 包名替换 ────────────────────────────────────────────────
 echo "==> 替换包名"
@@ -112,6 +119,7 @@ cp -r "$KIT/skills/android-skills/." "$TARGET/.agents/skills/" 2>/dev/null || tr
 echo
 echo "✅ 装好了。还差这几步（脚本不替你做决定）："
 echo "  1. settings.gradle.kts: include(\":kit\")，要 agent 再 include(\":kit-agent-koog\")，并把 kit-root-plugins.gradle.kts 的插件块合进根 build.gradle.kts"
+echo "  1b. gradle/libs.versions.toml: 插件版本用 alias(libs.plugins.*) 声明，目标项目已有这份就手动合条目"
 echo "  2. kit/build.gradle.kts: compose.resources 的 packageOfResClass 改成 $NEW_PKG.res（脚本已代改）"
 echo "  3. 你的 :app 模块: implementation(project(\":kit\"))；要 agent 再加 implementation(project(\":kit-agent-koog\"))"
 echo "  4. 你的首页: kit 里的 App() 是**演示页**（显示「Android-Kit」），换成你自己的根 Composable"

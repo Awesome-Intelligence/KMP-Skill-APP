@@ -34,17 +34,17 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             // Koog 1.3.0：agent loop + Anthropic 客户端 + 事件钩子
-            api("ai.koog:agents-core:1.3.0")
-            api("ai.koog:agents-tools:1.3.0")
-            api("ai.koog:prompt-executor-anthropic-client:1.3.0")
-            api("ai.koog:agents-features-event-handler:1.3.0")
+            api(libs.koog.agents.core)
+            api(libs.koog.agents.tools)
+            api(libs.koog.anthropic.client)
+            api(libs.koog.event.handler)
             // ChatMemory：多轮对话历史的官方实现（按 sessionId 存取）
-            api("ai.koog:agents-features-memory:1.3.0")
+            api(libs.koog.memory)
             // Koog 的 HTTP 客户端实现（Ktor），跟 :kit 用同一套引擎依赖
-            implementation("ai.koog:http-client-ktor:1.3.0")
+            implementation(libs.koog.http.ktor)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.json)
         }
 
         commonTest.dependencies {
@@ -52,19 +52,19 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation("io.ktor:ktor-client-okhttp:3.6.1")
+            implementation(libs.ktor.client.okhttp)
         }
 
         val desktopMain by getting {
             dependencies {
-                implementation("io.ktor:ktor-client-okhttp:3.6.1")
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
         if (hostIsMac) {
             val iosMain by getting {
                 dependencies {
-                    implementation("io.ktor:ktor-client-darwin:3.6.1")
+                    implementation(libs.ktor.client.darwin)
                 }
             }
         }

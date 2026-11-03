@@ -1,0 +1,70 @@
+# 版本目录（Version Catalog）：所有第三方版本号只在这里改一处。
+# 升级流程：改本文件 → 跑 ./gradlew :app:assembleDebug 验证 → 提交。
+#
+# 注意：Gradle 的 alias 由 group + name 推导，accessor 里的 '.' 和 '-' 都读成 '.'，
+# 例如 io.coil-kt.coil3:coil-compose → libs.io.coil.kt.coil3.coil.compose。
+
+[versions]
+agp = "9.5.0"
+kotlin = "2.4.21"
+# Compose Multiplatform（CMP）：org.jetbrains.compose 插件和所有 org.jetbrains.compose.* 产物同版本
+compose = "1.13.0-beta01"
+
+androidxCore = "1.19.1"
+androidxActivity = "1.13.0"
+androidxDocumentFile = "1.1.0"
+androidxSplashScreen = "1.2.0"
+
+ktor = "3.6.1"
+coil = "3.6.3"
+okio = "3.18.2"
+
+coroutines = "1.11.0"
+datetime = "0.8.0"
+serialization = "1.12.0"
+
+koog = "1.3.0"
+
+[libraries]
+# ── AndroidX ──────────────────────────────────────────────
+androidx-core-ktx = { module = "androidx.core:core-ktx", version.ref = "androidxCore" }
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "androidxSplashScreen" }
+androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidxActivity" }
+androidx-documentfile = { module = "androidx.documentfile:documentfile", version.ref = "androidxDocumentFile" }
+
+# ── Compose Multiplatform ────────────────────────────────
+compose-ui-tooling-preview = { module = "org.jetbrains.compose.ui:ui-tooling-preview", version.ref = "compose" }
+compose-animation = { module = "org.jetbrains.compose.animation:animation", version.ref = "compose" }
+
+# ── Ktor ─────────────────────────────────────────────────
+ktor-client-core = { module = "io.ktor:ktor-client-core", version.ref = "ktor" }
+ktor-client-okhttp = { module = "io.ktor:ktor-client-okhttp", version.ref = "ktor" }
+ktor-client-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
+
+# ── 图片 / 文件 ──────────────────────────────────────────
+coil-compose = { module = "io.coil-kt.coil3:coil-compose", version.ref = "coil" }
+coil-network-ktor3 = { module = "io.coil-kt.coil3:coil-network-ktor3", version.ref = "coil" }
+okio = { module = "com.squareup.okio:okio", version.ref = "okio" }
+
+# ── Kotlinx ──────────────────────────────────────────────
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutines" }
+kotlinx-coroutines-swing = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-swing", version.ref = "coroutines" }
+kotlinx-datetime = { module = "org.jetbrains.kotlinx:kotlinx-datetime", version.ref = "datetime" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serialization" }
+
+# ── Koog agent 框架 ─────────────────────────────────────
+koog-agents-core = { module = "ai.koog:agents-core", version.ref = "koog" }
+koog-agents-tools = { module = "ai.koog:agents-tools", version.ref = "koog" }
+koog-anthropic-client = { module = "ai.koog:prompt-executor-anthropic-client", version.ref = "koog" }
+koog-event-handler = { module = "ai.koog:agents-features-event-handler", version.ref = "koog" }
+koog-memory = { module = "ai.koog:agents-features-memory", version.ref = "koog" }
+koog-http-ktor = { module = "ai.koog:http-client-ktor", version.ref = "koog" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+android-kotlin-multiplatform-library = { id = "com.android.kotlin.multiplatform.library", version.ref = "agp" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-plugin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
+kotlin-plugin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+compose = { id = "org.jetbrains.compose", version.ref = "compose" }

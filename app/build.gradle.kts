@@ -75,7 +75,7 @@ dependencies {
     implementation(project(":kit"))
     // app 的 agent 运行时：Koog（模型走云端 API，loop 和工具都跑在手机上）
     implementation(project(":kit-agent-koog"))
-    implementation("androidx.core:core-ktx:1.19.1")
-    implementation("androidx.core:core-splashscreen:1.2.0")
-    implementation("androidx.activity:activity-compose:1.13.0")
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.core.splashscreen)
+    implementation(libs.androidx.activity.compose)
 }

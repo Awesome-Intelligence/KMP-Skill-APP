@@ -50,25 +50,25 @@ kotlin {
             api(compose.materialIconsExtended)
             api(compose.components.resources)
             // @Preview 注解（CMP 版，包名换成 org.jetbrains.compose.ui.tooling.preview）
-            api("org.jetbrains.compose.ui:ui-tooling-preview:1.13.0-beta01")
+            api(libs.compose.ui.tooling.preview)
             // Crossfade / AnimatedVisibility
-            api("org.jetbrains.compose.animation:animation:1.13.0-beta01")
+            api(libs.compose.animation)
 
-            implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.11.0")
-            implementation("org.jetbrains.kotlinx:kotlinx-datetime:0.8.0")
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.datetime)
             // api：存储层的公开签名里就是 JsonElement（实体字段），下游必须能看到
-            api("org.jetbrains.kotlinx:kotlinx-serialization-json:1.12.0")
+            api(libs.kotlinx.serialization.json)
 
             // 图片加载（Coil3 是 KMP 版，包名 coil3.*）
-            implementation("io.coil-kt.coil3:coil-compose:3.6.3")
-            implementation("io.coil-kt.coil3:coil-network-ktor3:3.6.3")
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
 
             // Ktor：只服务 Coil 的网络图（平台引擎在 androidMain / desktopMain / iosMain 分别挂）。
             // agent 的 HTTP 客户端在 :kit-agent-koog 里（Koog 自带），这边不需要了。
-            implementation("io.ktor:ktor-client-core:3.6.1")
+            implementation(libs.ktor.client.core)
 
             // 文件系统（KMP，替掉 java.io.File）
-            implementation("com.squareup.okio:okio:3.18.2")
+            implementation(libs.okio)
 
         }
 
@@ -77,16 +77,16 @@ kotlin {
         }
 
         androidMain.dependencies {
-            implementation("androidx.core:core-ktx:1.19.1")
-            implementation("androidx.activity:activity-compose:1.13.0")
-            implementation("androidx.documentfile:documentfile:1.1.0")
-            implementation("io.ktor:ktor-client-okhttp:3.6.1")
+            implementation(libs.androidx.core.ktx)
+            implementation(libs.androidx.activity.compose)
+            implementation(libs.androidx.documentfile)
+            implementation(libs.ktor.client.okhttp)
         }
 
         val desktopMain by getting {
             dependencies {
                 implementation(compose.desktop.currentOs)
-                implementation("io.ktor:ktor-client-okhttp:3.6.1")
+                implementation(libs.ktor.client.okhttp)
             }
         }
 
@@ -94,7 +94,7 @@ kotlin {
         if (hostIsMac) {
             val iosMain by getting {
                 dependencies {
-                    implementation("io.ktor:ktor-client-darwin:3.6.1")
+                    implementation(libs.ktor.client.darwin)
                 }
             }
         }

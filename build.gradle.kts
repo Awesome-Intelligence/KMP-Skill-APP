@@ -1,10 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
+// 版本号全在 gradle/libs.versions.toml 里改，这里只声明"用哪个插件"。
 plugins {
-    id("com.android.application") version "9.5.0" apply false
-    id("com.android.kotlin.multiplatform.library") version "9.5.0" apply false
-    id("org.jetbrains.kotlin.multiplatform") version "2.4.21" apply false
-    id("org.jetbrains.kotlin.jvm") version "2.4.21" apply false
-    id("org.jetbrains.kotlin.plugin.compose") version "2.4.21" apply false
-    id("org.jetbrains.kotlin.plugin.serialization") version "2.4.21" apply false
-    id("org.jetbrains.compose") version "1.13.0-beta01" apply false
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.android.kotlin.multiplatform.library) apply false
+    alias(libs.plugins.kotlin.multiplatform) apply false
+    alias(libs.plugins.kotlin.jvm) apply false
+    alias(libs.plugins.kotlin.plugin.compose) apply false
+    alias(libs.plugins.kotlin.plugin.serialization) apply false
+    alias(libs.plugins.compose) apply false
 }
