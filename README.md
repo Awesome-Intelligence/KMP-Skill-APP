@@ -40,10 +40,11 @@ Android-Kit/
 │       ├── desktopMain/kotlin/  main.kt（application/Window 入口）
 │       └── iosMain/kotlin/      MainViewController.kt
 ├── kit-agent-koog/         ← agent 运行时（Koog 1.3.0）：AgentRuntime 契约 + SkillDefinition/SkillTool + Koog 实现
-├── app/                     ← Android 壳工程（只管 manifest / 主题 / 启动 Activity）
+├── apps/demo/               ← 示例 app（壳工程 + 业务 skill + 页面）。fork 后你的 app 放 apps/<name>/
+│   └── ios/                   iOS 壳工程：SwiftUI 薄壳 + Compose 内核（XcodeGen 生成 Xcode 工程）
 ├── chat-demo/               ← 桌面对话 demo（验证 agent 对话链路，见下）
 ├── backend/                 ← 可选的 agent 网关（Node/TS + Claude Agent SDK）；默认 agent 跑在手机端，见 ARCHITECTURE.md
-├── ci/                      ← GitHub Actions：Android / Desktop / iOS 三条构建线 + release
+├── ci/                      ← GitHub Actions：Android / Desktop / iOS 三条构建线 + backend 网关自检 + release
 ├── skills/                  ← Google 官方 android/skills 子集 + M3 对照 skill
 └── scripts/
     ├── install-kit.sh           装进新项目（kit + agent 模块、包名替换、strings 合并）
@@ -99,7 +100,28 @@ fields.doubleOr("progress", 0.0)   // 0.65
 
 ## 怎么用
 
-### 装进新项目
+### 起一个新 app（推荐：fork 本仓库）
+
+本仓库是**底座**。新 app 不把代码拷走，而是 fork（或 clone）整个仓库，在 `apps/` 里长出来，
+靠 `git pull upstream main` 持续跟进底座更新：
+
+```bash
+git clone <本仓库地址> myapp && cd myapp
+git remote rename origin upstream   # 以后 git pull upstream main
+```
+
+1. 照抄 `apps/demo/` → `apps/<name>/`，改四处：`build.gradle.kts` 的 namespace / applicationId、
+   `strings.xml` 的 app_name、主题名（`Theme.AndroidKit` → 你的）。
+   `settings.gradle.kts` **自动 include `apps/` 下所有模块**（不用注册），CI 自动逐个构建。
+2. 写业务 skill + 页面，见 `ARCHITECTURE.md`「写一个新 app 的步骤」。
+3. 发布时把 `ci/release.yml` 拷成自己的 `release-<name>.yml`（fork 自己拥有的文件，随便改）。
+
+**唯一规矩：底座路径（`kit/`、`kit-agent-koog/`、`rules/`、`ci/`、`backend/`、`settings.gradle.kts`）
+不改不删** —— 改了，pull 上游必冲突，更新链就断。底座能力不够，回上游提 PR，别在下游打补丁。
+
+### 只要一部分（拷贝脚本，备选）
+
+不想 fork 全套、想把 kit 拷进已有项目？老路径还在：
 
 ```bash
 bash scripts/install-kit.sh ~/code/MyApp com.myname.myapp MyApp
@@ -115,6 +137,8 @@ bash scripts/install-kit.sh ~/code/MyApp com.myname.myapp MyApp
 5. `settings.gradle.kts` 的 `rootProject.name`
 6. `strings.xml` 的 `app_name`
 7. `Theme.App` → `Theme.<你的应用名>`
+
+> 注意：拷走的代码不会跟着本仓库更新 —— 要持续跟进就选上面的 fork 模式。
 
 ### 只拿一部分
 
@@ -139,7 +163,6 @@ iOS 侧要一个 Xcode 工程，导入 kit 产出的 framework：
    → 得到 `kit/build/bin/ios*/releaseFramework/Kit.framework`
 2. Xcode 里 **General → Frameworks, Libraries, and Embedded Content** 加 `Kit.framework`
 3. Swift 侧接 UIKit 入口：
-
 ```swift
 import SwiftUI
 import UIKit
@@ -151,6 +174,14 @@ struct ComposeView: UIViewControllerRepresentable {
     }
     func updateUIViewController(_ controller: UIViewController, context: Context) {}
 }
+```
+
+**现成的例子**：`apps/demo/ios/` 就是照上面这套做的完整壳工程（Swift 薄壳 + Compose 内核 +
+XcodeGen 生成的 Xcode 工程 + 一键构建脚本）。抄 app 时整个目录拷走就行：
+
+```bash
+bash apps/demo/ios/build.sh     # 编 framework → 打 xcframework → 生成工程 → 编译
+open apps/demo/ios/DemoApp.xcodeproj
 ```
 
 ---
@@ -184,20 +215,23 @@ gradlew :chat-demo:run --args="--check"       # 无界面跑一轮，把事件�
 
 ## 已验证
 
-kit 代码在真实 Gradle 工程里跑通过（2026-11-02 复核）：
+kit 代码在真实 Gradle 工程里跑通过（2026-11-03 复核）：
 
 | 验证项 | 结果 |
 |---|---|
-| `:app:assembleDebug`（Android，含 manifest / 资源 / 主题 / 打包 / agent 模块依赖） | ✅ BUILD SUCCESSFUL |
+| `:apps:demo:assembleDebug`（Android，含 manifest / 资源 / 主题 / 打包 / agent 模块依赖） | ✅ BUILD SUCCESSFUL |
 | `:kit:compileAndroidMain`（Android 目标 + androidMain 专属代码） | ✅ BUILD SUCCESSFUL |
 | `:kit:compileKotlinDesktop`（桌面目标） | ✅ BUILD SUCCESSFUL |
 | `:kit:desktopTest`（KitDateFormat 4 + StoreCodec 4） | ✅ 8 个用例通过 |
-| `:kit-agent-koog:desktopTest`（SkillTool 3 + KoogAgentSession 2） | ✅ 5 个用例通过 |
+| `:kit-agent-koog:desktopTest`（SkillTool 3 + KoogAgentSession 5） | ✅ 8 个用例通过 |
 | `scripts/verify-kit.py` | ✅ 通过（62 个 kt 文件，133 个 string key） |
 | `:chat-demo:run --args="--check"`（agent 全链路） | ✅ ToolUse(now) → Text → Result |
+| `backend: npm run check`（tsc 7.0.2 `--noEmit`） | ✅ 无错 |
+| `backend: npm run smoke`（skill 加载 + 契约校验 + SSE 断连检测） | ✅ 1 个 skill（summarize） |
+| `backend: node --import tsx src/server.ts` + `/health` `/v1/skills` | ✅ 路由通 |
 | iOS | ⚠️ 本机是 Windows 编不了，靠 CI 的 macOS job 验 |
 
-> ⚠️ 依赖约束：Compose Multiplatform 1.13.0-beta01 的 android 产物要求 **compileSdk 37.1**（`compileSdkMinor = 1`）。
+> ⚠️ 依赖约束：compileSdk 要到 **37.1**（`compileSdkMinor = 1`）。
 > AGP 9 的 KMP 库插件里 `compileSdkMinor` 不可用，要用新的 DSL：
 > ```kotlin
 > android {
@@ -217,6 +251,6 @@ kit 代码在真实 Gradle 工程里跑通过（2026-11-02 复核）：
 ## 依赖前提
 
 - JDK 17
-- AGP 9.5.0 / Kotlin 2.4.21 / Compose Multiplatform 1.13.0-beta01 / Gradle 9.8.2
+- AGP 9.5.0 / Kotlin 2.4.21 / Compose Multiplatform 1.12.2 / Gradle 9.8.2
 - compileSdk 37.1 / minSdk 26 / targetSdk 36（Play 自 2026-08-31 起要求 ≥ 36）
 - 版本号统一在 `gradle/libs.versions.toml` 里改

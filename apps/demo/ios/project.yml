@@ -1,0 +1,63 @@
+# XcodeGen 工程定义（手改这个文件，别手改生成的 .xcodeproj）
+#
+# 改完跑 `xcodegen generate`（或 bash build.sh）重新生成。
+# 好处：工程文件只有几十行 YAML，能 diff、能 review，不用跟 Xcode 打架。
+name: DemoApp
+
+options:
+  bundleIdPrefix: com.androidkit
+  deploymentTarget:
+    iOS: "16.0"
+  createIntermediateGroups: true
+
+configs:
+  Debug: debug
+  Release: release
+
+settings:
+  base:
+    SWIFT_VERSION: "5.0"
+    IPHONEOS_DEPLOYMENT_TARGET: "16.0"
+    # 脚本阶段要调 gradlew，Xcode 的沙箱会拦 Gradle 写 ~/.gradle
+    ENABLE_USER_SCRIPT_SANDBOXING: "NO"
+
+targets:
+  DemoApp:
+    type: application
+    platform: iOS
+    deploymentTarget: "16.0"
+
+    sources:
+      - path: DemoApp
+        excludes:
+          # Info.plist 走 INFOPLIST_FILE，进了 Resources 阶段会报重名
+          - "Info.plist"
+
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.androidkit.app.demo
+        PRODUCT_NAME: DemoApp
+        MARKETING_VERSION: "1.0.0"
+        CURRENT_PROJECT_VERSION: "1"
+        INFOPLIST_FILE: DemoApp/Info.plist
+        # 我们自带 Info.plist，别让 Xcode 再生成一份
+        GENERATE_INFOPLIST_FILE: "NO"
+        TARGETED_DEVICE_FAMILY: "1,2"
+        CODE_SIGN_STYLE: Automatic
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        # Kotlin/Native 的静态 framework 里有 ObjC 类，-ObjC 保证它们被加载
+        OTHER_LDFLAGS: "$(inherited) -ObjC"
+
+    dependencies:
+      # 静态 framework：只链接，不嵌入（Do Not Embed）
+      # 切片（真机 / 模拟器）由 .xcframework 自己挑，Xcode 不用管
+      - framework: Frameworks/Kit.xcframework
+        embed: false
+        codeSign: false
+
+    # 改完 Kotlin 代码，按 ⌘R 前先把新的 framework 编出来。
+    # 放在编译之前：Swift 的 `import Kit` 要在编译期就拿到 Kit.swiftmodule。
+    preBuildScripts:
+      - name: Build Kotlin framework
+        script: bash "$SRCROOT/build.sh" --framework-only
+        basedOnDependencyAnalysis: false

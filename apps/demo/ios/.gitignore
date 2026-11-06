@@ -1,0 +1,4 @@
+# 生成物，不进版本库
+Frameworks/
+*.xcodeproj/
+build/

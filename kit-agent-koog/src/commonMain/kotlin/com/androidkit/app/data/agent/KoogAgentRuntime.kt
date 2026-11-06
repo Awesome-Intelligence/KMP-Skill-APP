@@ -74,8 +74,16 @@ internal class KoogAgentSession(
     /** 同一个 session 的 send 串行执行 —— sink 只有一份，并发 send 会串台。 */
     private val mutex = Mutex()
 
+    /**
+     * 流式出口：模型每吐一块文本就发一个 [AgentEvent.Text]（打字机效果）。
+     * 工具调用仍然走 Koog 的事件钩子 —— 那边拿到的是拼好的完整入参。
+     */
+    private val streamingExecutor = StreamingExecutor(executor) { text ->
+        sink?.invoke(AgentEvent.Text(text))
+    }
+
     private val agent = AIAgent(
-        promptExecutor = executor,
+        promptExecutor = streamingExecutor,
         agentConfig = AIAgentConfig(
             prompt(skill.id, LLMParams(maxTokens = skill.maxTokens)) { system(skill.systemPrompt) },
             model,
@@ -87,14 +95,10 @@ internal class KoogAgentSession(
             install(ChatMemory.Feature) { windowSize(24) }
             handleEvents {
                 onLLMCallCompleted { ctx ->
+                    // 文本已经由流式增量发过了，这里只报工具调用
                     ctx.response?.parts?.forEach { part ->
-                        when (part) {
-                            is MessagePart.Text ->
-                                if (part.text.isNotBlank()) sink?.invoke(AgentEvent.Text(part.text))
-                            is MessagePart.Tool.Call ->
-                                // 模型偶尔会吐非法 JSON，解析失败也别把整轮带崩
-                                sink?.invoke(AgentEvent.ToolUse(part.tool, part.argsJson))
-                            else -> {}
+                        if (part is MessagePart.Tool.Call) {
+                            sink?.invoke(AgentEvent.ToolUse(part.tool, part.argsJson))
                         }
                     }
                 }
@@ -135,7 +139,7 @@ internal class KoogAgentSession(
  */
 internal fun resolveModel(id: String, modelVersions: MutableMap<LLModel, String>): LLModel {
     AnthropicModels.models.firstOrNull { it.id == id }?.let { model ->
-        // 自定义模型是全局注册的，别处可能已经注册过；本 runtime 的版本表里还没有就补一条
+        // Koog 认识这个 id —— 直接用它的定义；本 runtime 的版本表里还没有就补一条
         if (modelVersions[model] == null) modelVersions[model] = model.id
         return model
     }
@@ -148,7 +152,11 @@ internal fun resolveModel(id: String, modelVersions: MutableMap<LLModel, String>
         contextLength = template?.contextLength ?: DEFAULT_CONTEXT_LENGTH,
         maxOutputTokens = template?.maxOutputTokens ?: DEFAULT_MAX_OUTPUT_TOKENS,
     )
-    AnthropicModels.addCustomModel(model)
+    // 只写 runtime 自己的版本表 —— client 真正取的模型名就是从这儿来的
+    // （AnthropicLLMClient 读 settings.modelVersionsMap）。
+    //
+    // 别碰 AnthropicModels 的全局表：那是进程共享的 ArrayList，add 不去重也不加锁 ——
+    // 每开一个 session 就多一条一模一样的记录，永远不删，还会污染别的 runtime。
     modelVersions[model] = model.id
     return model
 }

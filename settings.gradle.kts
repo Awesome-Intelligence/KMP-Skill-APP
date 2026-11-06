@@ -35,5 +35,12 @@ dependencyResolutionManagement {
 rootProject.name = "Android-Kit"
 include(":kit")
 include(":kit-agent-koog")
-include(":app")
 include(":chat-demo")
+
+// apps/ 下每个带 build.gradle.kts 的目录自动成为模块（:apps:<目录名>）。
+// 本仓库是底座：各 app fork 本仓库后在 apps/<name>/ 里开发自己的壳，
+// 加新 app 只需新建目录，不用改这个文件 —— 这样 git pull 上游更新永不冲突。
+file("apps").listFiles()
+    ?.filter { it.isDirectory && it.resolve("build.gradle.kts").exists() }
+    ?.sortedBy { it.name }
+    ?.forEach { include(":apps:${it.name}") }

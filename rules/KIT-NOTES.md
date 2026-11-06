@@ -6,7 +6,7 @@
 
 ## 〇、KMP 化（2026-10-31）
 
-kit 现在是 **Compose Multiplatform 工程**：`:kit`（KMP 库）+ `:app`（Android 壳工程）。
+kit 现在是 **Compose Multiplatform 工程**：`:kit`（KMP 库）+ `apps/`（各 app 的壳工程，`apps/demo` 是示例）。
 目标端 = Android + iOS + Desktop（**不做 Web/wasm**）。
 
 ### 搬进来的公共层
@@ -59,14 +59,14 @@ kit 现在是 **Compose Multiplatform 工程**：`:kit`（KMP 库）+ `:app`（A
    Windows 本地不会声明，也就不会被 Kotlin/Native 工具链绊倒。CI 的 macOS job 负责验 iOS。
    framework 的 `baseName = "Kit"` —— Xcode 里 import 的名字就是这个。
 
-2. **compileSdk 必须 37.1**。CMP 1.13.0-beta01 的 android 产物要求 37.1+，
+2. **compileSdk 必须 37.1**。CMP 的 android 产物要求 37.1+，
    AGP 9 的 KMP 库插件里 `compileSdkMinor` 属性不存在，要用新 DSL：
    ```kotlin
    android {
        compileSdk { version = release(37) { minorApiLevel = 1 } }
    }
    ```
-   `:app`（`com.android.application`）那边 `compileSdkMinor = 1` 直接写就行。
+   `apps/*/build.gradle.kts`（`com.android.application`）那边 `compileSdkMinor = 1` 直接写就行。
 
 3. **Aliyun 镜像没同步 CMP 的 `-android` 产物**。`settings.gradle.kts` 里给
    `org.jetbrains.compose*` 组单独挂了一条 `mavenCentral()`（带 content filter），
@@ -210,7 +210,8 @@ Anthropic API，工具在本机执行 —— 数据不出端。原因：用户�
 | `SkillDefinition.kt` | skill = systemPrompt + 工具集 + 模型/maxTurns |
 | `SkillTool.kt` | 工具基类：继承 Koog `ToolBase`，入参 `@Serializable` 数据类，**schema 自动生成** |
 | `KoogAgentRuntime.kt` | `AIAgent` + Anthropic 客户端 + `ChatMemory` + 事件 → `AgentEvent` |
-| `AgentEvent.kt` | Text / ToolUse / Result / Error |
+| `StreamingExecutor.kt` | 包 executor：`execute()` 走 `executeStreaming()`，文本增量逐块回调 |
+| `AgentEvent.kt` | Text（**增量块**，UI 追加）/ ToolUse / Result / Error |
 
 写工具不用再写 JSON Schema：
 
@@ -326,7 +327,7 @@ class SearchTool(private val store: Store) : SkillTool<SearchArgs>(
 | `ui/components/UserAvatar.kt` | 头像 URL 解析原本走 `MyProfileRepository`（领域层），改成直接用原始路径 + `ponytail:` 注释 |
 | 全部 `.kt` | 主题入口统一叫 `AppTheme` |
 | `kit/src/commonMain/composeResources/values/strings.xml` | 从 1119 条砍到 **133 条**（kit 代码实际引用的），`values-en` 同步 |
-| `app/src/main/res/values/themes.xml` | `Theme.AndroidKit` 保留（壳工程专用）；公共层不依赖它 |
+| `apps/demo/src/main/res/values/themes.xml` | `Theme.AndroidKit` 保留（示例壳工程专用）；公共层不依赖它 |
 
 ---
 
@@ -336,9 +337,9 @@ class SearchTool(private val store: Store) : SkillTool<SearchArgs>(
    所以 `GOOGLE_STYLE.md` 和所有 skill 一直是**未跟踪**状态 —— 换台机器就没了。
    kit 的 `.gitignore` 特意**不忽略** `.claude/`、`.agents/`、`rules/`、`skills/`。
 
-2. **release 签名的假设置**。上游仓库的 `app/build.gradle.kts` 里 release 用
+2. **release 签名的假设置**。上游仓库的 `apps/demo/build.gradle.kts` 里 release 用
    `signingConfigs.getByName("debug")` —— 只为本地出包，发商店必炸。
-   kit 的 `app/build.gradle.kts` 把真 keystore 的写法注释在原位，别直接照抄 debug 签名那行。
+   kit 的 `apps/demo/build.gradle.kts` 把真 keystore 的写法注释在原位，别直接照抄 debug 签名那行。
 
 ---
 

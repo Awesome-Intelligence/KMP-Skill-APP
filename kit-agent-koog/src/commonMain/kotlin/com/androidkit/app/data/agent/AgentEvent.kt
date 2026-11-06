@@ -5,9 +5,10 @@ import kotlinx.serialization.json.JsonObject
 /** 本地 agent 的事件（给 UI 消费；进程内对象，不走线，不需要序列化） */
 sealed class AgentEvent {
     /**
-     * 模型的一段文本。
+     * 模型的一段文本 —— **流式的增量块**，不是整段。
      *
-     * 同一轮里可能来多次（模型边想边说）。UI 把它追加进当前气泡。
+     * 同一轮里会来很多次（模型边想边说）。UI 把它**追加**进当前气泡，
+     * 拼起来才是完整回复（打字机效果）。
      */
     data class Text(val text: String) : AgentEvent()
 

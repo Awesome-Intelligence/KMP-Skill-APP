@@ -12,9 +12,13 @@ HTTP + SSE 暴露给任何前端。
 ```bash
 cp .env.example .env   # 填 ANTHROPIC_API_KEY
 npm install
-npm run smoke          # 不花钱的检查：skill 加载 + 契约校验
+npm run smoke          # 不花钱的检查：skill 加载 + 契约校验 + SSE 断连检测
 npm run dev            # http://localhost:8787
 ```
+
+> CI：`ci/ci.yml` 里的 `Backend (gateway)` job 每次 push 跑 `npm ci` → `npm run check`
+> → `npm run smoke` → 起一次真服务器打 `/health` 和 `/v1/skills`。
+> 消费方项目没装 backend/ 时这条 job 自动跳过。
 
 ```bash
 # 调用

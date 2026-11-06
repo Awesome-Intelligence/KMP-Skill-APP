@@ -60,13 +60,15 @@ jobs:
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
-          echo "$KEYSTORE_BASE64" | base64 -d > app/release.keystore
+          echo "$KEYSTORE_BASE64" | base64 -d > apps/demo/release.keystore
 
+      # 发布的是示例 app（:apps:demo）。各 app fork 本仓库后，把这份 workflow 拷成自己的
+      # release-<name>.yml（fork 自己拥有，改了不冲突），模块名、keystore、产物名换掉。
       - name: Build release APK
         env:
           VERSION_NAME: ${{ github.event.inputs.version || github.ref_name }}
         run: |
-          ./gradlew assembleRelease \
+          ./gradlew :apps:demo:assembleRelease \
             -PVERSION_NAME=$VERSION_NAME \
             --no-daemon
 
@@ -74,14 +76,14 @@ jobs:
         env:
           VERSION_NAME: ${{ github.event.inputs.version || github.ref_name }}
         run: |
-          cd app/build/outputs/apk/release
+          cd apps/demo/build/outputs/apk/release
           mv app-release.apk "Android-Kit-$VERSION_NAME.apk"
 
       - name: Upload release APK
         uses: actions/upload-artifact@v7
         with:
           name: release-apk
-          path: app/build/outputs/apk/release/Android-Kit-*.apk
+          path: apps/demo/build/outputs/apk/release/Android-Kit-*.apk
           retention-days: 30
 
       - name: Upload mapping file
@@ -89,7 +91,7 @@ jobs:
         uses: actions/upload-artifact@v7
         with:
           name: mapping-file
-          path: app/build/outputs/mapping/release/mapping.txt
+          path: apps/demo/build/outputs/mapping/release/mapping.txt
           retention-days: 90
 
       - name: Create GitHub Release
@@ -105,7 +107,7 @@ jobs:
           draft: true
           prerelease: ${{ env.IS_PRERELEASE }}
           files: |
-            app/build/outputs/apk/release/Android-Kit-*.apk
+            apps/demo/build/outputs/apk/release/Android-Kit-*.apk
           generate_release_notes: true
 
   desktop-deb:

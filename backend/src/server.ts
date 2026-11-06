@@ -11,6 +11,7 @@ import express, { type Request, type Response } from "express";
 import { fileURLToPath } from "node:url";
 import { loadSkills, inputError } from "./skills.js";
 import { invokeSkill, type GatewayEvent } from "./agent.js";
+import { abortOnDisconnect } from "./sse.js";
 
 const PORT = Number(process.env.PORT ?? 8787);
 const SKILLS_DIR = process.env.SKILLS_DIR || fileURLToPath(new URL("../skills/", import.meta.url));
@@ -65,9 +66,8 @@ app.post("/v1/skills/:id/invoke", (req, res) => {
     res.write(`event: ${e.type}\ndata: ${JSON.stringify(e)}\n\n`);
   };
 
-  // 客户端断开 → 中止 agent loop
-  const abort = new AbortController();
-  req.on("close", () => abort.abort());
+  // 客户端断开 → 中止 agent loop（挂 res，不挂 req，原因见 sse.ts）
+  const abort = abortOnDisconnect(res);
 
   invokeSkill(skill, input, sessionId, send, abort.signal)
     .catch((e: unknown) => {

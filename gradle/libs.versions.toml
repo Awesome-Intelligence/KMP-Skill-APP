@@ -8,7 +8,8 @@
 agp = "9.5.0"
 kotlin = "2.4.21"
 # Compose Multiplatform（CMP）：org.jetbrains.compose 插件和所有 org.jetbrains.compose.* 产物同版本
-compose = "1.13.0-beta01"
+# 1.12.2 = 当前最新稳定版（1.13.0 还只有 beta01，等 GA 再上）
+compose = "1.12.2"
 
 androidxCore = "1.19.1"
 androidxActivity = "1.13.0"

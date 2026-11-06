@@ -37,8 +37,14 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      - name: Build with Gradle
-        run: ./gradlew :app:assembleDebug --no-daemon
+      # 遍历 apps/ 下所有模块：fork 加新 app 只需新建 apps/<name>/，不用改这份 ci.yml
+      - name: Build Android apps
+        run: |
+          rc=0
+          for d in apps/*/; do
+            ./gradlew ":apps:$(basename "$d"):assembleDebug" --no-daemon || rc=1
+          done
+          exit $rc
 
       # Koog 引擎是独立模块，app 默认不引它，所以这里单独编一遍 android 产物
       - name: Compile Koog engine (Android)
@@ -49,7 +55,7 @@ jobs:
         if: success()
         with:
           name: debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: apps/*/build/outputs/apk/debug/*.apk
           retention-days: 7
 
   desktop:
@@ -122,6 +128,39 @@ jobs:
           path: kit/build/bin/ios*/debugFramework/
           retention-days: 7
 
+  ios-app:
+    name: Build (iOS App)
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v6
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # iOS 壳工程的 Xcode 工程是 XcodeGen 生成的（apps/*/ios/project.yml）
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      # 遍历 apps/ 下所有带 ios/ 目录的 app：
+      # fork 加新 app 只需建 apps/<name>/ios/，不用改这份 ci.yml
+      - name: Build iOS apps
+        run: |
+          rc=0
+          for d in apps/*/ios; do
+            [ -d "$d" ] || continue
+            bash "$d/build.sh" || rc=1
+          done
+          exit $rc
+
   lint:
     name: Lint
     runs-on: ubuntu-latest
@@ -151,7 +190,7 @@ jobs:
         if: always()
         with:
           name: lint-report
-          path: app/build/reports/lint-results-debug.html
+          path: apps/*/build/reports/lint-results-debug.html
           retention-days: 7
 
   unit-test:
@@ -183,7 +222,7 @@ jobs:
         if: always()
         with:
           name: test-report
-          path: app/build/reports/tests/testDebugUnitTest/
+          path: apps/*/build/reports/tests/testDebugUnitTest/
           retention-days: 14
 
       - name: Upload test results
@@ -191,5 +230,59 @@ jobs:
         if: always()
         with:
           name: test-results
-          path: app/build/test-results/testDebugUnitTest/
+          path: apps/*/build/test-results/testDebugUnitTest/
           retention-days: 14
+
+  backend:
+    name: Backend (gateway)
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # 这份 ci.yml 会被 install-kit.sh 原样拷进只装 KMP 模块的消费方项目，
+      # 那些项目没有 backend/ 目录 —— 所以每一步都先确认 backend/package.json 在，
+      # 不在就整条跳过（step 级 if 在 checkout 之后评估，hashFiles 才看得到文件）。
+      - name: Setup Node
+        if: ${{ hashFiles('backend/package.json') != '' }}
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: 'npm'
+          cache-dependency-path: backend/package-lock.json
+
+      - name: Install dependencies
+        if: ${{ hashFiles('backend/package.json') != '' }}
+        working-directory: backend
+        run: npm ci
+
+      - name: Typecheck
+        if: ${{ hashFiles('backend/package.json') != '' }}
+        working-directory: backend
+        run: npm run check
+
+      # 契约冒烟：不花钱、不连网（skill 加载 + JSON Schema 校验 + parseOutput + SSE 断连检测）
+      - name: Smoke test
+        if: ${{ hashFiles('backend/package.json') != '' }}
+        working-directory: backend
+        run: npm run smoke
+
+      # 起一次真服务器，验路由真的通（express 大版本升级最容易在这里炸）
+      - name: Boot check
+        if: ${{ hashFiles('backend/package.json') != '' }}
+        working-directory: backend
+        run: |
+          node --import tsx src/server.ts > /tmp/gateway.log 2>&1 &
+          PID=$!
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:8787/health > /dev/null; then
+              curl -sf http://localhost:8787/v1/skills
+              kill $PID
+              exit 0
+            fi
+            sleep 1
+          done
+          cat /tmp/gateway.log
+          kill $PID 2>/dev/null || true
+          exit 1
