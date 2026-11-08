@@ -1,29 +1,14 @@
-# Add project specific ProGuard rules here.
-# By default, the flags in this file are appended to flags specified
-# in /sdk/tools/proguard/proguard-android.txt
-
-# Keep Application class
--keep class com.androidkit.app.AndroidKitApp { *; }
-
-# Keep Koin
--keep class org.koin.** { *; }
--dontwarn org.koin.**
-
-# Keep DataStore（只保留 dontwarn：Preferences API 无反射，不需要 keep）
--dontwarn androidx.datastore.**
+# Ktor 的 IntellijIdeaDebugDetector 引用 java.lang.management（桌面 JVM API，Android 没有）。
+# 那段代码包在 try/catch(Throwable) 里，运行时安全，R8 只是不认这个类。
+-dontwarn java.lang.management.**
 
 # Keep annotations
 -keepattributes *Annotation*, InnerClasses
 -dontnote kotlinx.serialization.AnnotationsKt
 
-# Keep model classes（字段名不能被改）
--keep class com.androidkit.app.data.model.** { *; }
-
-# Gson DTO：字段靠 @SerializedName 注解值，成员不能被删
-# Retrofit 的泛型/注解反射规则由 retrofit2.pro 自带，无需重复声明
--keepclassmembers,allowobfuscation class com.androidkit.app.data.ai.providers.** {
-    @com.google.gson.annotations.SerializedName <fields>;
-}
+# skill 工具的入参类是 @Serializable 数据类：Koog 靠 serializer() 的 descriptor 生成
+# input_schema，字段名就是模型看到的参数名。kotlinx-serialization 的 consumer 规则
+# 已经保留 Companion/serializer()/descriptor，这里不用再加 keep。
 
 # 不要加 -keep class androidx.compose.** { *; }
 # Compose 各 AAR 自带 consumer 规则（proguard.txt），AGP 自动应用。

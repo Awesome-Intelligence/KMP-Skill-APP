@@ -5,19 +5,28 @@
   用到哪个权限就留哪个 —— 商店审核对「申请的权限必须真的用得上」查得严，
   多申请的权限会被拒或者上架后被下架。
 
-  权限清单：
-    INTERNET            网络请求（Ktor）
-    POST_NOTIFICATIONS  本地通知（Android 13+ 运行时申请）
-    RECORD_AUDIO        语音输入（Android 11+ 发起方必须持有）
+  权限清单（按需启用，用不上的**删掉**，别留着占位）：
+    INTERNET               网络请求（Ktor / Anthropic API）
+    POST_NOTIFICATIONS     本地通知（Android 13+ 还要运行时申请）
+    RECORD_AUDIO           语音输入（Android 11+ 发起方必须持有）
+    ACCESS_COARSE_LOCATION 位置（粗略，运行时申请，两档建议同时声明）
+    ACCESS_FINE_LOCATION   位置（精确，运行时申请）
+    READ/WRITE_CONTACTS    通讯录读写（运行时申请）
+    READ/WRITE_CALENDAR    日历读写（运行时申请）
+
+  备忘录没有系统权限 —— 应用内数据（TodoStore 一类），直接存即可。
+  危险权限（位置/通讯录/日历）仅声明还不够，功能落地时需运行时 requestPermission。
+
+  本 demo 只用到网络（打 Anthropic API），所以只留 INTERNET。
 -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
 
     <application
-        android:allowBackup="true"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
