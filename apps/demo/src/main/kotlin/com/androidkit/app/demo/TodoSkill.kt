@@ -16,6 +16,20 @@ data class AddTodoArgs(val title: String)
 @Serializable
 data class DeleteTodoArgs(val id: String)
 
+/**
+ * 工具名常量 —— [UiApprover] 按名字决定放行还是弹窗。
+ * 写死字符串的话，改工具名会**静默失效**：闸门匹配不上就变成默认放行。
+ */
+const val TOOL_DELETE_TODO = "delete_todo"
+
+/**
+ * 工具一律是**薄包装**：校验、分支、结果文案都在 [TodoStore] 里，
+ * `doExecute` 只单行透传 —— 规范见 rules/CLAUDE.template.md「逻辑 api 化」一节。
+ *
+ * 为什么要这样：UI 的按钮和 agent 的工具调同一个函数，行为和文案才不会分叉
+ * （agent 删的和用户删的不一样，是这类 app 最常见的 bug）。
+ */
+
 /** 只读工具：列出本机待办。 */
 class ListTodosTool(private val store: TodoStore) : SkillTool<ListTodosArgs>(
     typeToken<ListTodosArgs>(), "list_todos", "列出本机所有待办事项",
@@ -27,21 +41,14 @@ class ListTodosTool(private val store: TodoStore) : SkillTool<ListTodosArgs>(
 class AddTodoTool(private val store: TodoStore) : SkillTool<AddTodoArgs>(
     typeToken<AddTodoArgs>(), "add_todo", "新增一条待办事项，参数 title 是待办内容",
 ) {
-    override suspend fun doExecute(args: AddTodoArgs): String {
-        val title = args.title.trim()
-        if (title.isEmpty()) return "没添加：待办内容是空的"
-        val todo = store.add(title)
-        return "已添加待办 ${todo.id}：${todo.title}"
-    }
+    override suspend fun doExecute(args: AddTodoArgs): String = store.add(args.title)
 }
 
 /** 危险工具：删待办。执行前会被 ToolApprover 拦一道，用户不点头就不删。 */
 class DeleteTodoTool(private val store: TodoStore) : SkillTool<DeleteTodoArgs>(
-    typeToken<DeleteTodoArgs>(), "delete_todo", "删除一条待办事项，参数 id 是待办 id（用 list_todos 查）",
+    typeToken<DeleteTodoArgs>(), TOOL_DELETE_TODO, "删除一条待办事项，参数 id 是待办 id（用 list_todos 查）",
 ) {
-    override suspend fun doExecute(args: DeleteTodoArgs): String =
-        if (store.remove(args.id)) "已删除待办 ${args.id}"
-        else "没找到待办 ${args.id}"
+    override suspend fun doExecute(args: DeleteTodoArgs): String = store.remove(args.id)
 }
 
 /**

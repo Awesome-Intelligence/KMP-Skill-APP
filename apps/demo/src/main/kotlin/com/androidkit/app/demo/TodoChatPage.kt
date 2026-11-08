@@ -90,11 +90,13 @@ fun TodoChatPage() {
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Text(
-                        text = "${todo.id}. ${todo.title}",
+                        text = store.format(todo),
                         style = MaterialTheme.typography.bodyMedium,
                         modifier = Modifier.weight(1f),
                     )
-                    TextButton(onClick = { store.remove(todo.id) }) { Text("删") }
+                    // 删的是同一个 store.remove —— agent 删待办走的是同一条路，
+                    // 拿到的也是同一句结果文案（见 TodoStore.kt 的「逻辑 api 化」注释）
+                    TextButton(onClick = { status = store.remove(todo.id) }) { Text("删") }
                 }
             }
         }
@@ -208,7 +210,7 @@ class UiApprover : ToolApprover {
 
     override suspend fun approve(name: String, input: JsonObject): Boolean {
         // ponytail: 只对"删"这类危险工具弹窗。要更细就按工具名配一张白名单表。
-        if (name != "delete_todo") return true
+        if (name != TOOL_DELETE_TODO) return true
         val answer = CompletableDeferred<Boolean>()
         _pending.value = Request(name, input["id"]?.jsonPrimitive?.contentOrNull ?: "?", answer)
         return try {

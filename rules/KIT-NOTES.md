@@ -258,11 +258,80 @@ class SearchTool(private val store: Store) : SkillTool<SearchArgs>(
 
 - 逐 token 流式（Koog 有 `requestLLMStreaming`，接上就能打字机）
 - 对话历史的持久化（`ChatHistoryProvider` 自己实现）
-- app 里接一个真 skill，让这套 loop 第一次在设备上跑起来
+- ~~app 里接一个真 skill，让这套 loop 第一次在设备上跑起来~~ —— `apps/demo/` 已经做了（待办助手）
 
 ---
 
-## 一、规则漂移审计（规则初版 vs 实际代码）
+## 〇.g 位图（Bitmap）主题（2026-11-06）
+
+底座预置**第二套视觉风格**，App 层自己挑用哪套并持久化 —— **kit 不带设置页**（和 `reducedMotion` 一个路子：kit 只给能力，选择权在 App）。
+
+### 风格是四个轴，不只是配色
+
+`ThemeStyle` 一个枚举同时切**颜色 / 形状 / 排版 / 动效**四样：
+
+| 轴 | Mono（默认） | Bitmap |
+|---|---|---|
+| 颜色 | 暖中性单色 | 冷灰白底 + 点阵网格纹理；**primary 是墨色（浅色近黑 / 深色近白）**，橙色只留强调 |
+| 形状 | M3 默认圆角（4/8/12/16/28） | 全直角（`RoundedCornerShape(0.dp)`） |
+| 排版 | 系统字体 | **fusion-pixel 12px 缝合像素字体**（OFL，中英全覆盖） |
+| 动效 | spring / emphasized | **按帧跳变，零平滑过渡**（60ms/帧） |
+
+**为什么 primary 是墨色而不是橙**：位图/1-bit 风格的实心块本来就是黑（深色下白），
+按钮、选中芯片、日历选中日、进度条格子全用 primary，如果 primary 是橙，满屏都是橙，
+"强调色只用橙"就不成立了。橙落在扩展色 `star` / `aiAccent`：光标、图表前沿点、收藏星标。
+
+```kotlin
+AppTheme(style = ThemeStyle.Bitmap, darkTheme = false) { /* ... */ }
+```
+
+`LocalThemeStyle` 供组件分发用（`TagColors` 靠它切色板）。
+
+### 为此做的三件基础设施改动
+
+1. **形状 token 化**：kit 里 43 处硬编码 `RoundedCornerShape(16/12/8.dp)` 全部换成
+   `MaterialTheme.shapes.large/medium/small`（17 个文件）。Mono 模式下 M3 默认 `Shapes`
+   正好是 4/8/12/16/28，**像素级保留原样**；Bitmap 模式把这五个桶全设成 0dp，组件自动直角化。
+   没这一步，换主题就得改 43 个文件。
+
+2. **帧制动效**（`ui/theme/PixelMotion.kt`）：`PixelMotion.stepped(durationMs)` 给线性
+   tween（时长向上取整到整帧），配套 `quantize(value, steps)` 把 0..1 进度压成档位。
+   **组件拿进度后必须过 `quantize` 再画** —— 中间值出现在画面上就破功了。
+   `LocalReducedMotion` 为真时全部退化成 `snap()`（直接终态）。
+
+3. **像素字体**（`ui/theme/TypeBitmap.kt`）：fusion-pixel 12px proportional zh_hans，
+   字号锁在 12px 网格整数倍 {12,24,36,48,60}，字重全 Normal（像素字体没粗体，假粗体会糊）。
+   字体走 `composeResources/font/`，用 `org.jetbrains.compose.resources.Font` 加载
+   （注意：它和 `androidx.compose.ui.text.font.Font` 同名，得 import 别名）。
+
+### 六个动效规格的落点（`ui/components/`）
+
+| 规格 | 组件 |
+|---|---|
+| 点阵数字滚动（个位先停、高位后停） | `DotMatrixNumber` |
+| 点阵柱状图（左→右、自下而上点亮，最新点用橙） | `DotMatrixBarChart` |
+| 像素溶解转场（随机逐格消失/出现，共 400ms） | `PixelDissolve` |
+| 抖动悬停（四档渐变网点代替透明度） | `Modifier.pixelDitherHover()` |
+| 逐字光标（橙方块闪 2 次、数字高亮、完稿光标消失） | `TypewriterText` |
+| 按帧加载进度条（20 格逐格点亮，完成显像素对勾） | `PixelProgressBar` |
+
+外加 `Modifier.pixelDotGrid()`（页面底纹）和 `PixelCheck`（对勾）。
+
+### 踩过的坑
+
+- **这版 Compose 没有 inline content API**（`InlineTextContent` / `appendInlineContent` 不存在），
+  逐字光标只能用 `Text(onTextLayout = { it.getCursorRect(offset) })` 拿光标矩形定位方块。
+- **`MaterialTheme.shapes` 的桶要求 `CornerBasedShape`** —— 写 `Shape` / `RectangleShape` 编译不过。
+- **`Skeleton.kt` 曾经把 `RoundedCornerShape` 当类型用**（参数类型写死），token 化后
+  `MaterialTheme.shapes.*` 返回 `CornerBasedShape` → 类型不匹配。参数类型要放宽成 `Shape`。
+
+### 字体授权
+
+`kit/fonts-licenses/` 存 OFL 原文和上游链接。fusion-pixel 每个语言包 ~7.3MB，
+**装进 App 会明显涨包体** —— 现在只带 zh_hans 一个语言包，要别的语言再加。
+
+---
+
 
 规则初版里有 5 条**写了但代码没做到**的约定。直接抄会把未兑现的承诺带到新项目：
 
@@ -276,6 +345,46 @@ class SearchTool(private val store: Store) : SkillTool<SearchArgs>(
 
 `docs/TECHNICAL_DESIGN.md` / `docs/UI_DESIGN.md` 描述的也是**没实现的架构**（Room + Clean 分层），
 所以**没有进 kit**。只有 `GOOGLE_STYLE.md`（纯视觉数值）和 `COMPONENT_SPEC.md`（设计令牌 + 组件规格）是无条件可复用的。
+
+---
+
+## 〇.h 逻辑 api 化（2026-11-07）
+
+底座只规定「能力边界」，业务逻辑归 app。但业务逻辑在 app 里有两个消费者：
+**UI 的按钮** 和 **agent 的工具**。两边各写一份，行为就会分叉 ——
+最常见的表现是「agent 删的待办和用户删的不一样」。
+
+规矩只有一条：**UI 和 tool 调同一个函数**。
+
+| 层 | 放什么 | 规矩 |
+|---|---|---|
+| data 层 | 业务动作 + 数据 | 普通类 / 普通函数（要挂起才 `suspend`）；不写 Compose 代码 |
+| ui 层 | Composable | 只调 data 层，不直接改数据 |
+| skill 层 | `SkillTool` 子类 | 薄包装：`doExecute` 单行透传，不写业务分支 |
+
+配套三条：
+
+- 动作函数返回**一句结果文案**（纯文本）—— tool 透传，UI 拿同一句去显示
+- 同一份数据的文本格式只有一处（别让用户和模型看到两个格式）
+- 危险动作（删 / 外发 / 覆盖）过 `ToolApprover` —— 工具一多最容易漏挂闸门
+
+**刻意不做**：UI 状态类操作（开弹窗、切 tab、滚动、展开）不做成工具 ——
+agent 是「本机能力」路线，不是 UI 自动化。工具粒度按「用户的一句自然话」切，不按按钮切
+（每个按钮一个工具 = 模型选错工具 + prompt 膨胀；入参字段名还是对模型的公开契约）。
+
+落点：
+
+- 规范写在 `rules/CLAUDE.template.md` 的「逻辑 api 化」一节 ——
+  `install-kit.sh` 会把它原样拷成 app 的 `CLAUDE.md`，所以**下游 app 天生带着这条要求**
+- `apps/demo/` 已按它改造：`TodoStore` 是 data 层（校验、分支、结果文案都在那儿），
+  三个 tool 单行透传，UI 和 agent 共用 `add` / `remove` / `format` —— 连结果文案都是同一句
+- `scripts/verify-skills.py` 静态自检（**只警告，不挡构建**）：
+
+  | # | 检查 |
+  |---|---|
+  | 1 | tool 类里有 Compose 代码（tool 跑在 agent loop 里，没有 UI 上下文） |
+  | 2 | `doExecute` 里有 `if` / `when` / `for` / `while` / `try`（分支该下沉到 data 层） |
+  | 3 | 工具名不是英文 snake_case（模型靠 name 挑工具） |
 
 ---
 
@@ -352,6 +461,14 @@ class SearchTool(private val store: Store) : SkillTool<SearchArgs>(
 3. `DemoData.A.B` 在 kit 的 `DemoData` 里没有对应成员
 
 改完 kit 跑一遍：`python scripts/verify-kit.py`。
+
+`scripts/verify-skills.py` 查 app 层的 skill 工具（不用编译）：
+
+1. tool 类里有 Compose 代码
+2. `doExecute` 里有业务分支（`if` / `when` / `for` / `while` / `try`）
+3. 工具名不是英文 snake_case
+
+写完 skill 跑一遍：`python scripts/verify-skills.py`（**只警告，不挡构建**）。
 
 ---
 

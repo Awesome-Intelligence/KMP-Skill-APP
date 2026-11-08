@@ -1033,6 +1033,45 @@ fun AppTheme(
 }
 ```
 
+### 12.2 位图（Bitmap）主题
+
+底座预置第二套视觉风格。**一个 `ThemeStyle` 参数同时切颜色/形状/排版/动效四个轴**：
+
+```kotlin
+AppTheme(style = ThemeStyle.Bitmap, darkTheme = false) { /* ... */ }
+```
+
+| 轴 | Mono（默认） | Bitmap |
+|---|---|---|
+| 颜色 | 暖中性单色 | 冷灰白底 + 点阵网格纹理；primary 为墨色（浅色近黑 / 深色近白），橙色只作强调 |
+| 形状 | M3 默认圆角 4/8/12/16/28 | 全直角 |
+| 排版 | 系统字体 | fusion-pixel 12px 缝合像素字体（OFL） |
+| 动效 | spring / emphasized | 按帧跳变（60ms/帧），零平滑过渡 |
+
+- `primary` = 墨色（浅 `#17191E` / 深 `#F2F3F6`）：按钮、选中芯片、选中日期、进度条格子。
+- 橙色只出现在扩展色 `star` / `aiAccent`（光标、图表前沿点、收藏星标）。
+
+- 浅色 + 深色两套配色（`BitmapLightColorScheme` / `BitmapDarkColorScheme`）。
+- **kit 不带设置页** —— 选哪套、存不存，全由 App 层决定。
+- 组件内部用 `LocalThemeStyle` 分发（如 `tagColorPalette()` 切色板）。
+
+#### 12.2.1 位图组件
+
+| 组件 | 文件 | 说明 |
+|------|------|------|
+| `DotMatrixNumber` | `ui/components/DotMatrixNumber.kt` | 5×7 点阵数字，更新时逐位上下翻滚（个位先停、高位后停） |
+| `DotMatrixBarChart` | `ui/components/DotMatrixBarChart.kt` | 小圆点自下而上、从左到右逐点点亮，最新点用橙色 |
+| `PixelDissolve` | `ui/components/PixelDissolve.kt` | `target` 变化时随机逐格消失 + 逐格出现，总时长 400ms |
+| `Modifier.pixelDitherHover()` | `ui/components/PixelEffects.kt` | 悬停用四档渐变网点代替透明度，移开逐档退回 |
+| `Modifier.pixelDotGrid()` | `ui/components/PixelEffects.kt` | 页面底纹点阵网格 |
+| `TypewriterText` | `ui/components/TypewriterText.kt` | 橙色方块光标闪 2 次 → 逐字输出，数字高亮，完稿光标消失 |
+| `PixelProgressBar` | `ui/components/PixelProgressBar.kt` | 20 格按帧点亮，百分比同步跳变，完成显示像素对勾 |
+| `PixelCheck` | `ui/components/PixelProgressBar.kt` | 5×7 点阵画的完成对勾 |
+
+**帧制规则（写新组件时必须遵守）**：动效用 `PixelMotion.stepped(durationMs)`（线性 tween，
+时长向上取整到整帧），进度**必须过 `quantize(value, steps)` 再画** —— 中间值出现在画面上就破功了。
+`LocalReducedMotion` 为真时全部退化成 `snap()`。
+
 ---
 
 ## 附录：组件索引
@@ -1055,5 +1094,10 @@ fun AppTheme(
 | `AddFab` | `ui/components/Buttons.kt` |
 | `Header` | `ui/components/Header.kt` |
 | `LinearProgressBar` / `CircularProgressIndicatorWithText` | `ui/components/Progress.kt` |
+| `DotMatrixNumber` / `DotMatrixBarChart` | `ui/components/DotMatrixNumber.kt`、`DotMatrixBarChart.kt` |
+| `PixelDissolve` / `PixelCheck` / `PixelProgressBar` | `ui/components/PixelDissolve.kt`、`PixelProgressBar.kt` |
+| `TypewriterText` | `ui/components/TypewriterText.kt` |
+| `Modifier.pixelDitherHover()` / `Modifier.pixelDotGrid()` | `ui/components/PixelEffects.kt` |
 | 设计令牌（尺寸） | `res/values/dimens.xml` |
-| 颜色 / 排版 / 主题 | `ui/theme/Color.kt`、`ColorMono.kt`、`Type.kt`、`Theme.kt` |
+| 颜色 / 排版 / 主题 | `ui/theme/Color.kt`、`ColorMono.kt`、`ColorBitmap.kt`、`Type.kt`、`TypeBitmap.kt`、`Theme.kt` |
+| 帧制动效 | `ui/theme/PixelMotion.kt` |

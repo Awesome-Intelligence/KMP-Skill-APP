@@ -20,6 +20,18 @@
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<!-- 录音（缺失会在调起麦克风时直接崩溃） -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>用于语音输入，以便通过语音与助手对话</string>
+	<!-- 位置（仅在用的时候申请 WhenInUse 即可） -->
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>用于记录您所在的位置相关信息</string>
+	<!-- 通讯录 -->
+	<key>NSContactsUsageDescription</key>
+	<string>用于读取和管理您的联系人</string>
+	<!-- 日历 -->
+	<key>NSCalendarsUsageDescription</key>
+	<string>用于读取和管理您的日程</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchScreen</key>
