@@ -38,9 +38,12 @@
 
 | 文件 | 是什么 |
 |---|---|
-| `demo/TodoStore.kt` | **业务数据**：待办清单，纯本地 |
-| `demo/TodoSkill.kt` | **业务 skill**：人设（systemPrompt）+ 三个工具（list/add/delete），工具直接摸 TodoStore |
+| `demo/TodoStore.kt` | **业务数据 + 业务动作**：待办清单，纯本地。校验、分支、结果文案都在这一层 |
+| `demo/TodoSkill.kt` | **业务 skill**：人设（systemPrompt）+ 三个工具（list/add/delete），工具只单行透传给 TodoStore |
 | `demo/TodoChatPage.kt` | **业务页面**：待办列表 + 对话；`UiApprover` 是「agent 想删东西时弹窗确认」的实现 |
+
+> **一份逻辑两处用**：UI 的「删」按钮和 agent 的 `delete_todo` 工具调的是**同一个** `TodoStore.remove` ——
+> 连结果文案都是同一句。规范见 `rules/CLAUDE.template.md` 的「逻辑 api 化」一节。
 
 跑起来（Android）：
 
@@ -118,15 +121,16 @@ delegate 的 `executeStreaming()`，收到 `TextDelta` 就回调一次，最后�
 靠 `git pull upstream main` 持续跟进底座更新。
 
 0. fork / clone 本仓库，`git remote rename origin upstream`。
-   **唯一规矩：只新增、不改底座文件**（`kit/`、`kit-agent-koog/`、`rules/`、`ci/`、
+   **唯一规矩：只新增、不改底座文件**（`kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/`、
    `backend/`、`settings.gradle.kts`）—— 改了，pull 就冲突，更新链就断。
    底座能力不够，回上游提 PR，别在下游打补丁。
 1. 照抄 `apps/demo/` → `apps/<name>/`，改 namespace / applicationId / app_name / 主题名。
    `settings.gradle.kts` 自动 include `apps/` 下所有模块（不用注册），CI 自动逐个构建。
 2. 引用 `kit/` + `kit-agent-koog/`，为每个功能写一个 `SkillDefinition`（人设 + 工具；**工具就是 Kotlin 类**，编译期可查）。
+   业务动作放 data 层，**UI 的按钮和 agent 的工具调同一个函数**（规范见 `rules/CLAUDE.template.md`「逻辑 api 化」）。
 3. 给 skill 配 5-10 个黄金样例对话（输入 → 期望行为）——skill 化没有编译期保障，样例就是它的"类型检查"。
 4. UI collect 事件流渲染。
-5. 发布：把 `ci/release.yml` 拷成自己的 `release-<name>.yml`（fork 自己拥有的文件，随便改），换模块名 / keystore / 产物名。
+5. 发布：把 `.github/workflows/release.yml` 拷成自己的 `release-<name>.yml`（fork 自己拥有的文件，随便改），换模块名 / keystore / 产物名。
 
 ## API key 怎么处理（按分发方式选）
 
@@ -150,6 +154,34 @@ delegate 的 `executeStreaming()`，收到 `TextDelta` 就回调一次，最后�
 - skill 需要手机上没有的能力：跑 shell、爬大量网页、长时任务
 - 要把 prompt/工具集中管控、热更新（服务端下发 skill 配置）
 - 否则不用部署任何后端。
+
+### 网关的鉴权与 session 隔离
+
+网关三条安全线（代码在 `backend/src/guard.ts`，`smoke.ts` 在测）：
+
+| 机制 | 环境变量 | 作用 |
+|---|---|---|
+| 共享 token | `GATEWAY_TOKEN` | 单用户；所有 `/v1` 请求要 `Authorization: Bearer <token>`（定长比较，防时序侧信道） |
+| 按用户 token | `GATEWAY_TOKENS="alice:tok1,bob:tok2"` | 多用户；token 直接认 userId |
+| 限流 | `RATE_LIMIT_PER_MIN` | 每用户每分钟 N 次 invoke（一次 invoke = 一次真金白银的模型请求），超了 429 |
+
+**session 按 userId 隔离**：`resume` 会接着那个 session 继续跑，所以客户端随便传 sessionId
+就能接别人的会话。网关记一张 `sessionId → userId` 表（`backend/src/server.ts`）：
+是这个用户的才 resume，是别人的 403，本进程没见过的当新会话 —— **绝不拿它去 resume**。
+（表在内存里，重启就丢；要跨重启 resume 就落盘。）
+
+## 质量闸门
+
+改坏了什么，CI 会拦下来：
+
+| 闸门 | 干什么 | 基线在哪 |
+|---|---|---|
+| detekt | 静态规则（命名、复杂度、吞异常、空块…） | `config/detekt/detekt.yml` |
+| apiCheck | 改了 `kit/` / `kit-agent-koog/` 的**公开签名**就失败 | `kit/api/desktop/kit.api` |
+| 依赖校验 | 依赖被换包/篡改就失败 | `gradle/verification-metadata.xml` |
+| `verify-kit.py` / `verify-skills.py` | import / `Res.string` / DemoData 断裂；skill 工具有没有把业务逻辑写进 tool | — |
+
+改了公开 API 想要它合法地变：`./gradlew :kit:apiDump`（会重写基线，review 时看 diff）。
 
 ## 演进路径（刻意没做的）
 

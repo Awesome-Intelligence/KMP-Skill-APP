@@ -44,12 +44,15 @@ Android-Kit/
 │   └── ios/                   iOS 壳工程：SwiftUI 薄壳 + Compose 内核（XcodeGen 生成 Xcode 工程）
 ├── chat-demo/               ← 桌面对话 demo（验证 agent 对话链路，见下）
 ├── backend/                 ← 可选的 agent 网关（Node/TS + Claude Agent SDK）；默认 agent 跑在手机端，见 ARCHITECTURE.md
-├── ci/                      ← GitHub Actions：Android / Desktop / iOS 三条构建线 + backend 网关自检 + release
+├── .github/workflows/       ← GitHub Actions：Android / Desktop / iOS 三条构建线 + 静态检查 + backend 网关自检 + release
+├── config/detekt/          ← detekt 规则集（只查能抓真 bug 的那批规则）
+├── api/                    ← 公开 API 的二进制基线（binary-compatibility-validator 生成的 .api 快照）
 ├── skills/                  ← Google 官方 android/skills 子集 + M3 对照 skill
 └── scripts/
     ├── install-kit.sh           装进新项目（kit + agent 模块、包名替换、strings 合并）
     ├── merge_strings.py         strings.xml 合并（只补缺失 key）
     ├── verify-kit.py            ★ 静态自检：import / Res.string / DemoData 三类断裂
+    ├── verify-skills.py         ★ 静态自检：skill 工具有没有把业务逻辑写进 tool（只警告）
     └── diff-ownership.sh        多 Claude 并行时的文件归属判定
 ```
 
@@ -114,9 +117,9 @@ git remote rename origin upstream   # 以后 git pull upstream main
    `strings.xml` 的 app_name、主题名（`Theme.AndroidKit` → 你的）。
    `settings.gradle.kts` **自动 include `apps/` 下所有模块**（不用注册），CI 自动逐个构建。
 2. 写业务 skill + 页面，见 `ARCHITECTURE.md`「写一个新 app 的步骤」。
-3. 发布时把 `ci/release.yml` 拷成自己的 `release-<name>.yml`（fork 自己拥有的文件，随便改）。
+3. 发布时把 `.github/workflows/release.yml` 拷成自己的 `release-<name>.yml`（fork 自己拥有的文件，随便改）。
 
-**唯一规矩：底座路径（`kit/`、`kit-agent-koog/`、`rules/`、`ci/`、`backend/`、`settings.gradle.kts`）
+**唯一规矩：底座路径（`kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/`、`backend/`、`settings.gradle.kts`）
 不改不删** —— 改了，pull 上游必冲突，更新链就断。底座能力不够，回上游提 PR，别在下游打补丁。
 
 ### 只要一部分（拷贝脚本，备选）
@@ -151,7 +154,7 @@ bash scripts/install-kit.sh ~/code/MyApp com.myname.myapp MyApp
 | 组件库 | `kit/src/commonMain/kotlin/.../ui/{theme,components,templates,preview}` + `composeResources/` |
 | 存储层 | `kit/src/commonMain/.../data/storage/`（okio 引擎 + 格式 codec，三端通用） |
 | 本地 agent 引擎 | `kit-agent-koog/src/commonMain/.../data/agent/`（Koog loop 跑在端上，模型直连 Anthropic API）+ `kit-agent-koog/build.gradle.kts` |
-| CI | `ci/*.yml` → `.github/workflows/` |
+| CI | `.github/workflows/*.yml` 原样可用，fork 即生效 |
 
 组件依赖 `composeResources/values/strings.xml` 里的 key，单独拷组件时把 strings.xml 一起带走（或用 `merge_strings.py` 补）。
 
@@ -224,12 +227,16 @@ kit 代码在真实 Gradle 工程里跑通过（2026-11-03 复核）：
 | `:kit:compileKotlinDesktop`（桌面目标） | ✅ BUILD SUCCESSFUL |
 | `:kit:desktopTest`（KitDateFormat 4 + StoreCodec 4） | ✅ 8 个用例通过 |
 | `:kit-agent-koog:desktopTest`（SkillTool 3 + KoogAgentSession 5） | ✅ 8 个用例通过 |
+| `:kit:detekt` `:kit-agent-koog:detekt` `:apps:demo:detekt` | ✅ 0 问题（规则集 `config/detekt/`） |
+| `:kit:apiCheck`（公开 API 二进制兼容） | ✅ 与 `api/*.api` 基线一致 |
 | `scripts/verify-kit.py` | ✅ 通过（62 个 kt 文件，133 个 string key） |
+| `scripts/verify-skills.py` | ✅ 通过（4 个 tool，分支都在 data 层） |
 | `:chat-demo:run --args="--check"`（agent 全链路） | ✅ ToolUse(now) → Text → Result |
 | `backend: npm run check`（tsc 7.0.2 `--noEmit`） | ✅ 无错 |
-| `backend: npm run smoke`（skill 加载 + 契约校验 + SSE 断连检测） | ✅ 1 个 skill（summarize） |
+| `backend: npm run smoke`（skill 加载 + 契约校验 + SSE 断连检测 + 鉴权/session 归属/限流） | ✅ 通过 |
 | `backend: node --import tsx src/server.ts` + `/health` `/v1/skills` | ✅ 路由通 |
 | iOS | ⚠️ 本机是 Windows 编不了，靠 CI 的 macOS job 验 |
+| 依赖校验（`gradle/verification-metadata.xml`） | ✅ 生成的 sha256 基线（JVM/Android 产物；iOS 产物要在 macOS 上补） |
 
 > ⚠️ 依赖约束：compileSdk 要到 **37.1**（`compileSdkMinor = 1`）。
 > AGP 9 的 KMP 库插件里 `compileSdkMinor` 不可用，要用新的 DSL：
@@ -245,6 +252,9 @@ kit 代码在真实 Gradle 工程里跑通过（2026-11-03 复核）：
 
 组件本体在 `kit/src/commonMain/` 里，改完直接在这里验：
 `./gradlew :kit:compileKotlinDesktop` → `python scripts/verify-kit.py` 自检。
+
+改 app 的 skill 工具（业务逻辑该下沉到 data 层，tool 只做薄包装）：
+`python scripts/verify-skills.py` 自检 —— 规范见 `rules/CLAUDE.template.md`「逻辑 api 化」。
 
 ---
 

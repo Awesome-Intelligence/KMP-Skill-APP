@@ -10,7 +10,7 @@
 #   2. 把代码里的 com.androidkit.app 全量替换成新包名
 #   3. strings.xml 合并（只补缺失的 key，不覆盖你已有的）
 #   4. rules/CLAUDE.template.md → 目标 CLAUDE.md
-#   5. ci/*.yml → .github/workflows/
+#   5. .github/workflows/*.yml → .github/workflows/
 #   6. scripts/diff-ownership.sh → .claude/scripts/
 #   7. skills/ → .claude/skills/ 与 .agents/skills/
 #
@@ -108,10 +108,13 @@ fi
 # ── 4. 规则 / CI / 脚本 / skills ───────────────────────────────
 echo "==> 复制规则、CI、脚本、skills"
 [[ -f "$TARGET/CLAUDE.md" ]] || cp "$KIT/rules/CLAUDE.template.md" "$TARGET/CLAUDE.md"
-cp "$KIT/ci/ci.yml" "$TARGET/.github/workflows/ci.yml"
-cp "$KIT/ci/release.yml" "$TARGET/.github/workflows/release.yml"
+cp "$KIT/.github/workflows/ci.yml" "$TARGET/.github/workflows/ci.yml"
+cp "$KIT/.github/workflows/release.yml" "$TARGET/.github/workflows/release.yml"
 cp "$KIT/scripts/diff-ownership.sh" "$TARGET/.claude/scripts/diff-ownership.sh"
-cp "$KIT/scripts/verify-kit.py" "$KIT/scripts/merge_strings.py" "$TARGET/scripts/"
+# detekt 规则集：kit/build.gradle.kts 按 $rootDir/config/detekt/detekt.yml 找，缺了 detekt 任务直接失败
+mkdir -p "$TARGET/config/detekt"
+cp "$KIT/config/detekt/detekt.yml" "$TARGET/config/detekt/detekt.yml"
+cp "$KIT/scripts/verify-kit.py" "$KIT/scripts/verify-skills.py" "$KIT/scripts/merge_strings.py" "$TARGET/scripts/"
 chmod +x "$TARGET/.claude/scripts/diff-ownership.sh"
 cp -r "$KIT/skills/." "$TARGET/.claude/skills/" 2>/dev/null || true
 cp -r "$KIT/skills/android-skills/." "$TARGET/.agents/skills/" 2>/dev/null || true
@@ -128,4 +131,8 @@ echo "  6. app/build.gradle.kts: release 签名换成真 keystore（见 kit 里 
 echo "  7. settings.gradle.kts: rootProject.name = \"$APP_NAME\""
 echo "  8. res/values/strings.xml: app_name 改成你的应用名"
 echo "  9. 跑一次 python scripts/verify-kit.py 确认没漏"
-echo " 10. 编译：./gradlew :app:assembleDebug（Android）/ :kit:compileKotlinDesktop（桌面）"
+echo "  10. detekt：把 kit-root-plugins.gradle.kts 里的 detekt 插件声明合进根 build.gradle.kts（版本目录也要有 detekt 条目）"
+echo " 11. binary-compatibility-validator：同上，插件声明 + 版本目录条目都要合"
+echo " 11b. API 基线：包名换过了，仓库里的基线作废 —— 跑 ./gradlew :kit:apiDump :kit-agent-koog:apiDump 重新生成并提交"
+echo "  9b. 跑一次 python scripts/verify-skills.py 看 skill 工具有没有把业务逻辑写进 tool"
+echo " 12. 编译：./gradlew :app:assembleDebug（Android）/ :kit:compileKotlinDesktop（桌面）"
