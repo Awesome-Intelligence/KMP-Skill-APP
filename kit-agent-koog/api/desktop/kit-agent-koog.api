@@ -1,0 +1,104 @@
+public abstract class com/androidkit/app/data/agent/AgentEvent {
+}
+
+public final class com/androidkit/app/data/agent/AgentEvent$Error : com/androidkit/app/data/agent/AgentEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/data/agent/AgentEvent$Error;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/agent/AgentEvent$Error;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/agent/AgentEvent$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/agent/AgentEvent$Result : com/androidkit/app/data/agent/AgentEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/data/agent/AgentEvent$Result;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/agent/AgentEvent$Result;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/agent/AgentEvent$Result;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/agent/AgentEvent$Text : com/androidkit/app/data/agent/AgentEvent {
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/data/agent/AgentEvent$Text;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/agent/AgentEvent$Text;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/agent/AgentEvent$Text;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/agent/AgentEvent$ToolUse : com/androidkit/app/data/agent/AgentEvent {
+	public fun <init> (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lkotlinx/serialization/json/JsonObject;
+	public final fun copy (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;)Lcom/androidkit/app/data/agent/AgentEvent$ToolUse;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/agent/AgentEvent$ToolUse;Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;ILjava/lang/Object;)Lcom/androidkit/app/data/agent/AgentEvent$ToolUse;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getInput ()Lkotlinx/serialization/json/JsonObject;
+	public final fun getName ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/androidkit/app/data/agent/AgentRuntime {
+	public abstract fun session (Lcom/androidkit/app/data/agent/SkillDefinition;Lcom/androidkit/app/data/agent/ToolApprover;)Lcom/androidkit/app/data/agent/AgentSession;
+}
+
+public abstract interface class com/androidkit/app/data/agent/AgentSession {
+	public abstract fun send (Ljava/lang/String;)Lkotlinx/coroutines/flow/Flow;
+}
+
+public final class com/androidkit/app/data/agent/KoogAgentRuntime : com/androidkit/app/data/agent/AgentRuntime {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun session (Lcom/androidkit/app/data/agent/SkillDefinition;Lcom/androidkit/app/data/agent/ToolApprover;)Lcom/androidkit/app/data/agent/AgentSession;
+}
+
+public final class com/androidkit/app/data/agent/SkillDefinition {
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;II)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;IIILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/util/List;
+	public final fun component6 ()Ljava/lang/String;
+	public final fun component7 ()I
+	public final fun component8 ()I
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;II)Lcom/androidkit/app/data/agent/SkillDefinition;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/agent/SkillDefinition;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;Ljava/lang/String;IIILjava/lang/Object;)Lcom/androidkit/app/data/agent/SkillDefinition;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getMaxTokens ()I
+	public final fun getMaxTurns ()I
+	public final fun getModel ()Ljava/lang/String;
+	public final fun getName ()Ljava/lang/String;
+	public final fun getSystemPrompt ()Ljava/lang/String;
+	public final fun getTools ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract class com/androidkit/app/data/agent/SkillTool : ai/koog/agents/core/tools/ToolBase {
+	public fun <init> (Lai/koog/serialization/TypeToken;Ljava/lang/String;Ljava/lang/String;)V
+	protected abstract fun doExecute (Ljava/lang/Object;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun execute (Ljava/lang/Object;Lai/koog/agents/core/tools/ToolCallMetadata;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public abstract interface class com/androidkit/app/data/agent/ToolApprover {
+	public static final field Companion Lcom/androidkit/app/data/agent/ToolApprover$Companion;
+	public abstract fun approve (Ljava/lang/String;Lkotlinx/serialization/json/JsonObject;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/data/agent/ToolApprover$Companion {
+	public final fun getAllowAll ()Lcom/androidkit/app/data/agent/ToolApprover;
+}
+

@@ -6,6 +6,10 @@ on:
   pull_request:
     branches: [ main, develop ]
 
+# 最小权限：CI 只读代码、传产物，不给 GITHUB_TOKEN 写权限
+permissions:
+  contents: read
+
 env:
   JAVA_VERSION: '17'
   # 刻意不设 ANDROID_COMPILE_SDK：compileSdk 的唯一出处是各模块 build.gradle.kts，
@@ -19,17 +23,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: 'gradle'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
 
       # Gradle 缓存交给 setup-java 的 cache: 'gradle'（它已经缓存 ~/.gradle/caches + ~/.gradle/wrapper），
       # 别再叠一个 actions/cache —— 两个 action 写同一个目录、key 还不一样，只会互相打架。
@@ -38,10 +42,12 @@ jobs:
         run: chmod +x gradlew
 
       # 遍历 apps/ 下所有模块：fork 加新 app 只需新建 apps/<name>/，不用改这份 ci.yml
+      # [ -d ] 守卫：install-kit.sh 拷进来的消费方项目没有 apps/ 目录，glob 不展开会剩下字面量
       - name: Build Android apps
         run: |
           rc=0
           for d in apps/*/; do
+            [ -d "$d" ] || continue
             ./gradlew ":apps:$(basename "$d"):assembleDebug" --no-daemon || rc=1
           done
           exit $rc
@@ -51,7 +57,7 @@ jobs:
         run: ./gradlew :kit-agent-koog:compileAndroidMain --no-daemon
 
       - name: Upload debug APK
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: success()
         with:
           name: debug-apk
@@ -64,10 +70,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -79,14 +85,13 @@ jobs:
       - name: Compile desktop
         run: ./gradlew :kit:compileKotlinDesktop :kit-agent-koog:compileKotlinDesktop --no-daemon
 
-      - name: Run desktop tests
-        run: ./gradlew :kit:desktopTest :kit-agent-koog:desktopTest --no-daemon
+      # 测试在下面的 unit-test job 跑，这里只管编译和打包，别跑两遍
 
       - name: Package desktop
         run: ./gradlew :kit:packageDeb --no-daemon
 
       - name: Upload desktop package
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: success()
         with:
           name: desktop-deb
@@ -99,10 +104,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -121,7 +126,7 @@ jobs:
         run: ./gradlew :kit-agent-koog:compileKotlinIosArm64 --no-daemon
 
       - name: Upload iOS frameworks
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: success()
         with:
           name: ios-frameworks
@@ -134,10 +139,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -167,17 +172,17 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: 'gradle'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
@@ -186,7 +191,7 @@ jobs:
         run: ./gradlew lintDebug --no-daemon
 
       - name: Upload lint report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: always()
         with:
           name: lint-report
@@ -199,38 +204,133 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: 'gradle'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
+      # 真正的测试都在 kit / kit-agent-koog 的 desktopTest（commonTest 只在 JVM 跑得起来）。
+      # apps/* 的 testDebugUnitTest 目前都是 NO-SOURCE，但 fork 的 app 加了单测就自动进来。
       - name: Run unit tests
-        run: ./gradlew testDebugUnitTest --no-daemon
+        run: |
+          rc=0
+          for d in apps/*/; do
+            [ -d "$d" ] || continue
+            ./gradlew ":apps:$(basename "$d"):testDebugUnitTest" --no-daemon || rc=1
+          done
+          ./gradlew :kit:desktopTest :kit-agent-koog:desktopTest --no-daemon || rc=1
+          exit $rc
 
       - name: Upload test report
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: always()
         with:
           name: test-report
-          path: apps/*/build/reports/tests/testDebugUnitTest/
+          path: |
+            kit/build/reports/tests/desktopTest/
+            kit-agent-koog/build/reports/tests/desktopTest/
           retention-days: 14
 
       - name: Upload test results
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: always()
         with:
           name: test-results
-          path: apps/*/build/test-results/testDebugUnitTest/
+          path: |
+            kit/build/test-results/desktopTest/
+            kit-agent-koog/build/test-results/desktopTest/
+          retention-days: 14
+
+  static-check:
+    name: Static check
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+
+      - name: Setup JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+        with:
+          java-version: ${{ env.JAVA_VERSION }}
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # detekt：规则集在 config/detekt/detekt.yml（只查能抓真 bug 的那批规则）
+      # kit-agent-koog 是可选模块 —— 拷贝模式装出来的项目不一定 include 它，
+      # 直接点名会报 "Project not found"，所以先看 settings 里有没有
+      - name: Run detekt
+        run: |
+          rc=0
+          ./gradlew :kit:detekt --no-daemon || rc=1
+          if grep -q ':kit-agent-koog' settings.gradle.kts; then
+            ./gradlew :kit-agent-koog:detekt --no-daemon || rc=1
+          fi
+          if grep -q ':chat-demo' settings.gradle.kts; then
+            ./gradlew :chat-demo:detekt --no-daemon || rc=1
+          fi
+          for d in apps/*/; do
+            [ -d "$d" ] || continue
+            ./gradlew ":apps:$(basename "$d"):detekt" --no-daemon || rc=1
+          done
+          exit $rc
+
+      # 公开 API 的二进制兼容性：改了 kit 的公开签名就失败（基线在 api/*.api）。
+      # 拷贝模式装出来的项目没有这个插件，grep 一下再跑，免得报"task not found"
+      - name: Check public API compatibility
+        run: |
+          rc=0
+          if grep -q 'binary-compatibility-validator' kit/build.gradle.kts 2>/dev/null; then
+            # 基线不存在 = 还没 dump 过 —— 明确报错让人去跑 apiDump，
+            # 比让它红着"no dump file"强
+            if [ ! -f kit/api/desktop/kit.api ]; then
+              echo "::error::kit/api/desktop/kit.api 不存在 —— 先跑 ./gradlew :kit:apiDump 生成基线"
+              rc=1
+            else
+              ./gradlew :kit:apiCheck --no-daemon || rc=1
+            fi
+            if grep -q ':kit-agent-koog' settings.gradle.kts; then
+              if [ ! -f kit-agent-koog/api/desktop/kit-agent-koog.api ]; then
+                echo "::error::kit-agent-koog/api 不存在 —— 先跑 ./gradlew :kit-agent-koog:apiDump"
+                rc=1
+              else
+                ./gradlew :kit-agent-koog:apiCheck --no-daemon || rc=1
+              fi
+            fi
+          fi
+          exit $rc
+
+      # 自带脚本：查 import / Res.string / DemoData 断裂，以及 skill 工具有没有把业务逻辑写进 tool
+      - name: Verify kit sources
+        run: python scripts/verify-kit.py
+
+      - name: Verify skills
+        run: python scripts/verify-skills.py
+
+      - name: Upload detekt report
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
+        if: always()
+        with:
+          name: detekt-report
+          path: |
+            kit/build/reports/detekt/
+            kit-agent-koog/build/reports/detekt/
           retention-days: 14
 
   backend:
@@ -239,14 +339,14 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       # 这份 ci.yml 会被 install-kit.sh 原样拷进只装 KMP 模块的消费方项目，
       # 那些项目没有 backend/ 目录 —— 所以每一步都先确认 backend/package.json 在，
       # 不在就整条跳过（step 级 if 在 checkout 之后评估，hashFiles 才看得到文件）。
       - name: Setup Node
         if: ${{ hashFiles('backend/package.json') != '' }}
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7
         with:
           node-version: '24'
           cache: 'npm'

@@ -1,0 +1,82 @@
+# detekt 配置 —— 只保留「能抓真 bug」的规则。
+#
+# 原则：
+#   保留 potential-bugs / exceptions —— 这些是错，不是风格
+#   关掉注释类规则 —— 模板代码不该被逼着写 KDoc
+#   风格类的按本仓库现状放宽（行宽 160、Compose 命名、Res 包整包导入）
+complexity:
+  LongParameterList:
+    active: false
+  LongMethod:
+    active: false
+  LargeClass:
+    active: false
+  TooManyFunctions:
+    active: false
+  CyclomaticComplexMethod:
+    active: false
+  NestedBlockDepth:
+    active: false
+
+style:
+  MagicNumber:
+    active: false
+  UnusedPrivateMember:
+    active: true
+    # @Preview 函数只有 IDE 用得上，detekt 看不见 —— 放行
+    allowedNames: '.*Preview|.*Test|.*Spec|.*Sample|.*Example'
+  UnusedParameter:
+    # 模板组件的参数是公开契约的一部分（下游按同一套签名用），留着不报错
+    active: false
+  WildcardImport:
+    active: true
+    # compose-resources 生成的 Res 包整包导入是官方写法（Res.string.x）
+    excludeImports: ['*.res.*']
+  MaxLineLength:
+    maxLineLength: 160
+  ReturnCount:
+    active: false
+  LoopWithTooManyJumpStatements:
+    # 解析 Markdown / 日期这类逻辑本来就是 continue 满天飞，重构收益不抵风险
+    active: false
+  ForbiddenComment:
+    active: true
+    comments:
+      - reason: '待办必须有 owner'
+        value: 'TODO:'
+      - reason: 'FIXME 说明为什么留着'
+        value: 'FIXME:'
+  ThrowsCount:
+    active: false
+
+naming:
+  # @Composable 函数按 Compose 约定是 PascalCase，detekt 默认当违规
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
+    # iOS 入口函数 MainViewController() 是 Swift 侧的命名，改名会动到 apps/*/ios 的 Swift 代码
+    excludes: ['**/iosMain/**', '**/commonTest/**', '**/test/**', '**/*Test/**']
+  # 文件名和唯一顶层声明不一致：theme 文件习惯一个文件一个配色方案，规则在这没意义
+  MatchingDeclarationName:
+    active: false
+  TopLevelPropertyNaming:
+    active: false
+  VariableNaming:
+    active: false
+
+comments:
+  active: false
+
+exceptions:
+  TooGenericExceptionCaught:
+    active: false
+  SwallowedException:
+    active: true
+  InstanceOfCheckForException:
+    active: false
+
+empty-blocks:
+  active: true
+
+potential-bugs:
+  active: true

@@ -5,9 +5,16 @@ plugins {
     id("org.jetbrains.kotlin.plugin.compose")
     id("org.jetbrains.kotlin.plugin.serialization")
     id("org.jetbrains.compose")
+    id("io.gitlab.arturbosch.detekt")
 }
 
 kotlin { jvmToolchain(17) }
+
+detekt {
+    buildUponDefaultConfig = true
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    source.setFrom(fileTree("src") { include("**/kotlin/**/*.kt") })
+}
 
 dependencies {
     implementation(project(":kit"))

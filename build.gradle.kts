@@ -8,4 +8,6 @@ plugins {
     alias(libs.plugins.kotlin.plugin.compose) apply false
     alias(libs.plugins.kotlin.plugin.serialization) apply false
     alias(libs.plugins.compose) apply false
+    alias(libs.plugins.detekt) apply false
+    alias(libs.plugins.binary.compatibility.validator) apply false
 }

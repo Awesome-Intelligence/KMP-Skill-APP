@@ -1,0 +1,21 @@
+# 谁改哪块，要自动被拉来 review。
+# 规则：最后一条匹配生效；后面的行覆盖前面的。
+#
+# ⚠️ 换成你自己的账号/团队 —— 现在写的是仓库作者，fork 之后记得改。
+#    没有权限的账号写在这里 GitHub 不会报错，只会静默失效。
+
+# 默认：底座任何改动都要底座维护者过目
+* @zackal
+
+# 底座目录（改了会跟上游冲突，改动要更谨慎）
+/kit/ @zackal
+/kit-agent-koog/ @zackal
+/backend/ @zackal
+/.github/ @zackal
+
+# 示例 app：fork 之后通常会整个换掉
+/apps/demo/ @zackal
+
+# 锁文件：升级依赖才动，别顺手改
+/gradle/libs.versions.toml @zackal
+/backend/package-lock.json @zackal

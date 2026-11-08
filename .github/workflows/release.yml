@@ -21,6 +21,10 @@ concurrency:
   group: release
   cancel-in-progress: false
 
+# 默认只读；release job 要发 GitHub Release，单独提权到 write
+permissions:
+  contents: read
+
 env:
   JAVA_VERSION: '17'
   # 刻意不设 ANDROID_COMPILE_SDK：compileSdk 的唯一出处是各模块 build.gradle.kts，
@@ -31,22 +35,24 @@ jobs:
   release:
     name: Release Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
         with:
           fetch-depth: 0
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
           cache: 'gradle'
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v4
+        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
 
       # Gradle 缓存交给 setup-java 的 cache: 'gradle'（它已经缓存 ~/.gradle/caches + ~/.gradle/wrapper），
       # 别再叠一个 actions/cache —— 两个 action 写同一个目录、key 还不一样，只会互相打架。
@@ -54,33 +60,54 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
-      # 这个 job 需要仓库里配好 secret KEYSTORE_BASE64（keystore 文件的 base64）。
-      # 没配的话 base64 -d 会得到一个空文件，报错会出现在后面的签名步骤，很难往回找。
+      # 这个 job 需要仓库里配好 4 个 secret：
+      #   KEYSTORE_BASE64    keystore 文件的 base64
+      #   KEYSTORE_PASSWORD  keystore 密码
+      #   KEY_ALIAS          签名 key 别名
+      #   KEY_PASSWORD       key 密码（和 keystore 密码一样也单独配）
+      # 没配就当场失败，别等后面的签名步骤才报错 —— 那时候已经白编了 4 分钟。
       - name: Decode Keystore
         env:
           KEYSTORE_BASE64: ${{ secrets.KEYSTORE_BASE64 }}
         run: |
+          if [ -z "$KEYSTORE_BASE64" ]; then
+            echo "::error::secret KEYSTORE_BASE64 没配，release 无法签名"
+            exit 1
+          fi
           echo "$KEYSTORE_BASE64" | base64 -d > apps/demo/release.keystore
+          [ -s apps/demo/release.keystore ] || { echo "::error::keystore 解码后是空的"; exit 1; }
 
       # 发布的是示例 app（:apps:demo）。各 app fork 本仓库后，把这份 workflow 拷成自己的
       # release-<name>.yml（fork 自己拥有，改了不冲突），模块名、keystore、产物名换掉。
+      # 签名配置在 apps/demo/build.gradle.kts：keystore 存在 + 三个密码齐了才签，
+      # 本地没配这些环境变量时照样能编（产物是 unsigned）。
       - name: Build release APK
         env:
           VERSION_NAME: ${{ github.event.inputs.version || github.ref_name }}
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
           ./gradlew :apps:demo:assembleRelease \
             -PVERSION_NAME=$VERSION_NAME \
             --no-daemon
 
+      # AGP 的产物名 = 模块名-变体：签了名是 demo-release.apk，没签是 demo-release-unsigned.apk。
+      # 只认签名过的那个，unsigned 混进 Release 里装不上还查不出来。
       - name: Rename APK
         env:
           VERSION_NAME: ${{ github.event.inputs.version || github.ref_name }}
         run: |
           cd apps/demo/build/outputs/apk/release
-          mv app-release.apk "Android-Kit-$VERSION_NAME.apk"
+          ls -l
+          if [ ! -f demo-release.apk ]; then
+            echo "::error::没有 demo-release.apk —— 签名没生效，检查 4 个 secret"
+            exit 1
+          fi
+          mv demo-release.apk "Android-Kit-$VERSION_NAME.apk"
 
       - name: Upload release APK
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         with:
           name: release-apk
           path: apps/demo/build/outputs/apk/release/Android-Kit-*.apk
@@ -88,7 +115,7 @@ jobs:
 
       - name: Upload mapping file
         if: success()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         with:
           name: mapping-file
           path: apps/demo/build/outputs/mapping/release/mapping.txt
@@ -100,7 +127,7 @@ jobs:
           VERSION_NAME: ${{ github.event.inputs.version || github.ref_name }}
           IS_PRERELEASE: ${{ github.event.inputs.is_prerelease || 'false' }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: softprops/action-gh-release@v3
+        uses: softprops/action-gh-release@8a0cd651e5b2365bd640854a3fa5dfc70e4875f3  # v3
         with:
           tag_name: ${{ github.event.inputs.version && format('v{0}', github.event.inputs.version) || github.ref_name }}
           name: Release ${{ github.event.inputs.version || github.ref_name }}
@@ -116,10 +143,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -133,7 +160,7 @@ jobs:
         run: ./gradlew :kit:packageDeb --no-daemon
 
       - name: Upload desktop packages
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         with:
           name: desktop-deb
           path: kit/build/compose/binaries/main/deb/*.deb
@@ -145,10 +172,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -161,7 +188,7 @@ jobs:
         run: ./gradlew :kit:packageDmg --no-daemon
 
       - name: Upload desktop packages
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         with:
           name: desktop-dmg
           path: kit/build/compose/binaries/main/dmg/*.dmg
@@ -173,10 +200,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@v6
+        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
         with:
           java-version: ${{ env.JAVA_VERSION }}
           distribution: 'temurin'
@@ -190,7 +217,7 @@ jobs:
         run: ./gradlew :kit:linkReleaseFrameworkIosArm64 :kit:linkReleaseFrameworkIosSimulatorArm64 --no-daemon
 
       - name: Upload iOS frameworks
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
         if: success()
         with:
           name: ios-frameworks

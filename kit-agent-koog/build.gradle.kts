@@ -7,6 +7,9 @@ plugins {
     id("org.jetbrains.kotlin.multiplatform")
     // skill 的工具入参用 @Serializable 数据类声明
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("io.gitlab.arturbosch.detekt")
+    // 公开 API 的二进制兼容性：改了签名就 apiCheck 失败（除非显式更新 api/*.api）
+    id("org.jetbrains.kotlinx.binary-compatibility-validator")
 }
 
 // Apple target 只能在 macOS host 上编（Kotlin/Native 限制），和 :kit 保持一致。
@@ -68,5 +71,26 @@ kotlin {
                 }
             }
         }
+    }
+}
+
+detekt {
+    // 规则集在 config/detekt/detekt.yml（根目录，共享给所有模块）
+    // buildUponDefaultConfig 只能写在 Gradle 侧：yml 里没这个 key，写进去会被校验判为非法属性
+    buildUponDefaultConfig = true
+    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
+    // KMP 的源码不在 src/main/java 下，detekt 默认扫不到 —— 手动列出来
+    source.setFrom(
+        fileTree("src") { include("**/kotlin/**/*.kt") },
+    )
+}
+
+apiValidation {
+    // 只校验 JVM（desktop）那一份 API。
+    // klib（Kotlin/Native）那份只在 macOS 上才编得出来 —— 在 Windows 上生成基线，
+    // 到 macOS 上 apiCheck 就会因为「基线里没有 ios 的 klib」而失败。
+    // ponytail: 只跑 JVM 一份，跨平台一致；等 CI 稳定了再补 klib。
+    klib {
+        enabled = false
     }
 }
