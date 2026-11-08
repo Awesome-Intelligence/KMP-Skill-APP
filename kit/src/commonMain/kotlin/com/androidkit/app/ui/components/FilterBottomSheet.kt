@@ -217,7 +217,7 @@ fun DateRangeFilter(
         Row(
             modifier = Modifier
                 .weight(1f)
-                .clip(RoundedCornerShape(12.dp))
+                .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable(onClick = onStartDateClick)
                 .padding(12.dp),
@@ -251,7 +251,7 @@ fun DateRangeFilter(
         Row(
             modifier = Modifier
                 .weight(1f)
-                .clip(RoundedCornerShape(12.dp))
+                .clip(MaterialTheme.shapes.medium)
                 .background(MaterialTheme.colorScheme.surfaceVariant)
                 .clickable(onClick = onEndDateClick)
                 .padding(12.dp),
@@ -311,17 +311,17 @@ fun MoodFilterChips(
             val isSelected = selectedMoods.contains(mood)
             Row(
                 modifier = Modifier
-                    .clip(RoundedCornerShape(8.dp))
+                    .clip(MaterialTheme.shapes.small)
                     .then(
                         if (isSelected) {
                             Modifier.background(
                                 MaterialTheme.colorScheme.primaryContainer,
-                                RoundedCornerShape(8.dp)
+                                MaterialTheme.shapes.small
                             )
                         } else {
                             Modifier.background(
                                 MaterialTheme.colorScheme.surfaceVariant,
-                                RoundedCornerShape(8.dp)
+                                MaterialTheme.shapes.small
                             )
                         }
                     )

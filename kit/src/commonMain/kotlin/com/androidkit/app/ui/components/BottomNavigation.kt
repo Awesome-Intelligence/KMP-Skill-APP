@@ -58,7 +58,7 @@ fun AppBottomNavigation(
                         Box(
                             modifier = Modifier
                                 .size(width = 48.dp, height = 32.dp)
-                                .clip(RoundedCornerShape(12.dp))
+                                .clip(MaterialTheme.shapes.medium)
                                 .background(MaterialTheme.colorScheme.primary),
                             contentAlignment = Alignment.Center
                         ) {

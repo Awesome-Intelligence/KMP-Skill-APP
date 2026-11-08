@@ -18,6 +18,9 @@
     <string name="back">返回</string>
     <string name="basic_info">基本信息</string>
     <string name="bold">粗体</string>
+    <string name="bitmap_a11y_chart">点阵图表</string>
+    <string name="bitmap_a11y_number_value">数值 %1$s</string>
+    <string name="bitmap_a11y_typewriter">文字内容 %1$s</string>
     <string name="bullet_list">无序列表</string>
     <string name="calendar_view">日历视图</string>
     <string name="cancel">取消</string>

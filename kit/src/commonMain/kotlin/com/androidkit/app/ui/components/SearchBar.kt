@@ -67,7 +67,7 @@ fun SearchBar(
         modifier = modifier
             .fillMaxWidth()
             .height(56.dp)
-            .clip(RoundedCornerShape(28.dp))
+            .clip(MaterialTheme.shapes.extraLarge)
             .background(MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.8f)),
         contentAlignment = Alignment.CenterStart
     ) {

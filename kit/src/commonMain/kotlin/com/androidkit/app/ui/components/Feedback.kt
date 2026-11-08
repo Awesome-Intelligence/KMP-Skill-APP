@@ -44,7 +44,7 @@ fun AppSnackbar(
         modifier = modifier.padding(horizontal = 16.dp),
         containerColor = MaterialTheme.colorScheme.inverseSurface,
         contentColor = MaterialTheme.colorScheme.inverseOnSurface,
-        shape = RoundedCornerShape(8.dp)
+        shape = MaterialTheme.shapes.small
     ) {
         Row(
             horizontalArrangement = Arrangement.spacedBy(8.dp),

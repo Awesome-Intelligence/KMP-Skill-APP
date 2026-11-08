@@ -17,6 +17,9 @@
     <string name="back">Back</string>
     <string name="basic_info">Basic info</string>
     <string name="bold">Bold</string>
+    <string name="bitmap_a11y_chart">Dot-matrix chart</string>
+    <string name="bitmap_a11y_number_value">Value %1$s</string>
+    <string name="bitmap_a11y_typewriter">Text content %1$s</string>
     <string name="bullet_list">Bulleted list</string>
     <string name="calendar_view">Calendar view</string>
     <string name="cancel">Cancel</string>

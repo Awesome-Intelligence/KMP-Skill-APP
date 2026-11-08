@@ -76,7 +76,7 @@ fun PrimaryButton(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
@@ -100,7 +100,7 @@ fun SecondaryButton(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
     ) {
         if (icon != null) {
@@ -126,7 +126,7 @@ fun SmallSecondaryButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         contentPadding = ButtonDefaults.TextButtonContentPadding
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
@@ -468,7 +468,7 @@ fun DeleteButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.colorScheme.error
         )

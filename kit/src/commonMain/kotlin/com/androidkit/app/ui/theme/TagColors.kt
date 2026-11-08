@@ -6,7 +6,11 @@ import androidx.compose.ui.graphics.Color
 
 @Composable
 private fun tagColorPalette(): Map<String, Color> =
-    if (LocalIsDarkTheme.current) DarkTagColors else LightTagColors
+    if (LocalThemeStyle.current == ThemeStyle.Bitmap) {
+        if (LocalIsDarkTheme.current) BitmapDarkTagColors else BitmapLightTagColors
+    } else {
+        if (LocalIsDarkTheme.current) DarkTagColors else LightTagColors
+    }
 
 /**
  * 标签色板 — M3 Tonal Palette 精简版，仅 6 个核心色调。

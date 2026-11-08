@@ -36,12 +36,12 @@ class SafStorageEngine(
                 mimeOf(codec.extension),
                 filename
             )
-            ?: throw IllegalStateException("Failed to create document: $filename")
+            ?: error("Failed to create document: $filename")
 
         val fileContent = codec.encode(entity)
         contentResolver.openOutputStream(fileUri, "wt")?.use { os ->
             os.write(fileContent.toByteArray(Charsets.UTF_8))
-        } ?: throw IllegalStateException("Failed to open output stream: $filename")
+        } ?: error("Failed to open output stream: $filename")
     }
 
     override suspend fun read(subdir: String, entityId: String): StoredEntity? =
@@ -89,11 +89,11 @@ class SafStorageEngine(
                     mimeType,
                     filename
                 )
-                ?: throw IllegalStateException("Failed to create document: $filename")
+                ?: error("Failed to create document: $filename")
 
             contentResolver.openOutputStream(fileUri, "wt")?.use { os ->
                 os.write(bytes)
-            } ?: throw IllegalStateException("Failed to open output stream: $filename")
+            } ?: error("Failed to open output stream: $filename")
         }
 
     override suspend fun readBinary(subdir: String, filename: String): ByteArray? =
@@ -131,7 +131,7 @@ class SafStorageEngine(
                     contentResolver, dirUri,
                     DocumentsContract.Document.MIME_TYPE_DIR, segment
                 )
-                ?: throw IllegalStateException("Failed to create subdirectory: $segment")
+                ?: error("Failed to create subdirectory: $segment")
         }
         return dirUri
     }

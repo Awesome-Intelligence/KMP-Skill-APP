@@ -64,7 +64,7 @@ fun ConfirmDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier,
-            shape = RoundedCornerShape(28.dp),
+            shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 0.dp
         ) {
@@ -76,7 +76,7 @@ fun ConfirmDialog(
                 if (icon != null) {
                     Surface(
                         modifier = Modifier.size(64.dp),
-                        shape = RoundedCornerShape(16.dp),
+                        shape = MaterialTheme.shapes.large,
                         color = iconBackgroundColor ?: MaterialTheme.colorScheme.primaryContainer
                     ) {
                         Icon(
@@ -141,7 +141,7 @@ fun SelectDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier,
-            shape = RoundedCornerShape(28.dp),
+            shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 0.dp
         ) {
@@ -251,7 +251,7 @@ fun InputDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             modifier = modifier,
-            shape = RoundedCornerShape(28.dp),
+            shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 0.dp
         ) {
@@ -322,7 +322,7 @@ fun LoadingDialog(
     ) {
         Surface(
             modifier = modifier,
-            shape = RoundedCornerShape(28.dp),
+            shape = MaterialTheme.shapes.extraLarge,
             color = MaterialTheme.colorScheme.surface,
             tonalElevation = 0.dp
         ) {

@@ -122,7 +122,7 @@ fun MarkdownEditor(
                 .weight(1f, fill = true)
                 .background(
                     color = MaterialTheme.colorScheme.surface,
-                    shape = RoundedCornerShape(12.dp)
+                    shape = MaterialTheme.shapes.medium
                 )
                 .padding(12.dp)
         ) {
@@ -329,13 +329,6 @@ fun MarkdownPreview(
 }
 
 private enum class WikiLinkType { GOAL, CONTACT }
-
-private data class WikiLinkPart(
-    val id: String,
-    val displayName: String,
-    val displayText: String,
-    val type: WikiLinkType
-)
 
 private sealed class ContentPart {
     data class WikiLink(val id: String, val displayName: String, val displayText: String, val type: WikiLinkType) : ContentPart()

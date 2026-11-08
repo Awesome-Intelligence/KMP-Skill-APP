@@ -61,7 +61,7 @@ fun rememberSpeechLauncher(
         }
         try {
             speechLauncher.launch(intent)
-        } catch (e: ActivityNotFoundException) {
+        } catch (_: ActivityNotFoundException) {
             currentOnError(voiceNotAvailable)
         }
     }

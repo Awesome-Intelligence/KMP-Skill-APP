@@ -73,7 +73,7 @@ fun <T> SelectDropdown(
             },
             singleLine = true,
             // GOOGLE_STYLE：输入控件统一 12dp 圆角（覆盖 M3 默认 4dp）
-            shape = RoundedCornerShape(12.dp)
+            shape = MaterialTheme.shapes.medium
         )
 
         ExposedDropdownMenu(

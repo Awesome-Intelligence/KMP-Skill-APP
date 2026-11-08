@@ -120,7 +120,7 @@ fun FilterChip(
             borderWidth = 0.dp,
             selectedBorderWidth = 2.dp,
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = MaterialTheme.shapes.medium
     )
 }
 
@@ -169,7 +169,7 @@ fun AnswerChip(
             Text(text = text, style = MaterialTheme.typography.labelLarge)
         },
         modifier = modifier,
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         colors = AssistChipDefaults.assistChipColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLowest,
             labelColor = MaterialTheme.colorScheme.onSurface
@@ -305,7 +305,7 @@ fun SelectableTag(
             disabledBorderColor = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.12f),
             disabledSelectedBorderColor = Color.Transparent,
         ),
-        shape = RoundedCornerShape(12.dp)
+        shape = MaterialTheme.shapes.medium
     )
 }
 
@@ -323,7 +323,7 @@ fun AppBadge(
         style = MaterialTheme.typography.labelMedium,
         color = MaterialTheme.colorScheme.onPrimaryContainer,
         modifier = modifier
-            .background(MaterialTheme.colorScheme.primaryContainer, RoundedCornerShape(8.dp))
+            .background(MaterialTheme.colorScheme.primaryContainer, MaterialTheme.shapes.small)
             .padding(horizontal = 8.dp, vertical = 4.dp)
     )
 }

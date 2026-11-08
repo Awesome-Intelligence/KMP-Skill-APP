@@ -363,7 +363,7 @@ fun ExpandedAvatarRow(
         contacts.forEach { contact ->
             Surface(
                 modifier = Modifier.clickable { onContactClick(contact) },
-                shape = RoundedCornerShape(12.dp),
+                shape = MaterialTheme.shapes.medium,
                 color = MaterialTheme.colorScheme.surfaceVariant,
                 tonalElevation = 1.dp
             ) {

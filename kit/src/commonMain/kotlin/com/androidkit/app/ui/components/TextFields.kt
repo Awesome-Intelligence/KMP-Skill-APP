@@ -80,7 +80,9 @@ fun SimpleTextField(
         isError = isError,
         label = if (label.isNotEmpty()) { { Text(label) } } else null,
         placeholder = if (placeholder.isNotEmpty()) { { Text(placeholder) } } else null,
-        supportingText = supportingText?.let { { Text(it, color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant) } },
+        supportingText = supportingText?.let {
+            { Text(it, color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant) }
+        },
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
@@ -112,7 +114,7 @@ fun ComposerField(
 ) {
     Row(
         modifier = modifier
-            .clip(RoundedCornerShape(28.dp))
+            .clip(MaterialTheme.shapes.extraLarge)
             .background(MaterialTheme.colorScheme.surfaceContainerHigh)
             .padding(start = 20.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
         verticalAlignment = Alignment.Bottom
@@ -189,7 +191,9 @@ object TextFields {
             isError = isError,
             label = if (label.isNotEmpty()) { { Text(label) } } else null,
             placeholder = if (placeholder.isNotEmpty()) { { Text(placeholder) } } else null,
-            supportingText = supportingText?.let { { Text(it, color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant) } },
+            supportingText = supportingText?.let {
+            { Text(it, color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant) }
+        },
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,

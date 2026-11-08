@@ -86,7 +86,7 @@ fun AIInsightCard(
     val ext = MaterialTheme.extendedColors
     Card(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -174,7 +174,7 @@ fun AIInsightCard(
  * AISuggestionChip 和记录页的总结浮层共用同一套质感。
  */
 @Composable
-fun Modifier.aiGlassSurface(shape: Shape = RoundedCornerShape(12.dp)): Modifier {
+fun Modifier.aiGlassSurface(shape: Shape = MaterialTheme.shapes.medium): Modifier {
     val ext = MaterialTheme.extendedColors
     // drawBehind 的 lambda 不是 composable，颜色必须在外面取
     val glassTint = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f)
@@ -242,7 +242,7 @@ fun AISuggestionItem(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .aiGlassSurface(RoundedCornerShape(12.dp))
+            .aiGlassSurface(MaterialTheme.shapes.medium)
     ) {
         Row(
             modifier = Modifier
@@ -336,7 +336,7 @@ fun AILoadingSkeleton(
 
     Surface(
         modifier = modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -488,7 +488,7 @@ fun AIActionButton(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         enabled = enabled,
-        shape = RoundedCornerShape(12.dp),
+        shape = MaterialTheme.shapes.medium,
         colors = ButtonDefaults.buttonColors(
             containerColor = MaterialTheme.extendedColors.aiContainer,
             contentColor = MaterialTheme.extendedColors.onAiContainer
@@ -506,20 +506,6 @@ fun AIActionButton(
     }
 }
 
-// ─── Horizontal Divider (local) ───────────────────────────────────────────────
-
-@Composable
-private fun HorizontalDivider(
-    modifier: Modifier = Modifier,
-    color: Color = MaterialTheme.colorScheme.outlineVariant
-) {
-    Box(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(1.dp)
-            .background(color)
-    )
-}
 
 // ─── Previews ────────────────────────────────────────────────────────────────
 

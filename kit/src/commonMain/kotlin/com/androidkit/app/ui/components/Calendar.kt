@@ -118,7 +118,7 @@ fun AppCalendar(
 
     Column(
         modifier = modifier
-            .clip(RoundedCornerShape(12.dp))
+            .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surface)
             .padding(16.dp)
     ) {
@@ -267,7 +267,7 @@ private fun CalendarHeader(
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurface,
             modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
+                .clip(MaterialTheme.shapes.small)
                 .clickable(
                     interactionSource = remember { MutableInteractionSource() },
                     enabled = onViewModeChange != null,

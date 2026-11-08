@@ -1,6 +1,7 @@
 package com.androidkit.app.ui.components
 
 import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Shape
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,7 +37,7 @@ import com.androidkit.app.ui.theme.rememberBreathingAlpha
 @Composable
 private fun ShimmerBox(
     modifier: Modifier = Modifier,
-    shape: RoundedCornerShape = RoundedCornerShape(8.dp)
+    shape: Shape = MaterialTheme.shapes.small
 ) {
     val breathing = rememberBreathingAlpha(minAlpha = 0.55f)
 
@@ -165,7 +166,7 @@ fun SkeletonCard(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .clip(RoundedCornerShape(12.dp))
+            .clip(MaterialTheme.shapes.medium)
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .padding(cardPadding),
         content = content
@@ -184,7 +185,7 @@ fun SkeletonGridItem(
         modifier = modifier
             .fillMaxWidth()
             .height(itemHeight),
-        shape = RoundedCornerShape(16.dp)
+        shape = MaterialTheme.shapes.large
     )
 }
 
@@ -251,7 +252,7 @@ fun GoalListSkeleton(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(56.dp),
-            shape = RoundedCornerShape(28.dp)
+            shape = MaterialTheme.shapes.extraLarge
         )
         Spacer(modifier = Modifier.height(8.dp))
         // 标签栏骨架
@@ -566,7 +567,7 @@ fun ShimmerBoxPreview() {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(60.dp),
-            shape = RoundedCornerShape(12.dp)
+            shape = MaterialTheme.shapes.medium
         ) // ponytail: demo data only
     }
 }
