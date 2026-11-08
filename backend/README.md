@@ -16,7 +16,7 @@ npm run smoke          # 不花钱的检查：skill 加载 + 契约校验 + SSE 
 npm run dev            # http://localhost:8787
 ```
 
-> CI：`ci/ci.yml` 里的 `Backend (gateway)` job 每次 push 跑 `npm ci` → `npm run check`
+> CI：`.github/workflows/ci.yml` 里的 `Backend (gateway)` job 每次 push 跑 `npm ci` → `npm run check`
 > → `npm run smoke` → 起一次真服务器打 `/health` 和 `/v1/skills`。
 > 消费方项目没装 backend/ 时这条 job 自动跳过。
 
@@ -63,6 +63,47 @@ output: { type: object, ... }
 - skill 是**服务端控制的可执行逻辑**，永远不接受客户端上传/指定 skill 文件。
 - 工具走白名单（frontmatter `tools`），默认空；**不要**给 `Bash`、任意文件写这类工具。
 - `settingSources: []`：网关不读宿主机 CLAUDE.md/settings，行为确定。
-- 鉴权只有一个共享 Bearer token（`GATEWAY_TOKEN`）；做多用户时换成按用户的 token，
-  并把 sessionId 按 userId 隔离（`resume` 会接着别人的会话——现在靠 token 挡）。
 - API key 只在服务端。
+- **日志只记事件类型**（一行一个 JSON，见 `src/log.ts`）：记 userId / skillId / sessionId / 耗时 / 结果，
+  **不记对话正文、不记工具返回内容**（那些是用户隐私）。
+
+## 多用户
+
+```bash
+# GATEWAY_TOKENS="alice:tok-a,bob:tok-b" —— token 直接认用户
+GATEWAY_TOKENS="alice:tok-a,bob:tok-b" npm run dev
+```
+
+- `GATEWAY_TOKEN` 是单用户模式（userId 固定 `default`），行为和以前一样。
+- `GATEWAY_TOKENS` 是多用户模式，格式 `userId:token` 逗号分隔。
+- 两个都没配 = 不鉴权（**仅本机开发**）。
+- token 用定长比较（`timingSafeEqual`），不逐字节比。
+
+**session 按 userId 隔离**：`resume` 会让 agent 接着那个 session 继续跑 —— 客户端如果能随便传
+别人的 sessionId，就能接着别人的会话问下去（读到他上次的上下文）。所以网关记着
+`sessionId → userId`：
+
+| 情况 | 处理 |
+|---|---|
+| session 是这个用户的 | 正常 resume |
+| session 是**别人**的 | 403，直接拒绝 |
+| 本进程没见过 | 当新会话开（服务重启过 / 别的实例产的），**绝不拿它去 resume** |
+
+表在内存里，重启就丢 —— 要跨重启 resume 就落盘。
+
+## 限流
+
+每个用户每分钟最多 `RATE_LIMIT_PER_MIN`（默认 60）次请求，超了 429 + `Retry-After: 60`。
+一次 invoke 就是一次真金白银的模型请求，这道闸门是账单保险。
+
+## 环境变量
+
+| 变量 | 默认 | 说明 |
+|---|---|---|
+| `PORT` | 8787 | 端口 |
+| `SKILLS_DIR` | `backend/skills/` | skill 目录 |
+| `GATEWAY_TOKEN` | 无 | 单用户 token；不配 = 不鉴权（仅本机开发） |
+| `GATEWAY_TOKENS` | 无 | 多用户：`userId:token,userId:token` |
+| `RATE_LIMIT_PER_MIN` | 60 | 每用户每分钟请求上限 |
+| `AGENT_MODEL` | claude-opus-5-5 | 模型 |
+| `ANTHROPIC_API_KEY` | 无 | **只在服务端**，客户端不带 |

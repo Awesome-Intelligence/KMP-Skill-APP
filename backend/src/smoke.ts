@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import express from "express";
 import { loadSkills, inputError, parseOutput } from "./skills.js";
 import { abortOnDisconnect } from "./sse.js";
+import { mayResume, RateLimiter, userOf } from "./guard.js";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -65,3 +66,36 @@ async function checkAbortOnDisconnect() {
 
 await checkAbortOnDisconnect();
 console.log("smoke 通过: SSE 断连检测");
+
+/**
+ * 安全边界自检：鉴权 → userId、session 归属、限流。
+ * 这三条出错的后果是「接着别人的会话跑」或者「刷爆模型账单」，必须挡住。
+ */
+function checkGuards() {
+  // 鉴权
+  const multi = "alice:tok-a,bob:tok-b";
+  assert.equal(userOf("Bearer tok-a", multi), "alice", "alice 的 token 应该认出 alice");
+  assert.equal(userOf("Bearer tok-b", multi), "bob");
+  assert.equal(userOf("Bearer tok-c", multi), null, "别人的 token 不能被认出来");
+  assert.equal(userOf("", multi), null, "没带 token 不能通过");
+  assert.equal(userOf("Bearer x", undefined, "single"), null, "单用户模式也要验 token");
+  assert.equal(userOf("Bearer single", undefined, "single"), "default");
+  assert.equal(userOf("", undefined, undefined), "default", "没配 token = 本机开发，放行");
+
+  // session 归属
+  const registry = new Map<string, string>([["s1", "alice"]]);
+  assert.equal(mayResume(registry, "s1", "alice"), "resume", "自己的 session 要能接着跑");
+  assert.equal(mayResume(registry, "s1", "bob"), "forbidden", "别人的 session 必须拒绝");
+  assert.equal(mayResume(registry, "s-unknown", "bob"), "new", "没见过的 session 当新的，别 resume");
+
+  // 限流
+  const limiter = new RateLimiter(3, () => 1000);
+  assert.equal(limiter.hit("u"), false);
+  assert.equal(limiter.hit("u"), false);
+  assert.equal(limiter.hit("u"), false);
+  assert.equal(limiter.hit("u"), true, "第 4 次要超限");
+  assert.equal(limiter.hit("other"), false, "限流要按 key 分开");
+}
+
+checkGuards();
+console.log("smoke 通过: 鉴权 / session 归属 / 限流");
