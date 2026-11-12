@@ -1,0 +1,63 @@
+name: Base Guard
+
+# 底座保护 —— fork 不许改底座文件，改了就红。
+#
+# 用 pull_request_target 而不是 pull_request：
+#   pull_request 跑的是「PR 的代码」，fork 改一下这个文件就能把自己放过去；
+#   pull_request_target 永远用 base 分支的 workflow，PR 碰不到它。
+# 安全性：这里只 git fetch + git diff，不 checkout、不执行 PR 里的任何代码。
+#
+# 谁在什么时候被拦：
+#   - 外部 PR（fork 提给上游）：比对 base sha ↔ PR head，碰底座 → 失败。
+#   - 本仓库自己的 PR（上游作者改底座）：跳过 —— 上游本来就该能改底座。
+#   - fork 自己仓库里的 PR：比对上游默认分支（guard-self job），提前拦。
+
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened]
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    name: 底座路径未被改动
+    runs-on: ubuntu-latest
+    # 上游自己的 PR 不拦（作者有权改底座）；外部 fork 的 PR 才拦。
+    if: github.event.pull_request.head.repo.full_name != github.repository
+
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+
+      - name: Fetch PR head
+        run: git fetch --no-tags origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-head
+
+      - name: Check
+        run: bash scripts/check-base-unchanged.sh --base ${{ github.event.pull_request.base.sha }} --head pr-head
+
+  guard-self:
+    name: 底座路径未被改动（相对上游）
+    runs-on: ubuntu-latest
+    # 这个仓库本身是 fork（github.event.repository.parent 存在）时，
+    # 自己仓库里的 PR 也要按上游的底座清单来查。
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.event.repository.parent != null
+
+    steps:
+      - name: Checkout base
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
+        with:
+          ref: ${{ github.event.pull_request.base.sha }}
+          fetch-depth: 0
+
+      - name: Fetch PR head
+        run: git fetch --no-tags origin +refs/pull/${{ github.event.pull_request.number }}/head:pr-head
+
+      - name: Fetch upstream base
+        run: git fetch --no-tags https://github.com/${{ github.event.repository.parent.full_name }}.git ${{ github.event.repository.parent.default_branch }}:upstream-base
+
+      - name: Check
+        run: bash scripts/check-base-unchanged.sh --base upstream-base --head pr-head

@@ -6,6 +6,7 @@
 ## [未发布]
 
 ### 新增
+- **底座保护门禁（fork 不许改底座）**：`scripts/check-base-unchanged.sh` 列出底座路径（`kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/ci.yml`、`settings.gradle.kts`…），改动碰到就失败；`.github/workflows/base-guard.yml` 用 `pull_request_target` 在 PR 上强制它 —— workflow 永远取 base 分支的版本，fork 改不动，PR 碰底座路径直接红，合并不进来。fork 本地 `bash scripts/ci.sh base-guard`（`ci.sh all` 已包含）提前自查
 - **kit 新主题 Notion（文档风格）**：`ThemeStyle.Notion` + `notionThemeTokens(isDark)` —— 米色纸面 `#f7f6f3` + 墨色 `#37352f` + 1px 发丝线 `#e9e7e4`，圆角一律 4px、零渐变零重阴影、150ms ease-out 只变色。规范来自 StyleKit `notion-style`
 - **kit `ui/theme/ColorNotion.kt` / `TypeNotion.kt` / `MotionNotion.kt`**：规范只给了浅色，深色版是自建的语义反转（墨底 + 纸字）；悬停灰 `#efedea` / 按下灰 `#e3e1db` 分别落在 `surfaceVariant` / `surfaceContainerHighest` 两个槽位上
 - **kit `ui/components/NotionComponents.kt`**：规范里的四个角色 —— `NotionBlockRow`（悬停/聚焦淡入拖拽手柄 ⋮⋮，Drag Handle Illusion）、`NotionGhostButton`（透明底、悬停 `#efedea` / 按下 `#e3e1db`）、`NotionInlineInput`（聚焦只有一条 1px 底线，无外圈）、`NotionCallout`（淡底 + 4px 圆角 + 左侧图标槽）

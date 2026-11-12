@@ -197,9 +197,12 @@ session.send(text).collect { log.onEvent(it) }
 靠 `git pull upstream main` 持续跟进底座更新。
 
 0. fork / clone 本仓库，`git remote rename origin upstream`。
-   **唯一规矩：只新增、不改底座文件**（`kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/`、
-   `backend/`、`settings.gradle.kts`）—— 改了，pull 就冲突，更新链就断。
+   **唯一规矩：只新增、不改底座文件**（清单见 `scripts/check-base-unchanged.sh` 的 `PROTECTED_PATHS`：
+   `kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/`、`backend/`、`settings.gradle.kts` …）——
+   改了，pull 就冲突，更新链就断。
    底座能力不够，回上游提 PR，别在下游打补丁。
+   这条规矩由上游的 `base-guard` 门禁强制（PR 碰底座路径直接红），fork 本地
+   `bash scripts/ci.sh base-guard` 提前自查。
 1. 生成 app 壳：`python scripts/new_app.py <name> --package <pkg> --app-name "<显示名>"`。
    `settings.gradle.kts` 自动 include `apps/` 下所有模块（不用注册），CI 自动逐个构建。
    SDK / 签名 / release / detekt 在 `build-logic/` 的约定插件里，app 的 build 文件只留自己的配置。
@@ -255,7 +258,7 @@ session.send(text).collect { log.onEvent(it) }
 workflow 只说「在什么环境跑哪道门禁」；fork 要加自己的门禁，改脚本就行（不动底座路径）。
 
 ```bash
-bash scripts/ci.sh all        # 提交前跑这个：detekt + api + verify + test
+bash scripts/ci.sh all        # 提交前跑这个：detekt + api + verify + test + base-guard
 ```
 
 | 闸门 | 干什么 | 基线在哪 |
@@ -265,6 +268,7 @@ bash scripts/ci.sh all        # 提交前跑这个：detekt + api + verify + tes
 | 依赖校验 | 依赖被换包/篡改就失败 | `gradle/verification-metadata.xml` |
 | `verify-kit.py` / `verify-skills.py` / `verify-i18n.py` | import / `Res.string` / DemoData 断裂；skill 工具有没有把业务逻辑写进 tool；values 和 values-en 的 key 对不对齐 | — |
 | `scripts/checks/*.sh` | **fork 自己的门禁** —— 放个脚本进去就自动跑 | — |
+| base-guard | 改动碰到底座路径（`kit/`、`rules/`、`.github/`…）就失败 | `scripts/check-base-unchanged.sh` |
 | 单元测试 | `kit` / `kit-agent-koog` / `kit-membership` 的 `desktopTest` + `apps/*` 的 `testDebugUnitTest` | — |
 
 改了公开 API 想要它合法地变：`./gradlew :kit:apiDump`（会重写基线，review 时看 diff）。

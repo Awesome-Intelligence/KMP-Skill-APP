@@ -17,6 +17,7 @@
 #   bash scripts/ci.sh package-deb   # 打 .deb（只能在 linux 上跑）
 #   bash scripts/ci.sh package-dmg   # 打 .dmg（只能在 macOS 上跑）
 #   bash scripts/ci.sh backend       # agent 网关：类型检查 + 契约冒烟（不花钱、不连网）
+#   bash scripts/ci.sh base-guard   # 底座保护：改动碰到底座路径就失败（fork 必跑）
 #   bash scripts/ci.sh all           # 除 build/* / lint / backend 外全跑（本地提交前跑这个）
 #                                    # backend 没放进来：它要先 npm ci 装依赖，慢且可能需要网
 #
@@ -240,6 +241,21 @@ cmd_package() {
   if ./gradlew ":kit:package${fmt^}" $GRADLE_FLAGS; then ok ".$fmt 打包"; else bad ".$fmt 打包"; fi
 }
 
+# 底座保护：改动碰到底座路径（kit/、rules/、.github/…）就失败。
+# 上游靠 .github/workflows/base-guard.yml 在 PR 上强制它；这里是给 fork 本地自查的。
+cmd_base_guard() {
+  step "base-guard（底座路径未被改动）"
+  if [ ! -f scripts/check-base-unchanged.sh ]; then
+    ok "没有 check-base-unchanged.sh，跳过"
+    return
+  fi
+  if bash scripts/check-base-unchanged.sh "$@"; then
+    ok "base-guard"
+  else
+    bad "base-guard：改了底座路径"
+  fi
+}
+
 cmd_backend() {
   step "agent 网关自检"
   if [ ! -f backend/package.json ]; then
@@ -264,21 +280,22 @@ if [ $# -eq 0 ]; then
   exit 0
 fi
 
-for arg in "$@"; do
-  case "$arg" in
-    detekt)        cmd_detekt ;;
-    api)           cmd_api ;;
-    verify)        cmd_verify ;;
-    test)          cmd_test ;;
-    lint)          cmd_lint ;;
-    build-android) cmd_build_android ;;
-    build-desktop) cmd_build_desktop ;;
-    build-ios)     cmd_build_ios ;;
-    package-deb)   cmd_package deb ;;
-    package-dmg)   cmd_package dmg ;;
-    backend)       cmd_backend ;;
-    all)           cmd_detekt; cmd_api; cmd_verify; cmd_test ;;
-    *)             echo "未知子命令：$arg" >&2; exit 2 ;;
+while [ $# -gt 0 ]; do
+  case "$1" in
+    detekt)        cmd_detekt; shift ;;
+    api)           cmd_api; shift ;;
+    verify)        cmd_verify; shift ;;
+    test)          cmd_test; shift ;;
+    lint)          cmd_lint; shift ;;
+    build-android) cmd_build_android; shift ;;
+    build-desktop) cmd_build_desktop; shift ;;
+    build-ios)     cmd_build_ios; shift ;;
+    package-deb)   cmd_package deb; shift ;;
+    package-dmg)   cmd_package dmg; shift ;;
+    backend)       cmd_backend; shift ;;
+    base-guard)    shift; cmd_base_guard "$@"; break ;;
+    all)           cmd_detekt; cmd_api; cmd_verify; cmd_test; cmd_base_guard; shift ;;
+    *)             echo "未知子命令：$1" >&2; exit 2 ;;
   esac
 done
 

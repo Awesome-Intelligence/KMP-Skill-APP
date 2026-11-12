@@ -11,11 +11,27 @@
 
 **只新增、不改底座文件。**
 
-底座路径：`kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/`、`backend/`、`settings.gradle.kts`。
+底座路径（**唯一真相是 `scripts/check-base-unchanged.sh` 里的 `PROTECTED_PATHS`**）：
+
+| 类别 | 路径 |
+|---|---|
+| 库 | `kit/`、`kit-agent-koog/`、`kit-membership/` |
+| 构建 | `build-logic/`、`gradle/`、`config/`、`settings.gradle.kts`、`build.gradle.kts`、`gradle.properties` |
+| 规范 | `rules/`、`skills/`、`backend/`、`apps/demo/` |
+| 门禁 | `.github/actions/`、`.github/workflows/{ci,base-guard,release}.yml`、`.github/{CODEOWNERS,dependabot.yml,pull_request_template.md}`、`scripts/ci.sh`、`scripts/check-base-unchanged.sh`、`scripts/new_app.py`、`scripts/install-kit.sh`、`scripts/templates/`、`scripts/verify-*.py`、`scripts/merge_strings.py` |
+| 法务 | `LICENSE`、`SECURITY.md` |
 
 改了，pull 上游就冲突，更新链就断。底座能力不够，**回上游提 PR**，别在下游打补丁。
 
-例外只有一个：发布用的 workflow。fork 把 `.github/workflows/release.yml` 拷成自己的 `release-<name>.yml`（新文件，随便改）。
+**这条规矩是机器强制的**，不是嘴上说说：
+
+- 上游有 `.github/workflows/base-guard.yml` —— 用 `pull_request_target` 触发，workflow 永远取 **base 分支**的版本，fork 改不动它（改了就等于把检查删了）。PR 碰了上面任一路径 → 这道门禁直接红，PR 合并不进来。
+- fork 本地自查：`bash scripts/ci.sh base-guard`（默认比对 `upstream` 远端的默认分支）。`bash scripts/ci.sh all` 已经包含它 —— 提交前跑一遍，改了底座当场就知道。
+
+例外只有两个：
+
+1. **自己的发布 workflow** —— fork 把 `.github/workflows/release.yml` 拷成自己的 `release-<name>.yml`（新文件，随便改；`.github/` 里只有上表那几个是底座）。
+2. **自己的门禁脚本** —— 放 `scripts/checks/<你的名字>.sh`，那块不锁。
 
 ## 加一个新 app
 
@@ -38,13 +54,14 @@
 workflow 只负责「在什么环境跑哪道门禁」。
 
 ```bash
-bash scripts/ci.sh all        # 提交前跑这个：detekt + api + verify + test
+bash scripts/ci.sh all        # 提交前跑这个：detekt + api + verify + test + base-guard
 bash scripts/ci.sh detekt     # 静态规则（命名 / 复杂度 / 吞异常…）
 bash scripts/ci.sh api        # 公开 API 二进制兼容
 bash scripts/ci.sh verify     # 自带脚本 + scripts/checks/ 下的自定义门禁
 bash scripts/ci.sh test       # 单元测试（kit / kit-agent-koog / apps/*）
 bash scripts/ci.sh lint       # Android lint
 bash scripts/ci.sh backend    # agent 网关自检（不花钱、不连网）
+bash scripts/ci.sh base-guard # 底座保护：改了底座路径就失败（fork 必跑）
 ```
 
 **加一道自己的门禁**：往 `scripts/checks/` 放一个 `.sh`，退出码非 0 = 失败。

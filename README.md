@@ -353,6 +353,9 @@ git remote rename origin upstream   # 以后 git pull upstream main
 **唯一规矩：底座路径（`kit/`、`kit-agent-koog/`、`rules/`、`.github/workflows/`、`backend/`、`settings.gradle.kts`）
 不改不删** —— 改了，pull 上游必冲突，更新链就断。底座能力不够，回上游提 PR，别在下游打补丁。
 
+这条规矩**有机器强制**：上游的 `base-guard` 门禁（`.github/workflows/base-guard.yml`）会拦住任何
+碰底座路径的 PR；fork 本地跑 `bash scripts/ci.sh base-guard` 能提前自查。
+
 ### 只要一部分（拷贝脚本，备选）
 
 不想 fork 全套、想把 kit 拷进已有项目？老路径还在：
