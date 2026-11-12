@@ -5,7 +5,7 @@
 # 例如 io.coil-kt.coil3:coil-compose → libs.io.coil.kt.coil3.coil.compose。
 
 [versions]
-agp = "9.5.0"
+agp = "9.5.1"
 kotlin = "2.4.21"
 # Compose Multiplatform（CMP）：org.jetbrains.compose 插件和所有 org.jetbrains.compose.* 产物同版本
 # 1.12.2 = 当前最新稳定版（1.13.0 还只有 beta01，等 GA 再上）
