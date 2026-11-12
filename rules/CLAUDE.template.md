@@ -13,6 +13,11 @@ Compose Multiplatform 1.13（Material3）· Ktor 3（HTTP）· kotlinx-datetime�
 `EntityStore`（引擎：文件 / SAF / 未来数据库）+ `StoreCodec`（格式：`.md` / `.json` / 自定义）。
 字段类型化（`Map<String, JsonElement>`），需要关系型查询再上 Room/SQLDelight，别一开始就上。
 
+## 付费（要会员才引 `:kit-membership`）
+
+档位表写在代码里（`PlanCatalog`），额度用 `MembershipManager.consume()` 扣，
+支付通道各端 app 自己实现 `BillingProvider`（框架不碰 Play Billing / StoreKit）。
+
 ## agent（要 agent 才引 `:kit-agent-koog`）
 
 app = 前端 + skill + agent runtime，**全在手机端**，只有模型调用出网。

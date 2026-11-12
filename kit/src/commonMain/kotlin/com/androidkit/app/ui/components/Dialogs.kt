@@ -1,5 +1,6 @@
 package com.androidkit.app.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -43,6 +44,9 @@ import com.androidkit.app.res.*
 import com.androidkit.app.ui.components.SmallSecondaryButton
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.themedTextAlign
+import com.androidkit.app.ui.theme.themedHorizontalAlignment
+
 
 /**
  * Confirm Dialog - M3 确认弹窗
@@ -70,7 +74,7 @@ fun ConfirmDialog(
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = themedHorizontalAlignment(Alignment.CenterHorizontally)
             ) {
                 // Icon with background
                 if (icon != null) {
@@ -95,7 +99,7 @@ fun ConfirmDialog(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = themedTextAlign(TextAlign.Center)
                 )
 
                 if (message.isNotEmpty()) {
@@ -104,7 +108,7 @@ fun ConfirmDialog(
                         text = message,
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
-                        textAlign = TextAlign.Center
+                        textAlign = themedTextAlign(TextAlign.Center)
                     )
                 }
 
@@ -147,13 +151,13 @@ fun SelectDialog(
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = themedHorizontalAlignment(Alignment.CenterHorizontally)
             ) {
                 // Title
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = themedTextAlign(TextAlign.Center)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))
@@ -167,6 +171,7 @@ fun SelectDialog(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .clickable { pendingIndex = index }   // 整行都能点，不用非得戳那个小圆点
                                 .padding(vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -257,12 +262,12 @@ fun InputDialog(
         ) {
             Column(
                 modifier = Modifier.padding(24.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = themedHorizontalAlignment(Alignment.CenterHorizontally)
             ) {
                 Text(
                     text = title,
                     style = MaterialTheme.typography.headlineSmall,
-                    textAlign = TextAlign.Center
+                    textAlign = themedTextAlign(TextAlign.Center)
                 )
 
                 Spacer(modifier = Modifier.height(16.dp))

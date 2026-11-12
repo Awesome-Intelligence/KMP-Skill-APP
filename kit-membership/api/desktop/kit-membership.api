@@ -1,0 +1,341 @@
+public abstract interface class com/androidkit/app/membership/Access {
+}
+
+public final class com/androidkit/app/membership/Access$Allowed : com/androidkit/app/membership/Access {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/Access$Allowed;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/Access$Blocked : com/androidkit/app/membership/Access {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;ILcom/androidkit/app/membership/BlockReason;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()Lcom/androidkit/app/membership/BlockReason;
+	public final fun copy (Ljava/lang/String;ILcom/androidkit/app/membership/BlockReason;)Lcom/androidkit/app/membership/Access$Blocked;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/Access$Blocked;Ljava/lang/String;ILcom/androidkit/app/membership/BlockReason;ILjava/lang/Object;)Lcom/androidkit/app/membership/Access$Blocked;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getKey ()Ljava/lang/String;
+	public final fun getLimit ()I
+	public final fun getReason ()Lcom/androidkit/app/membership/BlockReason;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/androidkit/app/membership/BillingProvider {
+	public abstract fun products (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun purchase (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun restorePurchases (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/membership/BlockReason : java/lang/Enum {
+	public static final field NO_ENTITLEMENT Lcom/androidkit/app/membership/BlockReason;
+	public static final field QUOTA_EXCEEDED Lcom/androidkit/app/membership/BlockReason;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/membership/BlockReason;
+	public static fun values ()[Lcom/androidkit/app/membership/BlockReason;
+}
+
+public final class com/androidkit/app/membership/Membership {
+	public static final field $stable I
+	public static final field Companion Lcom/androidkit/app/membership/Membership$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/Long;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Long;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/Long;Z)Lcom/androidkit/app/membership/Membership;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/Membership;Ljava/lang/String;Ljava/lang/Long;ZILjava/lang/Object;)Lcom/androidkit/app/membership/Membership;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpiresAt ()Ljava/lang/Long;
+	public final fun getPlanId ()Ljava/lang/String;
+	public final fun getVerified ()Z
+	public fun hashCode ()I
+	public final fun isActive (J)Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/androidkit/app/membership/Membership$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/Membership$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/androidkit/app/membership/Membership;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/androidkit/app/membership/Membership;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/androidkit/app/membership/Membership$Companion {
+	public final fun free (Ljava/lang/String;)Lcom/androidkit/app/membership/Membership;
+	public static synthetic fun free$default (Lcom/androidkit/app/membership/Membership$Companion;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/membership/Membership;
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/androidkit/app/membership/MembershipManager {
+	public static final field $stable I
+	public static final field NO_LIMIT I
+	public fun <init> (Lcom/androidkit/app/membership/PlanCatalog;Lcom/androidkit/app/membership/MembershipStore;Lcom/androidkit/app/membership/UsageTracker;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Lcom/androidkit/app/membership/PlanCatalog;Lcom/androidkit/app/membership/MembershipStore;Lcom/androidkit/app/membership/UsageTracker;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun activate (Ljava/lang/String;Ljava/lang/Long;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun activate$default (Lcom/androidkit/app/membership/MembershipManager;Ljava/lang/String;Ljava/lang/Long;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun check (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun checkEntitlement (Ljava/lang/String;)Lcom/androidkit/app/membership/Access;
+	public final fun consume (Ljava/lang/String;ILkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun consume$default (Lcom/androidkit/app/membership/MembershipManager;Ljava/lang/String;ILkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun getMembership ()Lkotlinx/coroutines/flow/StateFlow;
+	public final fun getPlan ()Lcom/androidkit/app/membership/Plan;
+	public final fun has (Ljava/lang/String;)Z
+	public final fun purchase (Lcom/androidkit/app/membership/BillingProvider;Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun refresh (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun restore (Lcom/androidkit/app/membership/BillingProvider;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/membership/MembershipStore {
+	public static final field $stable I
+	public static final field FILE_NAME Ljava/lang/String;
+	public fun <init> (Lokio/Path;)V
+	public final fun load (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun save (Lcom/androidkit/app/membership/Membership;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/membership/Plan {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;ILjava/util/Set;Ljava/util/Map;)V
+	public synthetic fun <init> (Ljava/lang/String;ILjava/util/Set;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()I
+	public final fun component3 ()Ljava/util/Set;
+	public final fun component4 ()Ljava/util/Map;
+	public final fun copy (Ljava/lang/String;ILjava/util/Set;Ljava/util/Map;)Lcom/androidkit/app/membership/Plan;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/Plan;Ljava/lang/String;ILjava/util/Set;Ljava/util/Map;ILjava/lang/Object;)Lcom/androidkit/app/membership/Plan;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getEntitlements ()Ljava/util/Set;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getLimits ()Ljava/util/Map;
+	public final fun getTier ()I
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/PlanCatalog {
+	public static final field $stable I
+	public fun <init> (Ljava/util/List;)V
+	public final fun byId (Ljava/lang/String;)Lcom/androidkit/app/membership/Plan;
+	public final fun getAll ()Ljava/util/List;
+	public final fun getFree ()Lcom/androidkit/app/membership/Plan;
+	public final fun getPaid ()Ljava/util/List;
+}
+
+public final class com/androidkit/app/membership/Product {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/androidkit/app/membership/Product;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/Product;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/membership/Product;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDescription ()Ljava/lang/String;
+	public final fun getId ()Ljava/lang/String;
+	public final fun getPrice ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/androidkit/app/membership/PurchaseResult {
+}
+
+public final class com/androidkit/app/membership/PurchaseResult$Cancelled : com/androidkit/app/membership/PurchaseResult {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/PurchaseResult$Cancelled;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/PurchaseResult$Failed : com/androidkit/app/membership/PurchaseResult {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/membership/PurchaseResult$Failed;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/PurchaseResult$Failed;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/membership/PurchaseResult$Failed;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getReason ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/PurchaseResult$Pending : com/androidkit/app/membership/PurchaseResult {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/PurchaseResult$Pending;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/PurchaseResult$Success : com/androidkit/app/membership/PurchaseResult {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Long;Z)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Long;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Long;
+	public final fun component3 ()Z
+	public final fun copy (Ljava/lang/String;Ljava/lang/Long;Z)Lcom/androidkit/app/membership/PurchaseResult$Success;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/PurchaseResult$Success;Ljava/lang/String;Ljava/lang/Long;ZILjava/lang/Object;)Lcom/androidkit/app/membership/PurchaseResult$Success;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getExpiresAt ()Ljava/lang/Long;
+	public final fun getProductId ()Ljava/lang/String;
+	public final fun getVerified ()Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/QuotaLimit {
+	public static final field $stable I
+	public fun <init> (ILcom/androidkit/app/membership/QuotaPeriod;)V
+	public final fun component1 ()I
+	public final fun component2 ()Lcom/androidkit/app/membership/QuotaPeriod;
+	public final fun copy (ILcom/androidkit/app/membership/QuotaPeriod;)Lcom/androidkit/app/membership/QuotaLimit;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/QuotaLimit;ILcom/androidkit/app/membership/QuotaPeriod;ILjava/lang/Object;)Lcom/androidkit/app/membership/QuotaLimit;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLimit ()I
+	public final fun getPeriod ()Lcom/androidkit/app/membership/QuotaPeriod;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/QuotaPeriod : java/lang/Enum {
+	public static final field DAILY Lcom/androidkit/app/membership/QuotaPeriod;
+	public static final field TOTAL Lcom/androidkit/app/membership/QuotaPeriod;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/membership/QuotaPeriod;
+	public static fun values ()[Lcom/androidkit/app/membership/QuotaPeriod;
+}
+
+public final class com/androidkit/app/membership/UsageTracker {
+	public static final field $stable I
+	public static final field FILE_NAME Ljava/lang/String;
+	public fun <init> (Lokio/Path;)V
+	public final fun consume (Ljava/lang/String;Lcom/androidkit/app/membership/QuotaPeriod;IJLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun consume$default (Lcom/androidkit/app/membership/UsageTracker;Ljava/lang/String;Lcom/androidkit/app/membership/QuotaPeriod;IJLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun reset (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun used (Ljava/lang/String;Lcom/androidkit/app/membership/QuotaPeriod;JLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/membership/res/ActualResourceCollectorsKt {
+	public static final fun getAllDrawableResources (Lcom/androidkit/app/membership/res/Res;)Ljava/util/Map;
+	public static final fun getAllFontResources (Lcom/androidkit/app/membership/res/Res;)Ljava/util/Map;
+	public static final fun getAllPluralStringResources (Lcom/androidkit/app/membership/res/Res;)Ljava/util/Map;
+	public static final fun getAllStringArrayResources (Lcom/androidkit/app/membership/res/Res;)Ljava/util/Map;
+	public static final fun getAllStringResources (Lcom/androidkit/app/membership/res/Res;)Ljava/util/Map;
+}
+
+public final class com/androidkit/app/membership/res/Res {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/res/Res;
+	public final fun getUri (Ljava/lang/String;)Ljava/lang/String;
+	public final fun readBytes (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/membership/res/Res$array {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/res/Res$array;
+}
+
+public final class com/androidkit/app/membership/res/Res$drawable {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/res/Res$drawable;
+}
+
+public final class com/androidkit/app/membership/res/Res$font {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/res/Res$font;
+}
+
+public final class com/androidkit/app/membership/res/Res$plurals {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/res/Res$plurals;
+}
+
+public final class com/androidkit/app/membership/res/Res$string {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/membership/res/Res$string;
+}
+
+public final class com/androidkit/app/membership/res/String0_commonMainKt {
+	public static final fun getMembership_current_plan (Lcom/androidkit/app/membership/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getMembership_paywall_title (Lcom/androidkit/app/membership/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getMembership_paywall_upgrade (Lcom/androidkit/app/membership/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getMembership_purchase (Lcom/androidkit/app/membership/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getMembership_restore (Lcom/androidkit/app/membership/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+}
+
+public final class com/androidkit/app/membership/ui/ComposableSingletons$PaywallDialogKt {
+	public static final field INSTANCE Lcom/androidkit/app/membership/ui/ComposableSingletons$PaywallDialogKt;
+	public fun <init> ()V
+	public final fun getLambda$-1988997395$Android_Kit_kit_membership ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/androidkit/app/membership/ui/ComposableSingletons$UpgradeSheetKt {
+	public static final field INSTANCE Lcom/androidkit/app/membership/ui/ComposableSingletons$UpgradeSheetKt;
+	public fun <init> ()V
+	public final fun getLambda$878734651$Android_Kit_kit_membership ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/androidkit/app/membership/ui/PaywallDialogKt {
+	public static final fun MembershipPaywall (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/membership/ui/PlanFeature {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;)Lcom/androidkit/app/membership/ui/PlanFeature;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/ui/PlanFeature;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/membership/ui/PlanFeature;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLabel ()Ljava/lang/String;
+	public final fun getValue ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/ui/PlanOption {
+	public static final field $stable I
+	public fun <init> (Lcom/androidkit/app/membership/Plan;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Lcom/androidkit/app/membership/Plan;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/androidkit/app/membership/Plan;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/util/List;
+	public final fun copy (Lcom/androidkit/app/membership/Plan;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;)Lcom/androidkit/app/membership/ui/PlanOption;
+	public static synthetic fun copy$default (Lcom/androidkit/app/membership/ui/PlanOption;Lcom/androidkit/app/membership/Plan;Ljava/lang/String;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/androidkit/app/membership/ui/PlanOption;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getFeatures ()Ljava/util/List;
+	public final fun getPlan ()Lcom/androidkit/app/membership/Plan;
+	public final fun getPrice ()Ljava/lang/String;
+	public final fun getTitle ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/membership/ui/PlanOptionKt {
+	public static final fun planOptions (Lcom/androidkit/app/membership/BillingProvider;Lcom/androidkit/app/membership/PlanCatalog;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun planOptions$default (Lcom/androidkit/app/membership/BillingProvider;Lcom/androidkit/app/membership/PlanCatalog;Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public static final fun toFeatures (Lcom/androidkit/app/membership/Plan;Ljava/util/Map;Lkotlin/jvm/functions/Function2;)Ljava/util/List;
+	public static synthetic fun toFeatures$default (Lcom/androidkit/app/membership/Plan;Ljava/util/Map;Lkotlin/jvm/functions/Function2;ILjava/lang/Object;)Ljava/util/List;
+}
+
+public final class com/androidkit/app/membership/ui/UpgradeSheetKt {
+	public static final fun UpgradeSheet (Ljava/util/List;Ljava/lang/String;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+

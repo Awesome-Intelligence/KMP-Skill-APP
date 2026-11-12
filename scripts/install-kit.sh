@@ -115,7 +115,16 @@ cp "$KIT/scripts/diff-ownership.sh" "$TARGET/.claude/scripts/diff-ownership.sh"
 mkdir -p "$TARGET/config/detekt"
 cp "$KIT/config/detekt/detekt.yml" "$TARGET/config/detekt/detekt.yml"
 cp "$KIT/scripts/verify-kit.py" "$KIT/scripts/verify-skills.py" "$KIT/scripts/merge_strings.py" "$TARGET/scripts/"
-chmod +x "$TARGET/.claude/scripts/diff-ownership.sh"
+# ci.yml 是一份「薄壳」：门禁逻辑全在 scripts/ci.sh 里，复合 action 在 .github/actions/ 下。
+# 这两样必须跟着 ci.yml 一起拷过去 —— 少了 ci.yml 里的 run: 全部落空。
+cp "$KIT/scripts/ci.sh" "$TARGET/scripts/ci.sh"
+cp "$KIT/scripts/verify-i18n.py" "$TARGET/scripts/verify-i18n.py"
+mkdir -p "$TARGET/.github/actions/setup-gradle"
+cp "$KIT/.github/actions/setup-gradle/action.yml" "$TARGET/.github/actions/setup-gradle/action.yml"
+# fork 自定义门禁的落点：scripts/checks/*.sh 会被 ci.sh verify 自动跑
+mkdir -p "$TARGET/scripts/checks"
+cp "$KIT/scripts/checks/."* "$TARGET/scripts/checks/" 2>/dev/null || true
+chmod +x "$TARGET/.claude/scripts/diff-ownership.sh" "$TARGET/scripts/ci.sh"
 cp -r "$KIT/skills/." "$TARGET/.claude/skills/" 2>/dev/null || true
 cp -r "$KIT/skills/android-skills/." "$TARGET/.agents/skills/" 2>/dev/null || true
 
@@ -127,7 +136,7 @@ echo "  2. kit/build.gradle.kts: compose.resources 的 packageOfResClass 改成 
 echo "  3. 你的 :app 模块: implementation(project(\":kit\"))；要 agent 再加 implementation(project(\":kit-agent-koog\"))"
 echo "  4. 你的首页: kit 里的 App() 是**演示页**（显示「Android-Kit」），换成你自己的根 Composable"
 echo "  5. app/build.gradle.kts: namespace / applicationId 改成 $NEW_PKG"
-echo "  6. app/build.gradle.kts: release 签名换成真 keystore（见 kit 里 app/build.gradle.kts 的注释）"
+echo "  6. app/build.gradle.kts: release 签名换成真 keystore（参考 build-logic/.../androidkit.android.app.gradle.kts 的 signingConfigs；拷贝模式不带 build-logic，按那段手抄）"
 echo "  7. settings.gradle.kts: rootProject.name = \"$APP_NAME\""
 echo "  8. res/values/strings.xml: app_name 改成你的应用名"
 echo "  9. 跑一次 python scripts/verify-kit.py 确认没漏"

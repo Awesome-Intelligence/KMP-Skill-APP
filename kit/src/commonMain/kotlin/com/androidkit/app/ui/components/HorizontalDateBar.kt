@@ -17,7 +17,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
 import androidx.compose.material3.Icon
@@ -53,6 +52,9 @@ import kotlinx.datetime.todayIn
 import kotlinx.coroutines.launch
 import kotlinx.datetime.yearMonth
 import kotlinx.datetime.number
+import com.androidkit.app.ui.theme.themedFontWeight
+import com.androidkit.app.ui.theme.themedCircleShape
+
 
 /**
  * 横向日期条 —— 日程 App 常见的连续日期选择器。
@@ -232,14 +234,14 @@ private fun DateCell(
         Box(
             modifier = Modifier
                 .size(36.dp)
-                .clip(CircleShape)
+                .clip(themedCircleShape())
                 .background(circleColor),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = date.dayOfMonth.toString(),
                 style = MaterialTheme.typography.titleSmall,
-                fontWeight = if (isSelected || isToday) FontWeight.SemiBold else FontWeight.Normal,
+                fontWeight = themedFontWeight(if (isSelected || isToday) FontWeight.SemiBold else FontWeight.Normal),
                 color = dayTextColor
             )
         }
@@ -248,7 +250,7 @@ private fun DateCell(
         Box(
             modifier = Modifier
                 .size(4.dp)
-                .clip(CircleShape)
+                .clip(themedCircleShape())
                 .background(
                     if (isMarked) {
                         if (isSelected) MaterialTheme.colorScheme.onPrimary

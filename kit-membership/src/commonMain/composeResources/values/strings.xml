@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- kit-membership 自己的文案（不跟 :kit 的混在一起） -->
+<resources>
+    <string name="membership_paywall_title">需要会员才能继续</string>
+    <string name="membership_paywall_upgrade">查看会员方案</string>
+    <string name="membership_purchase">购买</string>
+    <string name="membership_current_plan">当前方案</string>
+    <string name="membership_restore">恢复购买</string>
+</resources>

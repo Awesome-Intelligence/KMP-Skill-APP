@@ -9,6 +9,7 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 // Light Color Scheme - M3 Tonal Palette based (default to Mono)
@@ -94,94 +95,360 @@ private val DarkColorScheme = darkColorScheme(
     surfaceContainerHighest = Mono.surfaceContainerHighestDark
 )
 
-// Bitmap Color Schemes — 冷灰白 + 橙强调（位图主题），槽位结构与 Mono 一致
-private val BitmapLightColorScheme = lightColorScheme(
-    primary = Bitmap.primaryLight,
-    onPrimary = Bitmap.onPrimaryLight,
-    primaryContainer = Bitmap.primaryContainerLight,
-    onPrimaryContainer = Bitmap.onPrimaryContainerLight,
-    secondary = Bitmap.secondaryLight,
-    onSecondary = Bitmap.onSecondaryLight,
-    secondaryContainer = Bitmap.secondaryContainerLight,
-    onSecondaryContainer = Bitmap.onSecondaryContainerLight,
-    tertiary = Bitmap.tertiaryLight,
-    onTertiary = Bitmap.onTertiaryLight,
-    tertiaryContainer = Bitmap.tertiaryContainerLight,
-    onTertiaryContainer = Bitmap.onTertiaryContainerLight,
-    error = Bitmap.errorLight,
-    onError = Bitmap.onErrorLight,
-    errorContainer = Bitmap.errorContainerLight,
-    onErrorContainer = Bitmap.onErrorContainerLight,
-    background = Bitmap.backgroundLight,
-    onBackground = Bitmap.onBackgroundLight,
-    surface = Bitmap.surfaceLight,
-    onSurface = Bitmap.onSurfaceLight,
-    surfaceVariant = Bitmap.surfaceVariantLight,
-    onSurfaceVariant = Bitmap.onSurfaceVariantLight,
-    outline = Bitmap.outlineLight,
-    outlineVariant = Bitmap.outlineVariantLight,
-    scrim = Bitmap.scrimLight,
-    inverseSurface = Bitmap.inverseSurfaceLight,
-    inverseOnSurface = Bitmap.inverseOnSurfaceLight,
-    inversePrimary = Bitmap.inversePrimaryLight,
-    surfaceTint = Bitmap.outlineLight,
-    surfaceDim = Bitmap.surfaceDimLight,
-    surfaceBright = Bitmap.surfaceBrightLight,
-    surfaceContainerLowest = Bitmap.surfaceContainerLowestLight,
-    surfaceContainerLow = Bitmap.surfaceContainerLowLight,
-    surfaceContainer = Bitmap.surfaceContainerLight,
-    surfaceContainerHigh = Bitmap.surfaceContainerHighLight,
-    surfaceContainerHighest = Bitmap.surfaceContainerHighestLight
+// Swiss Color Schemes — 纯白画布 + 纯黑文字 + 信号红强调（瑞士国际风格）
+private val SwissLightColorScheme = lightColorScheme(
+    primary = Swiss.primaryLight,
+    onPrimary = Swiss.onPrimaryLight,
+    primaryContainer = Swiss.primaryContainerLight,
+    onPrimaryContainer = Swiss.onPrimaryContainerLight,
+    secondary = Swiss.secondaryLight,
+    onSecondary = Swiss.onSecondaryLight,
+    secondaryContainer = Swiss.secondaryContainerLight,
+    onSecondaryContainer = Swiss.onSecondaryContainerLight,
+    tertiary = Swiss.tertiaryLight,
+    onTertiary = Swiss.onTertiaryLight,
+    tertiaryContainer = Swiss.tertiaryContainerLight,
+    onTertiaryContainer = Swiss.onTertiaryContainerLight,
+    error = Swiss.errorLight,
+    onError = Swiss.onErrorLight,
+    errorContainer = Swiss.errorContainerLight,
+    onErrorContainer = Swiss.onErrorContainerLight,
+    background = Swiss.backgroundLight,
+    onBackground = Swiss.onBackgroundLight,
+    surface = Swiss.surfaceLight,
+    onSurface = Swiss.onSurfaceLight,
+    surfaceVariant = Swiss.surfaceVariantLight,
+    onSurfaceVariant = Swiss.onSurfaceVariantLight,
+    outline = Swiss.outlineLight,
+    outlineVariant = Swiss.outlineVariantLight,
+    scrim = Swiss.scrimLight,
+    inverseSurface = Swiss.inverseSurfaceLight,
+    inverseOnSurface = Swiss.inverseOnSurfaceLight,
+    inversePrimary = Swiss.inversePrimaryLight,
+    surfaceTint = Swiss.surfaceTintLight,
+    surfaceDim = Swiss.surfaceDimLight,
+    surfaceBright = Swiss.surfaceBrightLight,
+    surfaceContainerLowest = Swiss.surfaceContainerLowestLight,
+    surfaceContainerLow = Swiss.surfaceContainerLowLight,
+    surfaceContainer = Swiss.surfaceContainerLight,
+    surfaceContainerHigh = Swiss.surfaceContainerHighLight,
+    surfaceContainerHighest = Swiss.surfaceContainerHighestLight
 )
 
-private val BitmapDarkColorScheme = darkColorScheme(
-    primary = Bitmap.primaryDark,
-    onPrimary = Bitmap.onPrimaryDark,
-    primaryContainer = Bitmap.primaryContainerDark,
-    onPrimaryContainer = Bitmap.onPrimaryContainerDark,
-    secondary = Bitmap.secondaryDark,
-    onSecondary = Bitmap.onSecondaryDark,
-    secondaryContainer = Bitmap.secondaryContainerDark,
-    onSecondaryContainer = Bitmap.onSecondaryContainerDark,
-    tertiary = Bitmap.tertiaryDark,
-    onTertiary = Bitmap.onTertiaryDark,
-    tertiaryContainer = Bitmap.tertiaryContainerDark,
-    onTertiaryContainer = Bitmap.onTertiaryContainerDark,
-    error = Bitmap.errorDark,
-    onError = Bitmap.onErrorDark,
-    errorContainer = Bitmap.errorContainerDark,
-    onErrorContainer = Bitmap.onErrorContainerDark,
-    background = Bitmap.backgroundDark,
-    onBackground = Bitmap.onBackgroundDark,
-    surface = Bitmap.surfaceDark,
-    onSurface = Bitmap.onSurfaceDark,
-    surfaceVariant = Bitmap.surfaceVariantDark,
-    onSurfaceVariant = Bitmap.onSurfaceVariantDark,
-    outline = Bitmap.outlineDark,
-    outlineVariant = Bitmap.outlineVariantDark,
-    scrim = Bitmap.scrimDark,
-    inverseSurface = Bitmap.inverseSurfaceDark,
-    inverseOnSurface = Bitmap.inverseOnSurfaceDark,
-    inversePrimary = Bitmap.inversePrimaryDark,
-    surfaceTint = Bitmap.outlineDark,
-    surfaceDim = Bitmap.surfaceDimDark,
-    surfaceBright = Bitmap.surfaceBrightDark,
-    surfaceContainerLowest = Bitmap.surfaceContainerLowestDark,
-    surfaceContainerLow = Bitmap.surfaceContainerLowDark,
-    surfaceContainer = Bitmap.surfaceContainerDark,
-    surfaceContainerHigh = Bitmap.surfaceContainerHighDark,
-    surfaceContainerHighest = Bitmap.surfaceContainerHighestDark
+// 深色是自建的语义反转（黑画布 + 白字），规范本身没给深色契约
+private val SwissDarkColorScheme = darkColorScheme(
+    primary = Swiss.primaryDark,
+    onPrimary = Swiss.onPrimaryDark,
+    primaryContainer = Swiss.primaryContainerDark,
+    onPrimaryContainer = Swiss.onPrimaryContainerDark,
+    secondary = Swiss.secondaryDark,
+    onSecondary = Swiss.onSecondaryDark,
+    secondaryContainer = Swiss.secondaryContainerDark,
+    onSecondaryContainer = Swiss.onSecondaryContainerDark,
+    tertiary = Swiss.tertiaryDark,
+    onTertiary = Swiss.onTertiaryDark,
+    tertiaryContainer = Swiss.tertiaryContainerDark,
+    onTertiaryContainer = Swiss.onTertiaryContainerDark,
+    error = Swiss.errorDark,
+    onError = Swiss.onErrorDark,
+    errorContainer = Swiss.errorContainerDark,
+    onErrorContainer = Swiss.onErrorContainerDark,
+    background = Swiss.backgroundDark,
+    onBackground = Swiss.onBackgroundDark,
+    surface = Swiss.surfaceDark,
+    onSurface = Swiss.onSurfaceDark,
+    surfaceVariant = Swiss.surfaceVariantDark,
+    onSurfaceVariant = Swiss.onSurfaceVariantDark,
+    outline = Swiss.outlineDark,
+    outlineVariant = Swiss.outlineVariantDark,
+    scrim = Swiss.scrimDark,
+    inverseSurface = Swiss.inverseSurfaceDark,
+    inverseOnSurface = Swiss.inverseOnSurfaceDark,
+    inversePrimary = Swiss.inversePrimaryDark,
+    surfaceTint = Swiss.surfaceTintDark,
+    surfaceDim = Swiss.surfaceDimDark,
+    surfaceBright = Swiss.surfaceBrightDark,
+    surfaceContainerLowest = Swiss.surfaceContainerLowestDark,
+    surfaceContainerLow = Swiss.surfaceContainerLowDark,
+    surfaceContainer = Swiss.surfaceContainerDark,
+    surfaceContainerHigh = Swiss.surfaceContainerHighDark,
+    surfaceContainerHighest = Swiss.surfaceContainerHighestDark
+)
+
+// Notion Color Schemes —— 米色纸面 + 暖墨字 + 发丝线，槽位结构与 Mono 一致
+private val NotionLightColorScheme = lightColorScheme(
+    primary = Notion.primaryLight,
+    onPrimary = Notion.onPrimaryLight,
+    primaryContainer = Notion.primaryContainerLight,
+    onPrimaryContainer = Notion.onPrimaryContainerLight,
+    secondary = Notion.secondaryLight,
+    onSecondary = Notion.onSecondaryLight,
+    secondaryContainer = Notion.secondaryContainerLight,
+    onSecondaryContainer = Notion.onSecondaryContainerLight,
+    tertiary = Notion.tertiaryLight,
+    onTertiary = Notion.onTertiaryLight,
+    tertiaryContainer = Notion.tertiaryContainerLight,
+    onTertiaryContainer = Notion.onTertiaryContainerLight,
+    error = Notion.errorLight,
+    onError = Notion.onErrorLight,
+    errorContainer = Notion.errorContainerLight,
+    onErrorContainer = Notion.onErrorContainerLight,
+    background = Notion.backgroundLight,
+    onBackground = Notion.onBackgroundLight,
+    surface = Notion.surfaceLight,
+    onSurface = Notion.onSurfaceLight,
+    surfaceVariant = Notion.surfaceVariantLight,
+    onSurfaceVariant = Notion.onSurfaceVariantLight,
+    outline = Notion.outlineLight,
+    outlineVariant = Notion.outlineVariantLight,
+    scrim = Notion.scrimLight,
+    inverseSurface = Notion.inverseSurfaceLight,
+    inverseOnSurface = Notion.inverseOnSurfaceLight,
+    inversePrimary = Notion.inversePrimaryLight,
+    surfaceTint = Notion.surfaceTintLight,
+    surfaceDim = Notion.surfaceDimLight,
+    surfaceBright = Notion.surfaceBrightLight,
+    surfaceContainerLowest = Notion.surfaceContainerLowestLight,
+    surfaceContainerLow = Notion.surfaceContainerLowLight,
+    surfaceContainer = Notion.surfaceContainerLight,
+    surfaceContainerHigh = Notion.surfaceContainerHighLight,
+    surfaceContainerHighest = Notion.surfaceContainerHighestLight
+)
+
+// 深色是自建的语义反转（规范本身没给深色契约）
+private val NotionDarkColorScheme = darkColorScheme(
+    primary = Notion.primaryDark,
+    onPrimary = Notion.onPrimaryDark,
+    primaryContainer = Notion.primaryContainerDark,
+    onPrimaryContainer = Notion.onPrimaryContainerDark,
+    secondary = Notion.secondaryDark,
+    onSecondary = Notion.onSecondaryDark,
+    secondaryContainer = Notion.secondaryContainerDark,
+    onSecondaryContainer = Notion.onSecondaryContainerDark,
+    tertiary = Notion.tertiaryDark,
+    onTertiary = Notion.onTertiaryDark,
+    tertiaryContainer = Notion.tertiaryContainerDark,
+    onTertiaryContainer = Notion.onTertiaryContainerDark,
+    error = Notion.errorDark,
+    onError = Notion.onErrorDark,
+    errorContainer = Notion.errorContainerDark,
+    onErrorContainer = Notion.onErrorContainerDark,
+    background = Notion.backgroundDark,
+    onBackground = Notion.onBackgroundDark,
+    surface = Notion.surfaceDark,
+    onSurface = Notion.onSurfaceDark,
+    surfaceVariant = Notion.surfaceVariantDark,
+    onSurfaceVariant = Notion.onSurfaceVariantDark,
+    outline = Notion.outlineDark,
+    outlineVariant = Notion.outlineVariantDark,
+    scrim = Notion.scrimDark,
+    inverseSurface = Notion.inverseSurfaceDark,
+    inverseOnSurface = Notion.inverseOnSurfaceDark,
+    inversePrimary = Notion.inversePrimaryDark,
+    surfaceTint = Notion.surfaceTintDark,
+    surfaceDim = Notion.surfaceDimDark,
+    surfaceBright = Notion.surfaceBrightDark,
+    surfaceContainerLowest = Notion.surfaceContainerLowestDark,
+    surfaceContainerLow = Notion.surfaceContainerLowDark,
+    surfaceContainer = Notion.surfaceContainerDark,
+    surfaceContainerHigh = Notion.surfaceContainerHighDark,
+    surfaceContainerHighest = Notion.surfaceContainerHighestDark
+)
+
+// E-Ink Color Schemes —— 暖纸底 + 墨色 + 灰阶（电子纸），槽位结构与 Mono 一致
+private val EInkLightColorScheme = lightColorScheme(
+    primary = EInk.primaryLight,
+    onPrimary = EInk.onPrimaryLight,
+    primaryContainer = EInk.primaryContainerLight,
+    onPrimaryContainer = EInk.onPrimaryContainerLight,
+    secondary = EInk.secondaryLight,
+    onSecondary = EInk.onSecondaryLight,
+    secondaryContainer = EInk.secondaryContainerLight,
+    onSecondaryContainer = EInk.onSecondaryContainerLight,
+    tertiary = EInk.tertiaryLight,
+    onTertiary = EInk.onTertiaryLight,
+    tertiaryContainer = EInk.tertiaryContainerLight,
+    onTertiaryContainer = EInk.onTertiaryContainerLight,
+    error = EInk.errorLight,
+    onError = EInk.onErrorLight,
+    errorContainer = EInk.errorContainerLight,
+    onErrorContainer = EInk.onErrorContainerLight,
+    background = EInk.backgroundLight,
+    onBackground = EInk.onBackgroundLight,
+    surface = EInk.surfaceLight,
+    onSurface = EInk.onSurfaceLight,
+    surfaceVariant = EInk.surfaceVariantLight,
+    onSurfaceVariant = EInk.onSurfaceVariantLight,
+    outline = EInk.outlineLight,
+    outlineVariant = EInk.outlineVariantLight,
+    scrim = EInk.scrimLight,
+    inverseSurface = EInk.inverseSurfaceLight,
+    inverseOnSurface = EInk.inverseOnSurfaceLight,
+    inversePrimary = EInk.inversePrimaryLight,
+    surfaceTint = EInk.surfaceTintLight,
+    surfaceDim = EInk.surfaceDimLight,
+    surfaceBright = EInk.surfaceBrightLight,
+    surfaceContainerLowest = EInk.surfaceContainerLowestLight,
+    surfaceContainerLow = EInk.surfaceContainerLowLight,
+    surfaceContainer = EInk.surfaceContainerLight,
+    surfaceContainerHigh = EInk.surfaceContainerHighLight,
+    surfaceContainerHighest = EInk.surfaceContainerHighestLight
+)
+
+// 深色是自建的语义反转（墨底 + 纸字），规范本身没给深色契约
+private val EInkDarkColorScheme = darkColorScheme(
+    primary = EInk.primaryDark,
+    onPrimary = EInk.onPrimaryDark,
+    primaryContainer = EInk.primaryContainerDark,
+    onPrimaryContainer = EInk.onPrimaryContainerDark,
+    secondary = EInk.secondaryDark,
+    onSecondary = EInk.onSecondaryDark,
+    secondaryContainer = EInk.secondaryContainerDark,
+    onSecondaryContainer = EInk.onSecondaryContainerDark,
+    tertiary = EInk.tertiaryDark,
+    onTertiary = EInk.onTertiaryDark,
+    tertiaryContainer = EInk.tertiaryContainerDark,
+    onTertiaryContainer = EInk.onTertiaryContainerDark,
+    error = EInk.errorDark,
+    onError = EInk.onErrorDark,
+    errorContainer = EInk.errorContainerDark,
+    onErrorContainer = EInk.onErrorContainerDark,
+    background = EInk.backgroundDark,
+    onBackground = EInk.onBackgroundDark,
+    surface = EInk.surfaceDark,
+    onSurface = EInk.onSurfaceDark,
+    surfaceVariant = EInk.surfaceVariantDark,
+    onSurfaceVariant = EInk.onSurfaceVariantDark,
+    outline = EInk.outlineDark,
+    outlineVariant = EInk.outlineVariantDark,
+    scrim = EInk.scrimDark,
+    inverseSurface = EInk.inverseSurfaceDark,
+    inverseOnSurface = EInk.inverseOnSurfaceDark,
+    inversePrimary = EInk.inversePrimaryDark,
+    surfaceTint = EInk.surfaceTintDark,
+    surfaceDim = EInk.surfaceDimDark,
+    surfaceBright = EInk.surfaceBrightDark,
+    surfaceContainerLowest = EInk.surfaceContainerLowestDark,
+    surfaceContainerLow = EInk.surfaceContainerLowDark,
+    surfaceContainer = EInk.surfaceContainerDark,
+    surfaceContainerHigh = EInk.surfaceContainerHighDark,
+    surfaceContainerHighest = EInk.surfaceContainerHighestDark
+)
+
+// ============================================================
+// macOS 毛玻璃（vibrancy）—— 三档灰 + 系统蓝，规范原生是深色
+// ============================================================
+
+private val MacOSDarkColorScheme = darkColorScheme(
+    primary = MacOS.primaryDark,
+    onPrimary = MacOS.onPrimaryDark,
+    primaryContainer = MacOS.primaryContainerDark,
+    onPrimaryContainer = MacOS.onPrimaryContainerDark,
+    secondary = MacOS.secondaryDark,
+    onSecondary = MacOS.onSecondaryDark,
+    secondaryContainer = MacOS.secondaryContainerDark,
+    onSecondaryContainer = MacOS.onSecondaryContainerDark,
+    tertiary = MacOS.tertiaryDark,
+    onTertiary = MacOS.onTertiaryDark,
+    tertiaryContainer = MacOS.tertiaryContainerDark,
+    onTertiaryContainer = MacOS.onTertiaryContainerDark,
+    error = MacOS.errorDark,
+    onError = MacOS.onErrorDark,
+    errorContainer = MacOS.errorContainerDark,
+    onErrorContainer = MacOS.onErrorContainerDark,
+    background = MacOS.backgroundDark,
+    onBackground = MacOS.onBackgroundDark,
+    surface = MacOS.surfaceDark,
+    onSurface = MacOS.onSurfaceDark,
+    surfaceVariant = MacOS.surfaceVariantDark,
+    onSurfaceVariant = MacOS.onSurfaceVariantDark,
+    outline = MacOS.outlineDark,
+    outlineVariant = MacOS.outlineVariantDark,
+    scrim = MacOS.scrimDark,
+    inverseSurface = MacOS.inverseSurfaceDark,
+    inverseOnSurface = MacOS.inverseOnSurfaceDark,
+    inversePrimary = MacOS.inversePrimaryDark,
+    surfaceTint = MacOS.surfaceTintDark,
+    surfaceDim = MacOS.surfaceDimDark,
+    surfaceBright = MacOS.surfaceBrightDark,
+    surfaceContainerLowest = MacOS.surfaceContainerLowestDark,
+    surfaceContainerLow = MacOS.surfaceContainerLowDark,
+    surfaceContainer = MacOS.surfaceContainerDark,
+    surfaceContainerHigh = MacOS.surfaceContainerHighDark,
+    surfaceContainerHighest = MacOS.surfaceContainerHighestDark
+)
+
+// 浅色是自建的（规范只给了深色契约）
+private val MacOSLightColorScheme = lightColorScheme(
+    primary = MacOS.primaryLight,
+    onPrimary = MacOS.onPrimaryLight,
+    primaryContainer = MacOS.primaryContainerLight,
+    onPrimaryContainer = MacOS.onPrimaryContainerLight,
+    secondary = MacOS.secondaryLight,
+    onSecondary = MacOS.onSecondaryLight,
+    secondaryContainer = MacOS.secondaryContainerLight,
+    onSecondaryContainer = MacOS.onSecondaryContainerLight,
+    tertiary = MacOS.tertiaryLight,
+    onTertiary = MacOS.onTertiaryLight,
+    tertiaryContainer = MacOS.tertiaryContainerLight,
+    onTertiaryContainer = MacOS.onTertiaryContainerLight,
+    error = MacOS.errorLight,
+    onError = MacOS.onErrorLight,
+    errorContainer = MacOS.errorContainerLight,
+    onErrorContainer = MacOS.onErrorContainerLight,
+    background = MacOS.backgroundLight,
+    onBackground = MacOS.onBackgroundLight,
+    surface = MacOS.surfaceLight,
+    onSurface = MacOS.onSurfaceLight,
+    surfaceVariant = MacOS.surfaceVariantLight,
+    onSurfaceVariant = MacOS.onSurfaceVariantLight,
+    outline = MacOS.outlineLight,
+    outlineVariant = MacOS.outlineVariantLight,
+    scrim = MacOS.scrimLight,
+    inverseSurface = MacOS.inverseSurfaceLight,
+    inverseOnSurface = MacOS.inverseOnSurfaceLight,
+    inversePrimary = MacOS.inversePrimaryLight,
+    surfaceTint = MacOS.surfaceTintLight,
+    surfaceDim = MacOS.surfaceDimLight,
+    surfaceBright = MacOS.surfaceBrightLight,
+    surfaceContainerLowest = MacOS.surfaceContainerLowestLight,
+    surfaceContainerLow = MacOS.surfaceContainerLowLight,
+    surfaceContainer = MacOS.surfaceContainerLight,
+    surfaceContainerHigh = MacOS.surfaceContainerHighLight,
+    surfaceContainerHighest = MacOS.surfaceContainerHighestLight
 )
 
 /**
- * 主题风格。底座预置能力：App 层自行选择并持久化，kit 不带设置页。
+ * 主题风格。底座预置能力：App 层自行选择并持久化。
  * - [ThemeStyle.Mono] — 默认，暖中性单色 + M3 动效
- * - [ThemeStyle.Bitmap] — 位图（冷灰白 + 橙强调、像素字体、直角、帧跳动效）
+ * - [ThemeStyle.Swiss] — 瑞士国际风格（黑白 + 红强调、Helvetica 系无衬线、直角、150ms 变色）
+ * - [ThemeStyle.Notion] — Notion 风格（米色纸面 + 墨字、4px 圆角、只变色不动效）
+ * - [ThemeStyle.EInk] — 电子纸（暖纸 + 墨色 + 灰阶、等宽数值、直角、180ms 变色）
+ * - [ThemeStyle.MacOS] — macOS 毛玻璃（三档灰 + 系统蓝、衬线标题、半透明层、200ms 变色）
  */
-enum class ThemeStyle { Mono, Bitmap }
+enum class ThemeStyle { Mono, Swiss, Notion, EInk, MacOS }
 
-/** 位图主题全直角：像素 UI 没有圆角，层次靠 1px 硬边框和色阶 */
-private val BitmapShapes = Shapes(
+/**
+ * 外观（深浅色）模式。
+ *
+ * - [System] — 跟随系统（`isSystemInDarkTheme()`）
+ * - [Light] / [Dark] — 强制浅色 / 深色
+ */
+enum class AppearanceMode { System, Light, Dark }
+
+/**
+ * 把外观模式落成实际深浅色。[System] 时用系统值。
+ *
+ * 用它而不是到处 `when`：设置页和入口都要用同一套判定，散开写早晚不一致。
+ */
+fun AppearanceMode.resolveDark(systemDark: Boolean): Boolean = when (this) {
+    AppearanceMode.System -> systemDark
+    AppearanceMode.Light -> false
+    AppearanceMode.Dark -> true
+}
+
+/** 瑞士 / 电子纸主题全直角：网格和纸面印刷都没有圆角，层次靠硬边框和色阶 */
+private val SquareShapes = Shapes(
     extraSmall = RoundedCornerShape(0.dp),
     small = RoundedCornerShape(0.dp),
     medium = RoundedCornerShape(0.dp),
@@ -189,6 +456,141 @@ private val BitmapShapes = Shapes(
     extraLarge = RoundedCornerShape(0.dp)
 )
 
+/**
+ * Notion 主题的圆角：卡片/按钮/输入框一律 4px，只有弹层类大容器给到 8px。
+ *
+ * 规范原话「Radius stays at 4px or below, except pill tags」——
+ * 弹层用 8px 是 M3 自己的 large/extraLarge 槽位需要，不是风格破例。
+ */
+private val NotionShapes = Shapes(
+    extraSmall = RoundedCornerShape(4.dp),
+    small = RoundedCornerShape(4.dp),
+    medium = RoundedCornerShape(4.dp),
+    large = RoundedCornerShape(4.dp),
+    extraLarge = RoundedCornerShape(8.dp)
+)
+
+/**
+ * macOS 主题的圆角：按钮/输入框 6px、卡片 10px、面板 14px。
+ *
+ * 规范原表：cards 10 / buttons 6 / inputs 6 / panels 14 / pills 999。
+ * M3 的五个桶照这个顺序分配；药丸（999）不占桶 —— 用 `CircleShape` 显式画。
+ */
+private val MacOSShapes = Shapes(
+    extraSmall = RoundedCornerShape(6.dp),
+    small = RoundedCornerShape(6.dp),
+    medium = RoundedCornerShape(10.dp),
+    large = RoundedCornerShape(14.dp),
+    extraLarge = RoundedCornerShape(14.dp)
+)
+
+/** 底座预置：Mono（暖中性单色 + M3 动效）。App 层想微调品牌色，可以拿它当基底再 copy。 */
+fun monoThemeTokens(isDark: Boolean): ThemeTokens = ThemeTokens(
+    colorScheme = if (isDark) DarkColorScheme else LightColorScheme,
+    extendedColors = if (isDark) DarkExtended else LightExtended,
+    typography = Typography,
+    shapes = Shapes(),
+    isDark = isDark,
+    themeStyle = ThemeStyle.Mono,
+    cornerStyle = CornerStyle.Rounded,
+    tagColors = tagColorsFor(ThemeStyle.Mono, isDark),
+)
+
+/**
+ * 底座预置：Swiss（瑞士国际风格）。
+ *
+ * 黑白画布 + 信号红强调、Helvetica 系无衬线（只有 400/700）、全直角、
+ * 150ms ease-out 只变色。规范本身只给了浅色，深色版是自建的语义反转。
+ */
+fun swissThemeTokens(isDark: Boolean): ThemeTokens = ThemeTokens(
+    colorScheme = if (isDark) SwissDarkColorScheme else SwissLightColorScheme,
+    extendedColors = if (isDark) SwissDarkExtended else SwissLightExtended,
+    typography = SwissTypography,
+    shapes = SquareShapes,
+    isDark = isDark,
+    themeStyle = ThemeStyle.Swiss,
+    cornerStyle = CornerStyle.Square,
+    tagColors = tagColorsFor(ThemeStyle.Swiss, isDark),
+)
+
+/**
+ * 底座预置：Notion（文档工具风格）。
+ *
+ * 米色纸面 `#f7f6f3` + 暖墨字 `#37352f` + 1px 发丝线，4px 圆角，
+ * 150ms ease-out 只变色（不位移、不缩放）。规范只给了浅色，深色版是自建的语义反转。
+ */
+fun notionThemeTokens(isDark: Boolean): ThemeTokens = ThemeTokens(
+    colorScheme = if (isDark) NotionDarkColorScheme else NotionLightColorScheme,
+    extendedColors = if (isDark) NotionDarkExtended else NotionLightExtended,
+    typography = NotionTypography,
+    shapes = NotionShapes,
+    isDark = isDark,
+    themeStyle = ThemeStyle.Notion,
+    cornerStyle = CornerStyle.Rounded,
+    tagColors = tagColorsFor(ThemeStyle.Notion, isDark),
+)
+
+/**
+ * 底座预置：E-Ink（电子纸风格）。
+ *
+ * 暖纸底 `#f5f3ea` + 墨色 `#20211e` + 三档灰阶、全直角、等宽数值、
+ * 180ms ease-out 只变色。规范只给了浅色，深色版是自建的语义反转（墨底 + 纸字）。
+ */
+fun eInkThemeTokens(isDark: Boolean): ThemeTokens = ThemeTokens(
+    colorScheme = if (isDark) EInkDarkColorScheme else EInkLightColorScheme,
+    extendedColors = if (isDark) EInkDarkExtended else EInkLightExtended,
+    typography = EInkTypography,
+    shapes = SquareShapes,
+    isDark = isDark,
+    themeStyle = ThemeStyle.EInk,
+    cornerStyle = CornerStyle.Square,
+    tagColors = tagColorsFor(ThemeStyle.EInk, isDark),
+)
+
+/**
+ * 底座预置：macOS 毛玻璃（vibrancy）。
+ *
+ * 三档灰 `#1c1c1e → #2c2c2e → #3a3a3c` 定层次，系统蓝 `#0a84ff` 是唯一强调色，
+ * 衬线标题 + 无衬线正文 + 等宽代码，圆角 6/10/14，
+ * 200ms ease-out **只改颜色**（不位移、不缩放）。
+ *
+ * 深色是规范原生；浅色是自建的 macOS 浅色系统（见 [ColorMacOS]）。
+ */
+fun macOSThemeTokens(isDark: Boolean): ThemeTokens = ThemeTokens(
+    colorScheme = if (isDark) MacOSDarkColorScheme else MacOSLightColorScheme,
+    extendedColors = if (isDark) MacOSDarkExtended else MacOSLightExtended,
+    typography = MacOSTypography,
+    shapes = MacOSShapes,
+    isDark = isDark,
+    themeStyle = ThemeStyle.MacOS,
+    cornerStyle = CornerStyle.Rounded,
+    tagColors = tagColorsFor(ThemeStyle.MacOS, isDark),
+)
+
+/**
+ * 阴影高度 —— 瑞士风格规范写死「Elevation: None」，该主题下所有 elevation 归零。
+ *
+ * 组件里凡是 `elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)` 这种写法，
+ * 把默认值换成 `themedElevation(1.dp)` 就行；别的主题原样不动。
+ *
+ * Notion 同样是平铺文档（只有弹层允许阴影），所以也归零。
+ * 电子纸是纸面印刷，层次靠栏线和色阶，也归零。
+ *
+ * macOS 毛玻璃同理：「层次靠背景深浅，不靠阴影」—— 它的层级就是那三档灰。
+ */
+@Composable
+fun themedElevation(default: Dp): Dp =
+    when (LocalThemeStyle.current) {
+        ThemeStyle.Swiss, ThemeStyle.Notion, ThemeStyle.EInk, ThemeStyle.MacOS -> 0.dp
+        else -> default
+    }
+
+/**
+ * 底座预置主题入口（Mono / Swiss / Notion / EInk / MacOS）。
+ *
+ * **品牌主题不要改这里** —— 在 App 自己的模块里造 [ThemeTokens]，走下面那个 tokens 重载。
+ * 改 kit 的 Theme.kt 会让下游 fork 丢掉底座更新。
+ */
 @Composable
 fun AppTheme(
     /** 主题风格，默认单色（历史行为不变） */
@@ -203,36 +605,47 @@ fun AppTheme(
     reducedMotion: Boolean = false,
     content: @Composable () -> Unit
 ) {
-    // ponytail: 原本这里读 SettingsRepository.appearanceMode（跟随/浅色/深色）。
-    // Kit 不带仓库依赖 —— 新项目把下面这行换成自己的设置流即可：
-    //   val appearanceMode by settingsRepo.appearanceMode.collectAsState()
-    val dark = darkTheme
-    val bitmap = style == ThemeStyle.Bitmap
-    val colorScheme = when {
-        bitmap && dark -> BitmapDarkColorScheme
-        bitmap -> BitmapLightColorScheme
-        dark -> DarkColorScheme
-        else -> LightColorScheme
+    val tokens = when (style) {
+        ThemeStyle.Mono -> monoThemeTokens(darkTheme)
+        ThemeStyle.Swiss -> swissThemeTokens(darkTheme)
+        ThemeStyle.Notion -> notionThemeTokens(darkTheme)
+        ThemeStyle.EInk -> eInkThemeTokens(darkTheme)
+        ThemeStyle.MacOS -> macOSThemeTokens(darkTheme)
     }
-    val extended = when {
-        bitmap && dark -> BitmapDarkExtended
-        bitmap -> BitmapLightExtended
-        dark -> DarkExtended
-        else -> LightExtended
-    }
-    // 像素字体从资源加载（@Composable，可能 suspend），只能在这里取
-    val typography = if (bitmap) bitmapTypography() else Typography
+    AppTheme(tokens = tokens, reducedMotion = reducedMotion, content = content)
+}
+
+/**
+ * 按 [ThemeTokens] 装配主题 —— **App 自己的品牌主题走这个重载**。
+ *
+ * 明暗在 tokens 里（[ThemeTokens.isDark]），所以这里不再收 `darkTheme`：
+ * 一套 tokens 就是一套完整的、已经定好明暗的主题，避免「浅色 tokens + 深色标记」的错配。
+ *
+ * ```kotlin
+ * AppTheme(tokens = if (systemDark) Brand.dark() else Brand.light()) { App() }
+ * ```
+ */
+@Composable
+fun AppTheme(
+    tokens: ThemeTokens,
+    reducedMotion: Boolean = false,
+    content: @Composable () -> Unit
+) {
+    // 标签色板留空 = 跟随主题风格取底座色板；品牌有自己的色板就在 tokens 里传
+    val tagColors = tokens.tagColors.ifEmpty { tagColorsFor(tokens.themeStyle, tokens.isDark) }
 
     CompositionLocalProvider(
         LocalReducedMotion provides reducedMotion,
-        LocalIsDarkTheme provides dark,
-        LocalThemeStyle provides style,
-        LocalExtendedColors provides extended,
+        LocalIsDarkTheme provides tokens.isDark,
+        LocalThemeStyle provides tokens.themeStyle,
+        LocalExtendedColors provides tokens.extendedColors,
+        LocalTagColors provides tagColors,
+        LocalCornerStyle provides tokens.cornerStyle,
     ) {
         MaterialTheme(
-            colorScheme = colorScheme,
-            typography = typography,
-            shapes = if (bitmap) BitmapShapes else Shapes(), // Mono = M3 默认圆角 4/8/12/16/28
+            colorScheme = tokens.colorScheme,
+            typography = tokens.typography,
+            shapes = tokens.shapes, // Mono = M3 默认圆角 4/8/12/16/28；Swiss / E-Ink = 全 0
             content = content
         )
     }

@@ -32,10 +32,26 @@ interface AgentSession {
  * 工具跑在用户自己的手机上，删文件 / 发消息 / 花钱这类动作必须先过这里。
  */
 fun interface ToolApprover {
-    suspend fun approve(name: String, input: JsonObject): Boolean
+    suspend fun approve(name: String, input: JsonObject): ToolApproval
 
     companion object {
         /** 全放行：只给"工具全是只读、无副作用"的 app 用。 */
-        val AllowAll: ToolApprover = ToolApprover { _, _ -> true }
+        val AllowAll: ToolApprover = ToolApprover { _, _ -> ToolApproval.Allow }
     }
+}
+
+/**
+ * 审批结果。
+ *
+ * 分三级而不是「是/否」：同一个工具反复问同一件事很烦，但"删数据"这种也不能一次点头就永久放行。
+ */
+enum class ToolApproval {
+    /** 这一次允许。 */
+    Allow,
+
+    /** 允许，并且**这个工具以后不再问**（本次会话内有效）。 */
+    AllowAlways,
+
+    /** 拒绝：工具不执行，模型会收到"用户拒绝"并自己改道。 */
+    Deny,
 }

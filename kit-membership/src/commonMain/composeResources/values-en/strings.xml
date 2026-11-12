@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="membership_paywall_title">Membership required</string>
+    <string name="membership_paywall_upgrade">View plans</string>
+    <string name="membership_purchase">Purchase</string>
+    <string name="membership_current_plan">Current plan</string>
+    <string name="membership_restore">Restore purchases</string>
+</resources>

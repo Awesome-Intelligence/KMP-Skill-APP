@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  桌面图标长按菜单（Android App Shortcuts，API 25+；本 app minSdk 26，直接可用）。
+
+  静态声明的意义：**装完 app 就长按就有了**，不用先启动一次。静态条目排在动态条目前面，
+  用户能看到的条数由桌面决定（一般 4 条左右，系统上限 5 条）。
+
+  三条约定（改一条就要三处一起改，`AppShortcutSyncTest` 会拦住漂移）：
+    1. android:shortcutId  ==  AppShortcut.id
+    2. android:action      ==  AppShortcut.action
+    3. targetPackage       ==  applicationId（fork 本 app 后要改这一行）
+
+  静态 <intent> **不能带 extra**（系统只认 action/data/categories），所以这里靠 action 区分动作；
+  运行时用 ShortcutManagerCompat 发的动态条目可以带 extra，解析在 AppShortcut.kt 里统一处理。
+-->
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <shortcut
+        android:shortcutId="new_todo"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_add"
+        android:shortcutShortLabel="@string/shortcut_new_todo_short"
+        android:shortcutLongLabel="@string/shortcut_new_todo_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.androidkit.app.shortcut.new_todo"
+            android:targetPackage="com.androidkit.app"
+            android:targetClass="com.androidkit.app.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="ask"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_chat"
+        android:shortcutShortLabel="@string/shortcut_ask_short"
+        android:shortcutLongLabel="@string/shortcut_ask_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.androidkit.app.shortcut.ask"
+            android:targetPackage="com.androidkit.app"
+            android:targetClass="com.androidkit.app.MainActivity" />
+    </shortcut>
+
+    <shortcut
+        android:shortcutId="settings"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_settings"
+        android:shortcutShortLabel="@string/shortcut_settings_short"
+        android:shortcutLongLabel="@string/shortcut_settings_long"
+        android:shortcutDisabledMessage="@string/shortcut_disabled">
+        <intent
+            android:action="com.androidkit.app.shortcut.settings"
+            android:targetPackage="com.androidkit.app"
+            android:targetClass="com.androidkit.app.MainActivity" />
+    </shortcut>
+
+</shortcuts>

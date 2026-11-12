@@ -17,7 +17,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import com.androidkit.app.ui.theme.themedCorner
+import com.androidkit.app.ui.theme.themedStrokeWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
@@ -53,6 +54,7 @@ import com.androidkit.app.res.*
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
 import com.androidkit.app.ui.theme.tagColor
+import com.androidkit.app.ui.theme.themedFontWeight
 
 /**
  * Filter Chip
@@ -94,7 +96,7 @@ fun FilterChip(
                 Text(
                     text = title,
                     style = MaterialTheme.typography.labelSmall.copy(
-                        fontWeight = if (isSelected) FontWeight.Medium else FontWeight.Normal
+                        fontWeight = themedFontWeight(if (isSelected) FontWeight.Medium else FontWeight.Normal)
                     ),
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
@@ -118,7 +120,7 @@ fun FilterChip(
             disabledBorderColor = Color.Transparent,
             disabledSelectedBorderColor = MaterialTheme.colorScheme.primary,
             borderWidth = 0.dp,
-            selectedBorderWidth = 2.dp,
+            selectedBorderWidth = themedStrokeWidth(2.dp),
         ),
         shape = MaterialTheme.shapes.medium
     )
@@ -147,7 +149,7 @@ fun AddTagChip(
             labelColor = MaterialTheme.colorScheme.onSurfaceVariant
         ),
         border = null,
-        shape = RoundedCornerShape(6.dp)
+        shape = themedCorner(6.dp)
     )
 }
 
@@ -294,7 +296,7 @@ fun SelectableTag(
             containerColor = unselectedColor,
             selectedContainerColor = selectedColor,
             labelColor = MaterialTheme.colorScheme.onSurfaceVariant,
-            selectedLabelColor = Color.White,
+            selectedLabelColor = if (selectedColor.luminance() > 0.5f) Color.Black else Color.White,
         ),
         modifier = modifier.height(32.dp),
         border = FilterChipDefaults.filterChipBorder(

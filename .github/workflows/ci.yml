@@ -16,6 +16,10 @@ env:
   # 这里再写一份就是第二处真相（而且这份 ci.yml 会被 install-kit.sh 原样拷进别的项目，
   # 那边 compileSdk 未必一样）。AGP 会按 build.gradle.kts 里声明的版本自动装对应平台。
 
+# 这份 YAML 是「薄壳」：每个 job 只说「在什么环境跑哪道门禁」，
+# 门禁逻辑全在 scripts/ci.sh 里 —— fork 想改门禁改脚本，不动这个文件（它是底座路径）。
+# 加一道新门禁的完整步骤见 scripts/ci.sh 头部注释。
+
 jobs:
   build:
     name: Build (Android)
@@ -25,36 +29,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK + Android SDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
-
-      # Gradle 缓存交给 setup-java 的 cache: 'gradle'（它已经缓存 ~/.gradle/caches + ~/.gradle/wrapper），
-      # 别再叠一个 actions/cache —— 两个 action 写同一个目录、key 还不一样，只会互相打架。
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+          android: 'true'
 
       # 遍历 apps/ 下所有模块：fork 加新 app 只需新建 apps/<name>/，不用改这份 ci.yml
-      # [ -d ] 守卫：install-kit.sh 拷进来的消费方项目没有 apps/ 目录，glob 不展开会剩下字面量
       - name: Build Android apps
-        run: |
-          rc=0
-          for d in apps/*/; do
-            [ -d "$d" ] || continue
-            ./gradlew ":apps:$(basename "$d"):assembleDebug" --no-daemon || rc=1
-          done
-          exit $rc
-
-      # Koog 引擎是独立模块，app 默认不引它，所以这里单独编一遍 android 产物
-      - name: Compile Koog engine (Android)
-        run: ./gradlew :kit-agent-koog:compileAndroidMain --no-daemon
+        run: bash scripts/ci.sh build-android
 
       - name: Upload debug APK
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -72,23 +55,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      - name: Compile desktop
-        run: ./gradlew :kit:compileKotlinDesktop :kit-agent-koog:compileKotlinDesktop --no-daemon
+          android: 'false'
 
       # 测试在下面的 unit-test job 跑，这里只管编译和打包，别跑两遍
+      - name: Compile desktop
+        run: bash scripts/ci.sh build-desktop
 
       - name: Package desktop
-        run: ./gradlew :kit:packageDeb --no-daemon
+        run: bash scripts/ci.sh package-deb
 
       - name: Upload desktop package
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -106,24 +84,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+          android: 'false'
 
       # iOS 目标只在 macOS host 上能编（Kotlin/Native 限制）
       # linkDebugFramework* 产出的 .framework 就是 Xcode 要 import 的东西
       - name: Link iOS frameworks
-        run: ./gradlew :kit:linkDebugFrameworkIosArm64 :kit:linkDebugFrameworkIosSimulatorArm64 --no-daemon
-
-      # Koog 引擎的 iOS 产物（独立模块，kit 的 framework 不含它）
-      - name: Compile Koog engine (iOS)
-        run: ./gradlew :kit-agent-koog:compileKotlinIosArm64 --no-daemon
+        run: bash scripts/ci.sh build-ios
 
       - name: Upload iOS frameworks
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -141,15 +111,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+          android: 'false'
 
       # iOS 壳工程的 Xcode 工程是 XcodeGen 生成的（apps/*/ios/project.yml）
       - name: Install XcodeGen
@@ -174,21 +140,14 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK + Android SDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+          android: 'true'
 
       - name: Run lint
-        run: ./gradlew lintDebug --no-daemon
+        run: bash scripts/ci.sh lint
 
       - name: Upload lint report
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -206,30 +165,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
-
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
+          android: 'false'
 
       # 真正的测试都在 kit / kit-agent-koog 的 desktopTest（commonTest 只在 JVM 跑得起来）。
       # apps/* 的 testDebugUnitTest 目前都是 NO-SOURCE，但 fork 的 app 加了单测就自动进来。
       - name: Run unit tests
-        run: |
-          rc=0
-          for d in apps/*/; do
-            [ -d "$d" ] || continue
-            ./gradlew ":apps:$(basename "$d"):testDebugUnitTest" --no-daemon || rc=1
-          done
-          ./gradlew :kit:desktopTest :kit-agent-koog:desktopTest --no-daemon || rc=1
-          exit $rc
+        run: bash scripts/ci.sh test
 
       - name: Upload test report
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -239,6 +184,7 @@ jobs:
           path: |
             kit/build/reports/tests/desktopTest/
             kit-agent-koog/build/reports/tests/desktopTest/
+            kit-membership/build/reports/tests/desktopTest/
           retention-days: 14
 
       - name: Upload test results
@@ -249,6 +195,7 @@ jobs:
           path: |
             kit/build/test-results/desktopTest/
             kit-agent-koog/build/test-results/desktopTest/
+            kit-membership/build/test-results/desktopTest/
           retention-days: 14
 
   static-check:
@@ -259,69 +206,16 @@ jobs:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
-      - name: Setup JDK ${{ env.JAVA_VERSION }}
-        uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      - name: Setup JDK
+        uses: ./.github/actions/setup-gradle
         with:
           java-version: ${{ env.JAVA_VERSION }}
-          distribution: 'temurin'
-          cache: 'gradle'
+          android: 'false'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
-
-      - name: Grant execute permission for gradlew
-        run: chmod +x gradlew
-
-      # detekt：规则集在 config/detekt/detekt.yml（只查能抓真 bug 的那批规则）
-      # kit-agent-koog 是可选模块 —— 拷贝模式装出来的项目不一定 include 它，
-      # 直接点名会报 "Project not found"，所以先看 settings 里有没有
-      - name: Run detekt
-        run: |
-          rc=0
-          ./gradlew :kit:detekt --no-daemon || rc=1
-          if grep -q ':kit-agent-koog' settings.gradle.kts; then
-            ./gradlew :kit-agent-koog:detekt --no-daemon || rc=1
-          fi
-          if grep -q ':chat-demo' settings.gradle.kts; then
-            ./gradlew :chat-demo:detekt --no-daemon || rc=1
-          fi
-          for d in apps/*/; do
-            [ -d "$d" ] || continue
-            ./gradlew ":apps:$(basename "$d"):detekt" --no-daemon || rc=1
-          done
-          exit $rc
-
-      # 公开 API 的二进制兼容性：改了 kit 的公开签名就失败（基线在 api/*.api）。
-      # 拷贝模式装出来的项目没有这个插件，grep 一下再跑，免得报"task not found"
-      - name: Check public API compatibility
-        run: |
-          rc=0
-          if grep -q 'binary-compatibility-validator' kit/build.gradle.kts 2>/dev/null; then
-            # 基线不存在 = 还没 dump 过 —— 明确报错让人去跑 apiDump，
-            # 比让它红着"no dump file"强
-            if [ ! -f kit/api/desktop/kit.api ]; then
-              echo "::error::kit/api/desktop/kit.api 不存在 —— 先跑 ./gradlew :kit:apiDump 生成基线"
-              rc=1
-            else
-              ./gradlew :kit:apiCheck --no-daemon || rc=1
-            fi
-            if grep -q ':kit-agent-koog' settings.gradle.kts; then
-              if [ ! -f kit-agent-koog/api/desktop/kit-agent-koog.api ]; then
-                echo "::error::kit-agent-koog/api 不存在 —— 先跑 ./gradlew :kit-agent-koog:apiDump"
-                rc=1
-              else
-                ./gradlew :kit-agent-koog:apiCheck --no-daemon || rc=1
-              fi
-            fi
-          fi
-          exit $rc
-
-      # 自带脚本：查 import / Res.string / DemoData 断裂，以及 skill 工具有没有把业务逻辑写进 tool
-      - name: Verify kit sources
-        run: python scripts/verify-kit.py
-
-      - name: Verify skills
-        run: python scripts/verify-skills.py
+      # detekt / apiCheck / verify-*.py 全在这里。
+      # 每道门禁失败只记一次，最后统一报 —— 一道红了不用重跑前面的。
+      - name: Run static gates
+        run: bash scripts/ci.sh detekt api verify
 
       - name: Upload detekt report
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9  # v7
@@ -331,6 +225,7 @@ jobs:
           path: |
             kit/build/reports/detekt/
             kit-agent-koog/build/reports/detekt/
+            kit-membership/build/reports/detekt/
           retention-days: 14
 
   backend:
@@ -342,8 +237,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7
 
       # 这份 ci.yml 会被 install-kit.sh 原样拷进只装 KMP 模块的消费方项目，
-      # 那些项目没有 backend/ 目录 —— 所以每一步都先确认 backend/package.json 在，
-      # 不在就整条跳过（step 级 if 在 checkout 之后评估，hashFiles 才看得到文件）。
+      # 那些项目没有 backend/ 目录 —— 脚本自己判断，没 backend/ 就跳过。
       - name: Setup Node
         if: ${{ hashFiles('backend/package.json') != '' }}
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1  # v7
@@ -352,21 +246,10 @@ jobs:
           cache: 'npm'
           cache-dependency-path: backend/package-lock.json
 
-      - name: Install dependencies
+      # 类型检查 + 契约冒烟：不花钱、不连网（skill 加载 + JSON Schema 校验 + parseOutput + SSE 断连检测）
+      - name: Typecheck + smoke test
         if: ${{ hashFiles('backend/package.json') != '' }}
-        working-directory: backend
-        run: npm ci
-
-      - name: Typecheck
-        if: ${{ hashFiles('backend/package.json') != '' }}
-        working-directory: backend
-        run: npm run check
-
-      # 契约冒烟：不花钱、不连网（skill 加载 + JSON Schema 校验 + parseOutput + SSE 断连检测）
-      - name: Smoke test
-        if: ${{ hashFiles('backend/package.json') != '' }}
-        working-directory: backend
-        run: npm run smoke
+        run: bash scripts/ci.sh backend
 
       # 起一次真服务器，验路由真的通（express 大版本升级最容易在这里炸）
       - name: Boot check

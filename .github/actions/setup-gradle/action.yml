@@ -1,0 +1,37 @@
+name: Setup Gradle
+description: 装 JDK + Android SDK，给 gradlew 加执行权限。CI 每个 job 的公共前置。
+
+# 为什么用 composite action 而不是每个 job 抄一遍：
+#   8 个 job 各抄 25 行 setup = 200 行重复，改个 JDK 版本要改 8 处。
+#   抽成 action 之后改一处，job 只留「这个 job 真正要做的事」。
+#
+# 版本固定的写法：action 用 SHA 锁（不是 tag），供应链攻击顶不掉 CI。
+inputs:
+  java-version:
+    description: JDK 版本
+    required: false
+    default: '17'
+  android:
+    description: 是否装 Android SDK（不需要 Android 的 job 传 false，省几分钟）
+    required: false
+    default: 'true'
+
+runs:
+  using: composite
+  steps:
+    - name: Setup JDK
+      uses: actions/setup-java@b843ebf9b913146b38da2eaa7aeddf76074ae1ad  # v6
+      with:
+        java-version: ${{ inputs.java-version }}
+        distribution: 'temurin'
+        # Gradle 缓存交给 setup-java 的 cache: 'gradle'（它已经缓存 ~/.gradle/caches + ~/.gradle/wrapper），
+        # 别再叠一个 actions/cache —— 两个 action 写同一个目录、key 还不一样，只会互相打架。
+        cache: 'gradle'
+
+    - name: Setup Android SDK
+      if: inputs.android == 'true'
+      uses: android-actions/setup-android@be39fa834029ff78f1a44aa3bb0819b8fc2bd8fd  # v4
+
+    - name: Grant execute permission for gradlew
+      shell: bash
+      run: chmod +x gradlew

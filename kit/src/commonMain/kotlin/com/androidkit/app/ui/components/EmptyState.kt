@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Flag
@@ -33,6 +32,11 @@ import com.androidkit.app.ui.components.PrimaryButton
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
 import com.androidkit.app.ui.theme.LocalIsDarkTheme
+import com.androidkit.app.ui.theme.themedCircleShape
+
+import com.androidkit.app.ui.theme.themedTextAlign
+import com.androidkit.app.ui.theme.themedHorizontalAlignment
+
 
 /**
  * Illustrated Empty State
@@ -56,7 +60,7 @@ fun IllustratedEmptyState(
         modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 40.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        horizontalAlignment = themedHorizontalAlignment(Alignment.CenterHorizontally),
         verticalArrangement = Arrangement.spacedBy(20.dp)
     ) {
         // 图标容器
@@ -70,7 +74,7 @@ fun IllustratedEmptyState(
                     .height(100.dp)
                     .background(
                         color = tintColor.copy(alpha = if (isDark) 0.15f else 0.08f),
-                        shape = CircleShape
+                        shape = themedCircleShape()
                     )
             )
 
@@ -86,7 +90,7 @@ fun IllustratedEmptyState(
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
-            textAlign = TextAlign.Center
+            textAlign = themedTextAlign(TextAlign.Center)
         )
 
         // 副标题
@@ -95,7 +99,7 @@ fun IllustratedEmptyState(
                 text = subtitle,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
-                textAlign = TextAlign.Center,
+                textAlign = themedTextAlign(TextAlign.Center),
                 modifier = Modifier.padding(horizontal = 32.dp)
             )
         }

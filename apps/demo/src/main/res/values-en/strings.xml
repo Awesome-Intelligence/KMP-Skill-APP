@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Android-Kit</string>
+
+    <!-- 桌面图标长按菜单（res/xml/shortcuts.xml） -->
+    <string name="shortcut_new_todo_short">New to-do</string>
+    <string name="shortcut_new_todo_long">Add a to-do by chatting</string>
+    <string name="shortcut_ask_short">Ask assistant</string>
+    <string name="shortcut_ask_long">Chat with the assistant</string>
+    <string name="shortcut_settings_short">Settings</string>
+    <string name="shortcut_settings_long">Open settings</string>
+    <string name="shortcut_disabled">This shortcut is unavailable right now</string>
 </resources>

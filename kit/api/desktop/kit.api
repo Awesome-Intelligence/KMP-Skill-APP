@@ -5,8 +5,14 @@ public final class com/androidkit/app/AppKt {
 public final class com/androidkit/app/ComposableSingletons$AppKt {
 	public static final field INSTANCE Lcom/androidkit/app/ComposableSingletons$AppKt;
 	public fun <init> ()V
-	public final fun getLambda$-1078895291$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1425766588$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1637296914$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-1741807517$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
 	public final fun getLambda$-1799632106$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$-953415859$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
+	public final fun getLambda$1764119729$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$4759858$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$810118827$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
 }
 
 public final class com/androidkit/app/ComposableSingletons$MainKt {
@@ -20,6 +26,49 @@ public final class com/androidkit/app/ComposableSingletons$MainKt {
 public final class com/androidkit/app/MainKt {
 	public static final fun main ()V
 	public static synthetic fun main ([Ljava/lang/String;)V
+}
+
+public final class com/androidkit/app/data/settings/AppSettings {
+	public static final field $stable I
+	public static final field Companion Lcom/androidkit/app/data/settings/AppSettings$Companion;
+	public fun <init> ()V
+	public fun <init> (Lcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/AppearanceMode;Z)V
+	public synthetic fun <init> (Lcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/AppearanceMode;ZILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public final fun component2 ()Lcom/androidkit/app/ui/theme/AppearanceMode;
+	public final fun component3 ()Z
+	public final fun copy (Lcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/AppearanceMode;Z)Lcom/androidkit/app/data/settings/AppSettings;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/settings/AppSettings;Lcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/AppearanceMode;ZILjava/lang/Object;)Lcom/androidkit/app/data/settings/AppSettings;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAppearanceMode ()Lcom/androidkit/app/ui/theme/AppearanceMode;
+	public final fun getReducedMotion ()Z
+	public final fun getThemeStyle ()Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/androidkit/app/data/settings/AppSettings$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/data/settings/AppSettings$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/androidkit/app/data/settings/AppSettings;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/androidkit/app/data/settings/AppSettings;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/androidkit/app/data/settings/AppSettings$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/androidkit/app/data/settings/SettingsStore {
+	public static final field $stable I
+	public static final field FILE_NAME Ljava/lang/String;
+	public fun <init> (Lokio/Path;)V
+	public final fun load (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public final fun save (Lcom/androidkit/app/data/settings/AppSettings;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
 }
 
 public abstract interface class com/androidkit/app/data/storage/EntityStore {
@@ -106,16 +155,218 @@ public final class com/androidkit/app/data/storage/StoredEntity {
 	public fun toString ()Ljava/lang/String;
 }
 
+public final class com/androidkit/app/data/update/AppVersion : java/lang/Comparable {
+	public static final field $stable I
+	public static final field Companion Lcom/androidkit/app/data/update/AppVersion$Companion;
+	public fun <init> (Ljava/util/List;Ljava/util/List;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/util/List;Ljava/util/List;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun compareTo (Lcom/androidkit/app/data/update/AppVersion;)I
+	public synthetic fun compareTo (Ljava/lang/Object;)I
+	public final fun component1 ()Ljava/util/List;
+	public final fun component2 ()Ljava/util/List;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun copy (Ljava/util/List;Ljava/util/List;Ljava/lang/String;)Lcom/androidkit/app/data/update/AppVersion;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/update/AppVersion;Ljava/util/List;Ljava/util/List;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/update/AppVersion;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getBuildMetadata ()Ljava/lang/String;
+	public final fun getNumbers ()Ljava/util/List;
+	public final fun getPreRelease ()Ljava/util/List;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/update/AppVersion$Companion {
+	public final fun parseOrNull (Ljava/lang/String;)Lcom/androidkit/app/data/update/AppVersion;
+}
+
+public final class com/androidkit/app/data/update/FileUpdateStateStore : com/androidkit/app/data/update/UpdateStateStore {
+	public static final field $stable I
+	public static final field FILE_NAME Ljava/lang/String;
+	public fun <init> (Lokio/Path;)V
+	public fun load (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public fun save (Lcom/androidkit/app/data/update/UpdateState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/data/update/GitHubReleaseSource : com/androidkit/app/data/update/UpdateSource {
+	public static final field $stable I
+	public static final field ACCEPT Ljava/lang/String;
+	public static final field API_BASE Ljava/lang/String;
+	public static final field API_VERSION Ljava/lang/String;
+	public static final field USER_AGENT Ljava/lang/String;
+	public fun <init> (Lio/ktor/client/HttpClient;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Lio/ktor/client/HttpClient;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun fetch (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/data/update/HttpUpdateSource : com/androidkit/app/data/update/UpdateSource {
+	public static final field $stable I
+	public static final field USER_AGENT Ljava/lang/String;
+	public fun <init> (Lio/ktor/client/HttpClient;Ljava/lang/String;)V
+	public fun fetch (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/data/update/UpdateCheckPolicy {
+	public static final field $stable I
+	public fun <init> ()V
+	public synthetic fun <init> (JILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public synthetic fun <init> (JLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-UwyO8pc ()J
+	public final fun copy-LRDsOJo (J)Lcom/androidkit/app/data/update/UpdateCheckPolicy;
+	public static synthetic fun copy-LRDsOJo$default (Lcom/androidkit/app/data/update/UpdateCheckPolicy;JILjava/lang/Object;)Lcom/androidkit/app/data/update/UpdateCheckPolicy;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMinInterval-UwyO8pc ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/update/UpdateChecker {
+	public static final field $stable I
+	public fun <init> (Lcom/androidkit/app/data/update/UpdateSource;Lcom/androidkit/app/data/update/UpdateStateStore;Lcom/androidkit/app/data/update/UpdateCheckPolicy;Lkotlin/jvm/functions/Function0;)V
+	public synthetic fun <init> (Lcom/androidkit/app/data/update/UpdateSource;Lcom/androidkit/app/data/update/UpdateStateStore;Lcom/androidkit/app/data/update/UpdateCheckPolicy;Lkotlin/jvm/functions/Function0;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun check (Ljava/lang/String;ZLkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public static synthetic fun check$default (Lcom/androidkit/app/data/update/UpdateChecker;Ljava/lang/String;ZLkotlin/coroutines/Continuation;ILjava/lang/Object;)Ljava/lang/Object;
+	public final fun skip (Ljava/lang/String;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/data/update/UpdateManifest {
+	public static final field $stable I
+	public static final field Companion Lcom/androidkit/app/data/update/UpdateManifest$Companion;
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Ljava/lang/String;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun component5 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/androidkit/app/data/update/UpdateManifest;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/update/UpdateManifest;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/update/UpdateManifest;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getDownloadUrl ()Ljava/lang/String;
+	public final fun getLatestVersion ()Ljava/lang/String;
+	public final fun getMinSupportedVersion ()Ljava/lang/String;
+	public final fun getPublishedAt ()Ljava/lang/String;
+	public final fun getReleaseNotes ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/androidkit/app/data/update/UpdateManifest$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/data/update/UpdateManifest$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/androidkit/app/data/update/UpdateManifest;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/androidkit/app/data/update/UpdateManifest;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/androidkit/app/data/update/UpdateManifest$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class com/androidkit/app/data/update/UpdateResult {
+}
+
+public final class com/androidkit/app/data/update/UpdateResult$Available : com/androidkit/app/data/update/UpdateResult {
+	public static final field $stable I
+	public fun <init> (Lcom/androidkit/app/data/update/UpdateManifest;Z)V
+	public final fun component1 ()Lcom/androidkit/app/data/update/UpdateManifest;
+	public final fun component2 ()Z
+	public final fun copy (Lcom/androidkit/app/data/update/UpdateManifest;Z)Lcom/androidkit/app/data/update/UpdateResult$Available;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/update/UpdateResult$Available;Lcom/androidkit/app/data/update/UpdateManifest;ZILjava/lang/Object;)Lcom/androidkit/app/data/update/UpdateResult$Available;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMandatory ()Z
+	public final fun getManifest ()Lcom/androidkit/app/data/update/UpdateManifest;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/update/UpdateResult$Failed : com/androidkit/app/data/update/UpdateResult {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/data/update/UpdateResult$Failed;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/update/UpdateResult$Failed;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/update/UpdateResult$Failed;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/update/UpdateResult$Skipped : com/androidkit/app/data/update/UpdateResult {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/data/update/UpdateResult$Skipped;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/update/UpdateResult$Throttled : com/androidkit/app/data/update/UpdateResult {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/data/update/UpdateResult$Throttled;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/data/update/UpdateResult$UpToDate : com/androidkit/app/data/update/UpdateResult {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/data/update/UpdateResult$UpToDate;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public abstract interface class com/androidkit/app/data/update/UpdateSource {
+	public abstract fun fetch (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
+public final class com/androidkit/app/data/update/UpdateState {
+	public static final field $stable I
+	public static final field Companion Lcom/androidkit/app/data/update/UpdateState$Companion;
+	public fun <init> ()V
+	public fun <init> (JLjava/lang/String;)V
+	public synthetic fun <init> (JLjava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()J
+	public final fun component2 ()Ljava/lang/String;
+	public final fun copy (JLjava/lang/String;)Lcom/androidkit/app/data/update/UpdateState;
+	public static synthetic fun copy$default (Lcom/androidkit/app/data/update/UpdateState;JLjava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/data/update/UpdateState;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getLastCheckedAtMillis ()J
+	public final fun getSkippedVersion ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final synthetic class com/androidkit/app/data/update/UpdateState$$serializer : kotlinx/serialization/internal/GeneratedSerializer {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/data/update/UpdateState$$serializer;
+	public final fun childSerializers ()[Lkotlinx/serialization/KSerializer;
+	public final fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Lcom/androidkit/app/data/update/UpdateState;
+	public synthetic fun deserialize (Lkotlinx/serialization/encoding/Decoder;)Ljava/lang/Object;
+	public final fun getDescriptor ()Lkotlinx/serialization/descriptors/SerialDescriptor;
+	public final fun serialize (Lkotlinx/serialization/encoding/Encoder;Lcom/androidkit/app/data/update/UpdateState;)V
+	public synthetic fun serialize (Lkotlinx/serialization/encoding/Encoder;Ljava/lang/Object;)V
+	public fun typeParametersSerializers ()[Lkotlinx/serialization/KSerializer;
+}
+
+public final class com/androidkit/app/data/update/UpdateState$Companion {
+	public final fun serializer ()Lkotlinx/serialization/KSerializer;
+}
+
+public abstract interface class com/androidkit/app/data/update/UpdateStateStore {
+	public abstract fun load (Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+	public abstract fun save (Lcom/androidkit/app/data/update/UpdateState;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class com/androidkit/app/res/ActualResourceCollectorsKt {
 	public static final fun getAllDrawableResources (Lcom/androidkit/app/res/Res;)Ljava/util/Map;
 	public static final fun getAllFontResources (Lcom/androidkit/app/res/Res;)Ljava/util/Map;
 	public static final fun getAllPluralStringResources (Lcom/androidkit/app/res/Res;)Ljava/util/Map;
 	public static final fun getAllStringArrayResources (Lcom/androidkit/app/res/Res;)Ljava/util/Map;
 	public static final fun getAllStringResources (Lcom/androidkit/app/res/Res;)Ljava/util/Map;
-}
-
-public final class com/androidkit/app/res/Font0_commonMainKt {
-	public static final fun getFusion_pixel_12px_proportional_zh_hans (Lcom/androidkit/app/res/Res$font;)Lorg/jetbrains/compose/resources/FontResource;
 }
 
 public final class com/androidkit/app/res/Res {
@@ -164,16 +415,23 @@ public final class com/androidkit/app/res/String0_commonMainKt {
 	public static final fun getAi_not_configured (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getAi_parse_error (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getAi_unsupported_capability (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getAppearance (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getAppearance_mode (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getAvatar_content_description (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getBack (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getBasic_info (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
-	public static final fun getBitmap_a11y_chart (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
-	public static final fun getBitmap_a11y_number_value (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
-	public static final fun getBitmap_a11y_typewriter (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getBold (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getBullet_list (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getCalendar_view (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getCancel (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_approval_allow_always (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_approval_allow_once (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_approval_deny (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_approval_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_process_count (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_step_done (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_step_failed (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getChat_step_running (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getClear (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getClear_all (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getClear_all_filters (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -181,6 +439,7 @@ public final class com/androidkit/app/res/String0_commonMainKt {
 	public static final fun getCollapse (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getConfirm (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getCurrent_streak (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getDark_mode (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getDate_month_day (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getDate_pattern_full_date (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getDate_pattern_month (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -205,6 +464,7 @@ public final class com/androidkit/app/res/String0_commonMainKt {
 	public static final fun getDismiss_suggestion (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getDone (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getEdit (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getEink_selected (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getEmpty_no_contacts (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getEmpty_no_goals (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getEnd_date (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -217,12 +477,14 @@ public final class com/androidkit/app/res/String0_commonMainKt {
 	public static final fun getFilter_colleague_template (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getFilter_family_template (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getFilter_other_template (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getFollow_system (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getHeading (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getHide_remove_button (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getInsert_image (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getInsert_tag (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getItalic (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getLess (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getLight_mode (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getLink_contact (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getLink_goal (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getLoading (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -240,6 +502,9 @@ public final class com/androidkit/app/res/String0_commonMainKt {
 	public static final fun getNotifications_empty_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getNotifications_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getNumbered_list (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+}
+
+public final class com/androidkit/app/res/String1_commonMainKt {
 	public static final fun getOperation_failed (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getOperation_success (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getPage_indicator (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -251,11 +516,10 @@ public final class com/androidkit/app/res/String0_commonMainKt {
 	public static final fun getQuota_goal_message (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getQuota_paywall_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getQuota_paywall_upgrade (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
-}
-
-public final class com/androidkit/app/res/String1_commonMainKt {
 	public static final fun getQuote (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getRedo (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getReduce_motion (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getReduce_motion_desc (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getRemove (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getRemove_filter (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getReset (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -267,12 +531,19 @@ public final class com/androidkit/app/res/String1_commonMainKt {
 	public static final fun getSelected_state (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getSelected_suffix (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getSelected_tags (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getSettings (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getShow_more_contacts (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getStart_date (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getStart_first_record (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getTag_placeholder (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getTemplate (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getTemplate_emergency (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getTheme_eink (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getTheme_macos (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getTheme_mono (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getTheme_notion (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getTheme_style (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getTheme_swiss (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getTime_days_ago (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getTime_hours_ago (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getTime_just_now (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
@@ -286,10 +557,125 @@ public final class com/androidkit/app/res/String1_commonMainKt {
 	public static final fun getUnfavorite (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getUnselected_state (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getUnselected_tags (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_available_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_later (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_notes_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_now (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_required_hint (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_required_title (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_skip_version (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+	public static final fun getUpdate_version_line (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getVoice_not_available (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getVoice_permission_required (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getWeek_selected_suffix (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
 	public static final fun getWeek_view_switch_hint (Lcom/androidkit/app/res/Res$string;)Lorg/jetbrains/compose/resources/StringResource;
+}
+
+public abstract class com/androidkit/app/ui/agent/ChatMessage {
+	public static final field $stable I
+}
+
+public final class com/androidkit/app/ui/agent/ChatMessage$Assistant : com/androidkit/app/ui/agent/ChatMessage {
+	public static final field $stable I
+	public fun <init> ()V
+	public fun <init> (Ljava/lang/String;Ljava/util/List;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Ljava/util/List;)Lcom/androidkit/app/ui/agent/ChatMessage$Assistant;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/agent/ChatMessage$Assistant;Ljava/lang/String;Ljava/util/List;ILjava/lang/Object;)Lcom/androidkit/app/ui/agent/ChatMessage$Assistant;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getSteps ()Ljava/util/List;
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/agent/ChatMessage$Error : com/androidkit/app/ui/agent/ChatMessage {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/ui/agent/ChatMessage$Error;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/agent/ChatMessage$Error;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/ui/agent/ChatMessage$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/agent/ChatMessage$System : com/androidkit/app/ui/agent/ChatMessage {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/ui/agent/ChatMessage$System;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/agent/ChatMessage$System;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/ui/agent/ChatMessage$System;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/agent/ChatMessage$User : com/androidkit/app/ui/agent/ChatMessage {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;)Lcom/androidkit/app/ui/agent/ChatMessage$User;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/agent/ChatMessage$User;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/ui/agent/ChatMessage$User;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getText ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/agent/ChatMessageListKt {
+	public static final fun ChatMessageList (Ljava/util/List;Landroidx/compose/ui/Modifier;Landroidx/compose/foundation/lazy/LazyListState;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ChatMessageRow (Lcom/androidkit/app/ui/agent/ChatMessage;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ChatStepRow (Lcom/androidkit/app/ui/agent/ChatStep;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ChatStepsFold (Ljava/util/List;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/agent/ChatStep {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/androidkit/app/ui/agent/ChatStepStatus;Ljava/lang/String;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/String;Lcom/androidkit/app/ui/agent/ChatStepStatus;Ljava/lang/String;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/String;
+	public final fun component3 ()Lcom/androidkit/app/ui/agent/ChatStepStatus;
+	public final fun component4 ()Ljava/lang/String;
+	public final fun copy (Ljava/lang/String;Ljava/lang/String;Lcom/androidkit/app/ui/agent/ChatStepStatus;Ljava/lang/String;)Lcom/androidkit/app/ui/agent/ChatStep;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/agent/ChatStep;Ljava/lang/String;Ljava/lang/String;Lcom/androidkit/app/ui/agent/ChatStepStatus;Ljava/lang/String;ILjava/lang/Object;)Lcom/androidkit/app/ui/agent/ChatStep;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getArgs ()Ljava/lang/String;
+	public final fun getResult ()Ljava/lang/String;
+	public final fun getStatus ()Lcom/androidkit/app/ui/agent/ChatStepStatus;
+	public final fun getTool ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/agent/ChatStepStatus : java/lang/Enum {
+	public static final field Done Lcom/androidkit/app/ui/agent/ChatStepStatus;
+	public static final field Failed Lcom/androidkit/app/ui/agent/ChatStepStatus;
+	public static final field Running Lcom/androidkit/app/ui/agent/ChatStepStatus;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/agent/ChatStepStatus;
+	public static fun values ()[Lcom/androidkit/app/ui/agent/ChatStepStatus;
+}
+
+public final class com/androidkit/app/ui/agent/ComposableSingletons$ChatMessageListKt {
+	public static final field INSTANCE Lcom/androidkit/app/ui/agent/ComposableSingletons$ChatMessageListKt;
+	public fun <init> ()V
+	public final fun getLambda$585775204$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/androidkit/app/ui/agent/ComposableSingletons$ToolApprovalCardKt {
+	public static final field INSTANCE Lcom/androidkit/app/ui/agent/ComposableSingletons$ToolApprovalCardKt;
+	public fun <init> ()V
+	public final fun getLambda$-2085550052$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+}
+
+public final class com/androidkit/app/ui/agent/ToolApprovalCardKt {
+	public static final fun ToolApprovalCard (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/androidkit/app/ui/components/AIComponentsKt {
@@ -635,18 +1021,6 @@ public final class com/androidkit/app/ui/components/ComposableSingletons$Dialogs
 	public final fun getLambda$929347137$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/androidkit/app/ui/components/ComposableSingletons$DotMatrixBarChartKt {
-	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$DotMatrixBarChartKt;
-	public fun <init> ()V
-	public final fun getLambda$924181039$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
-}
-
-public final class com/androidkit/app/ui/components/ComposableSingletons$DotMatrixNumberKt {
-	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$DotMatrixNumberKt;
-	public fun <init> ()V
-	public final fun getLambda$423630255$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
-}
-
 public final class com/androidkit/app/ui/components/ComposableSingletons$DropdownsKt {
 	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$DropdownsKt;
 	public fun <init> ()V
@@ -754,18 +1128,6 @@ public final class com/androidkit/app/ui/components/ComposableSingletons$PageInd
 	public final fun getLambda$-730251569$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/androidkit/app/ui/components/ComposableSingletons$PixelDissolveKt {
-	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$PixelDissolveKt;
-	public fun <init> ()V
-	public final fun getLambda$-1963045818$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
-}
-
-public final class com/androidkit/app/ui/components/ComposableSingletons$PixelProgressBarKt {
-	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$PixelProgressBarKt;
-	public fun <init> ()V
-	public final fun getLambda$-1204274253$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
-}
-
 public final class com/androidkit/app/ui/components/ComposableSingletons$ProgressKt {
 	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$ProgressKt;
 	public fun <init> ()V
@@ -855,10 +1217,11 @@ public final class com/androidkit/app/ui/components/ComposableSingletons$ToggleR
 	public final fun getLambda$245707535$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
 }
 
-public final class com/androidkit/app/ui/components/ComposableSingletons$TypewriterTextKt {
-	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$TypewriterTextKt;
+public final class com/androidkit/app/ui/components/ComposableSingletons$UpdateDialogKt {
+	public static final field INSTANCE Lcom/androidkit/app/ui/components/ComposableSingletons$UpdateDialogKt;
 	public fun <init> ()V
-	public final fun getLambda$-882495809$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-641777434$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$656125329$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
 }
 
 public final class com/androidkit/app/ui/components/ComposableSingletons$UserAvatarKt {
@@ -918,14 +1281,6 @@ public final class com/androidkit/app/ui/components/DialogsKt {
 	public static final fun SelectDialog (Ljava/lang/String;Ljava/util/List;ILkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
-public final class com/androidkit/app/ui/components/DotMatrixBarChartKt {
-	public static final fun DotMatrixBarChart-j6YwSyc (Ljava/util/List;Landroidx/compose/ui/Modifier;IFFFJJJLjava/lang/String;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/androidkit/app/ui/components/DotMatrixNumberKt {
-	public static final fun DotMatrixNumber-ypmoAuA (Ljava/lang/String;Landroidx/compose/ui/Modifier;FFJLjava/lang/String;Landroidx/compose/runtime/Composer;II)V
-}
-
 public final class com/androidkit/app/ui/components/DropdownOption {
 	public static final field $stable I
 	public fun <init> (Ljava/lang/String;Ljava/lang/Object;)V
@@ -942,6 +1297,15 @@ public final class com/androidkit/app/ui/components/DropdownOption {
 
 public final class com/androidkit/app/ui/components/DropdownsKt {
 	public static final fun SelectDropdown (Ljava/util/List;Ljava/lang/Object;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/components/EInkComponentsKt {
+	public static final fun EInkInkAction (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun EInkPanel-uFdPcIQ (Landroidx/compose/ui/Modifier;FLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun EInkPaperField (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun EInkReadingRow (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZZLkotlin/jvm/functions/Function0;Landroidx/compose/runtime/Composer;II)V
+	public static final fun EInkStatusMarker (Ljava/lang/String;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun eInkGrain (Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Modifier;
 }
 
 public final class com/androidkit/app/ui/components/EmptyStateKt {
@@ -1050,6 +1414,24 @@ public final class com/androidkit/app/ui/components/ListItemsKt {
 	public static final fun AppListItem-uTGNYkk (Ljava/lang/String;Ljava/lang/String;Ljava/lang/Integer;Landroidx/compose/ui/graphics/Color;Ljava/lang/String;ZLjava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function2;Ljava/lang/Float;Ljava/util/List;Ljava/util/Map;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;III)V
 }
 
+public final class com/androidkit/app/ui/components/MacOSComponentsKt {
+	public static final fun MacOSListRow (Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/runtime/Composer;II)V
+	public static final fun MacOSSegmentedControl (Ljava/util/List;ILkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun MacOSSystemButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLandroidx/compose/runtime/Composer;II)V
+	public static final fun MacOSToolbar (Ljava/lang/String;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun MacOSVibrancyPanel (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun MacOSVibrancySidebar (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/components/MacOSTrafficLight : java/lang/Enum {
+	public static final field Green Lcom/androidkit/app/ui/components/MacOSTrafficLight;
+	public static final field Red Lcom/androidkit/app/ui/components/MacOSTrafficLight;
+	public static final field Yellow Lcom/androidkit/app/ui/components/MacOSTrafficLight;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/components/MacOSTrafficLight;
+	public static fun values ()[Lcom/androidkit/app/ui/components/MacOSTrafficLight;
+}
+
 public final class com/androidkit/app/ui/components/MarkdownEditorKt {
 	public static final fun MarkdownEditor (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;ZLkotlin/jvm/functions/Function1;Ljava/util/Map;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;III)V
 	public static final fun MarkdownPreview (Ljava/lang/String;Landroidx/compose/ui/Modifier;Ljava/util/Map;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Landroidx/compose/runtime/Composer;II)V
@@ -1100,22 +1482,15 @@ public final class com/androidkit/app/ui/components/NotificationsButtonKt {
 	public static final fun NotificationsPanelPreview (Landroidx/compose/runtime/Composer;I)V
 }
 
+public final class com/androidkit/app/ui/components/NotionComponentsKt {
+	public static final fun NotionBlockRow (Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun NotionCallout (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/runtime/Composer;II)V
+	public static final fun NotionGhostButton (Ljava/lang/String;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/vector/ImageVector;Landroidx/compose/runtime/Composer;II)V
+	public static final fun NotionInlineInput (Ljava/lang/String;Lkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Ljava/lang/String;ZLandroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/androidkit/app/ui/components/PageIndicatorKt {
 	public static final fun PageIndicator (IILandroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/androidkit/app/ui/components/PixelDissolveKt {
-	public static final fun PixelDissolve-FyETyZw (Ljava/lang/Object;Landroidx/compose/ui/Modifier;FIJLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/androidkit/app/ui/components/PixelEffectsKt {
-	public static final fun pixelDitherHover-BazWgJc (Landroidx/compose/ui/Modifier;JFILandroidx/compose/runtime/Composer;II)Landroidx/compose/ui/Modifier;
-	public static final fun pixelDotGrid-oMI9zvI (Landroidx/compose/ui/Modifier;JFFLandroidx/compose/runtime/Composer;II)Landroidx/compose/ui/Modifier;
-}
-
-public final class com/androidkit/app/ui/components/PixelProgressBarKt {
-	public static final fun PixelCheck-iJQMabo (Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V
-	public static final fun PixelProgressBar-c-RVSQo (FLandroidx/compose/ui/Modifier;IFFJJJZLjava/lang/String;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/androidkit/app/ui/components/ProgressKt {
@@ -1221,6 +1596,35 @@ public final class com/androidkit/app/ui/components/StatsKt {
 	public static final fun StatsCard (Ljava/util/List;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
 }
 
+public final class com/androidkit/app/ui/components/StatusMarkKt {
+	public static final fun StatusMark-EfRbmQ0 (ZLandroidx/compose/ui/Modifier;FJLandroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/components/SwissComponentsKt {
+	public static final fun SwissColorField-KTwxG1Y (JLjava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun SwissInlineButton (Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun SwissSectionLabel (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+	public static final fun SwissStructuralRow (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;ZLkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/components/SwissLayout {
+	public static final field $stable I
+	public static final field COLUMNS I
+	public static final field INSTANCE Lcom/androidkit/app/ui/components/SwissLayout;
+	public final fun getElementGap-D9Ej5fM ()F
+	public final fun getGutter-D9Ej5fM ()F
+	public final fun getMaxWidth-D9Ej5fM ()F
+	public final fun getNarrowBreakpoint-D9Ej5fM ()F
+	public final fun getSectionGap-D9Ej5fM ()F
+}
+
+public final class com/androidkit/app/ui/components/SwissLayoutKt {
+	public static final fun SwissGrid-6a0pyJM (Ljava/util/List;Landroidx/compose/ui/Modifier;FLandroidx/compose/runtime/Composer;II)V
+	public static final fun SwissPage (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+	public static final fun SwissRule-iJQMabo (Landroidx/compose/ui/Modifier;JLandroidx/compose/runtime/Composer;II)V
+	public static final fun SwissSection-3IgeMak (Landroidx/compose/ui/Modifier;JLkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/androidkit/app/ui/components/TagPickerBottomSheetKt {
 	public static final fun TagPickerBottomSheet (Ljava/util/List;Ljava/util/List;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Ljava/util/Map;Landroidx/compose/runtime/Composer;II)V
 	public static final fun TagPickerChipPreview (Landroidx/compose/runtime/Composer;I)V
@@ -1242,11 +1646,7 @@ public final class com/androidkit/app/ui/components/TextFieldsKt {
 }
 
 public final class com/androidkit/app/ui/components/ToggleRowKt {
-	public static final fun ToggleRow (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/runtime/Composer;II)V
-}
-
-public final class com/androidkit/app/ui/components/TypewriterTextKt {
-	public static final fun TypewriterText-X-z6DiA (Ljava/lang/String;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/text/TextStyle;JJIILjava/lang/String;Landroidx/compose/runtime/Composer;II)V
+	public static final fun ToggleRow (Ljava/lang/String;ZLkotlin/jvm/functions/Function1;Landroidx/compose/ui/Modifier;Landroidx/compose/ui/graphics/vector/ImageVector;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
 }
 
 public final class com/androidkit/app/ui/components/UndoHistory {
@@ -1267,8 +1667,22 @@ public final class com/androidkit/app/ui/components/UndoHistory {
 public final class com/androidkit/app/ui/components/UndoHistory$Companion {
 }
 
+public final class com/androidkit/app/ui/components/UpdateDialogKt {
+	public static final fun UpdateDialog (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function0;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;ZLkotlin/jvm/functions/Function0;ZLandroidx/compose/runtime/Composer;II)V
+}
+
 public final class com/androidkit/app/ui/components/UserAvatarKt {
 	public static final fun UserAvatar-jIwJxvA (Ljava/lang/String;Ljava/lang/String;Landroidx/compose/ui/Modifier;FLandroidx/compose/ui/text/TextStyle;Ljava/lang/String;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/navigation/NavTransitionsKt {
+	public static final fun fadeThroughIn ()Landroidx/compose/animation/EnterTransition;
+	public static final fun fadeThroughOut ()Landroidx/compose/animation/ExitTransition;
+	public static final fun sharedAxisIn (I)Landroidx/compose/animation/EnterTransition;
+	public static final fun sharedAxisOffsetPx (Landroidx/compose/runtime/Composer;I)I
+	public static final fun sharedAxisOut (I)Landroidx/compose/animation/ExitTransition;
+	public static final fun sharedAxisPopIn (I)Landroidx/compose/animation/EnterTransition;
+	public static final fun sharedAxisPopOut (I)Landroidx/compose/animation/ExitTransition;
 }
 
 public final class com/androidkit/app/ui/preview/DemoData {
@@ -1659,6 +2073,86 @@ public final class com/androidkit/app/ui/preview/DemoData$Value {
 	public final fun getDATE_TODAY_PLUS_5 ()Lkotlinx/datetime/LocalDate;
 }
 
+public final class com/androidkit/app/ui/settings/ComposableSingletons$SettingsScreenKt {
+	public static final field INSTANCE Lcom/androidkit/app/ui/settings/ComposableSingletons$SettingsScreenKt;
+	public fun <init> ()V
+	public final fun getLambda$-1257726466$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-1904928536$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$-932149798$Android_Kit_kit ()Lkotlin/jvm/functions/Function3;
+}
+
+public final class com/androidkit/app/ui/settings/SettingsScreenKt {
+	public static final fun SettingsScreen (Lcom/androidkit/app/data/settings/AppSettings;Lkotlin/jvm/functions/Function1;Lkotlin/jvm/functions/Function0;Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function3;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/shell/AppShellKt {
+	public static final fun AppShell (Landroidx/compose/ui/Modifier;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Lkotlin/jvm/functions/Function2;Landroidx/compose/material3/SnackbarHostState;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+}
+
+public final class com/androidkit/app/ui/shell/ComposableSingletons$AppShellKt {
+	public static final field INSTANCE Lcom/androidkit/app/ui/shell/ComposableSingletons$AppShellKt;
+	public fun <init> ()V
+	public final fun getLambda$-1336107823$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1100891986$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$1678530766$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$812072596$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+	public final fun getLambda$956482291$Android_Kit_kit ()Lkotlin/jvm/functions/Function2;
+}
+
+public abstract interface class com/androidkit/app/ui/state/UiState {
+}
+
+public final class com/androidkit/app/ui/state/UiState$Error : com/androidkit/app/ui/state/UiState {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Ljava/lang/Throwable;
+	public final fun copy (Ljava/lang/String;Ljava/lang/Throwable;)Lcom/androidkit/app/ui/state/UiState$Error;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/state/UiState$Error;Ljava/lang/String;Ljava/lang/Throwable;ILjava/lang/Object;)Lcom/androidkit/app/ui/state/UiState$Error;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getCause ()Ljava/lang/Throwable;
+	public final fun getMessage ()Ljava/lang/String;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/state/UiState$Idle : com/androidkit/app/ui/state/UiState {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/ui/state/UiState$Idle;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/state/UiState$Loading : com/androidkit/app/ui/state/UiState {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/ui/state/UiState$Loading;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/state/UiState$Success : com/androidkit/app/ui/state/UiState {
+	public static final field $stable I
+	public fun <init> (Ljava/lang/Object;)V
+	public final fun component1 ()Ljava/lang/Object;
+	public final fun copy (Ljava/lang/Object;)Lcom/androidkit/app/ui/state/UiState$Success;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/state/UiState$Success;Ljava/lang/Object;ILjava/lang/Object;)Lcom/androidkit/app/ui/state/UiState$Success;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getData ()Ljava/lang/Object;
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/state/UiStateKt {
+	public static final fun getDataOrNull (Lcom/androidkit/app/ui/state/UiState;)Ljava/lang/Object;
+	public static final fun isLoading (Lcom/androidkit/app/ui/state/UiState;)Z
+	public static final fun map (Lcom/androidkit/app/ui/state/UiState;Lkotlin/jvm/functions/Function1;)Lcom/androidkit/app/ui/state/UiState;
+	public static final fun orElse (Lcom/androidkit/app/ui/state/UiState;Lkotlin/jvm/functions/Function0;)Ljava/lang/Object;
+	public static final fun uiStateOf (Lkotlin/jvm/functions/Function1;Lkotlin/coroutines/Continuation;)Ljava/lang/Object;
+}
+
 public final class com/androidkit/app/ui/templates/ComposableSingletons$FormScreenKt {
 	public static final field INSTANCE Lcom/androidkit/app/ui/templates/ComposableSingletons$FormScreenKt;
 	public fun <init> ()V
@@ -1731,9 +2225,223 @@ public final class com/androidkit/app/ui/templates/ListViewMode : java/lang/Enum
 	public static fun values ()[Lcom/androidkit/app/ui/templates/ListViewMode;
 }
 
-public final class com/androidkit/app/ui/theme/Bitmap {
+public final class com/androidkit/app/ui/theme/AlignmentKt {
+	public static final fun themedHorizontalAlignment (Landroidx/compose/ui/Alignment$Horizontal;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/Alignment$Horizontal;
+	public static final fun themedTextAlign-vxyPOvU (ILandroidx/compose/runtime/Composer;I)I
+}
+
+public final class com/androidkit/app/ui/theme/AppearanceMode : java/lang/Enum {
+	public static final field Dark Lcom/androidkit/app/ui/theme/AppearanceMode;
+	public static final field Light Lcom/androidkit/app/ui/theme/AppearanceMode;
+	public static final field System Lcom/androidkit/app/ui/theme/AppearanceMode;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/theme/AppearanceMode;
+	public static fun values ()[Lcom/androidkit/app/ui/theme/AppearanceMode;
+}
+
+public final class com/androidkit/app/ui/theme/ColorKt {
+	public static final fun getAchievementGold ()J
+	public static final fun getExtendedColors (Landroidx/compose/material3/MaterialTheme;Landroidx/compose/runtime/Composer;I)Lcom/androidkit/app/ui/theme/ExtendedColors;
+	public static final fun getLocalExtendedColors ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun getScrim ()J
+	public static final fun importanceColor (Landroidx/compose/material3/MaterialTheme;Lcom/androidkit/app/ui/theme/Importance;Landroidx/compose/runtime/Composer;I)J
+	public static final fun importanceColor (Lcom/androidkit/app/ui/theme/Importance;)J
+}
+
+public final class com/androidkit/app/ui/theme/ColorSwissKt {
+	public static final fun swissRed (Landroidx/compose/runtime/Composer;I)J
+}
+
+public final class com/androidkit/app/ui/theme/CornerStyle : java/lang/Enum {
+	public static final field Rounded Lcom/androidkit/app/ui/theme/CornerStyle;
+	public static final field Square Lcom/androidkit/app/ui/theme/CornerStyle;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/theme/CornerStyle;
+	public static fun values ()[Lcom/androidkit/app/ui/theme/CornerStyle;
+}
+
+public final class com/androidkit/app/ui/theme/DisabledKt {
+	public static final fun themedDisabledContentColor (Landroidx/compose/runtime/Composer;I)J
+}
+
+public final class com/androidkit/app/ui/theme/EInk {
 	public static final field $stable I
-	public static final field INSTANCE Lcom/androidkit/app/ui/theme/Bitmap;
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/EInk;
+	public final fun getBackgroundDark-0d7_KjU ()J
+	public final fun getBackgroundLight-0d7_KjU ()J
+	public final fun getErrorContainerDark-0d7_KjU ()J
+	public final fun getErrorContainerLight-0d7_KjU ()J
+	public final fun getErrorDark-0d7_KjU ()J
+	public final fun getErrorLight-0d7_KjU ()J
+	public final fun getGraphite-0d7_KjU ()J
+	public final fun getInk-0d7_KjU ()J
+	public final fun getInverseOnSurfaceDark-0d7_KjU ()J
+	public final fun getInverseOnSurfaceLight-0d7_KjU ()J
+	public final fun getInversePrimaryDark-0d7_KjU ()J
+	public final fun getInversePrimaryLight-0d7_KjU ()J
+	public final fun getInverseSurfaceDark-0d7_KjU ()J
+	public final fun getInverseSurfaceLight-0d7_KjU ()J
+	public final fun getOnBackgroundDark-0d7_KjU ()J
+	public final fun getOnBackgroundLight-0d7_KjU ()J
+	public final fun getOnErrorContainerDark-0d7_KjU ()J
+	public final fun getOnErrorContainerLight-0d7_KjU ()J
+	public final fun getOnErrorDark-0d7_KjU ()J
+	public final fun getOnErrorLight-0d7_KjU ()J
+	public final fun getOnPrimaryContainerDark-0d7_KjU ()J
+	public final fun getOnPrimaryContainerLight-0d7_KjU ()J
+	public final fun getOnPrimaryDark-0d7_KjU ()J
+	public final fun getOnPrimaryLight-0d7_KjU ()J
+	public final fun getOnSecondaryContainerDark-0d7_KjU ()J
+	public final fun getOnSecondaryContainerLight-0d7_KjU ()J
+	public final fun getOnSecondaryDark-0d7_KjU ()J
+	public final fun getOnSecondaryLight-0d7_KjU ()J
+	public final fun getOnSurfaceDark-0d7_KjU ()J
+	public final fun getOnSurfaceLight-0d7_KjU ()J
+	public final fun getOnSurfaceVariantDark-0d7_KjU ()J
+	public final fun getOnSurfaceVariantLight-0d7_KjU ()J
+	public final fun getOnTertiaryContainerDark-0d7_KjU ()J
+	public final fun getOnTertiaryContainerLight-0d7_KjU ()J
+	public final fun getOnTertiaryDark-0d7_KjU ()J
+	public final fun getOnTertiaryLight-0d7_KjU ()J
+	public final fun getOutlineDark-0d7_KjU ()J
+	public final fun getOutlineLight-0d7_KjU ()J
+	public final fun getOutlineVariantDark-0d7_KjU ()J
+	public final fun getOutlineVariantLight-0d7_KjU ()J
+	public final fun getPanel-0d7_KjU ()J
+	public final fun getPaper-0d7_KjU ()J
+	public final fun getPrimaryContainerDark-0d7_KjU ()J
+	public final fun getPrimaryContainerLight-0d7_KjU ()J
+	public final fun getPrimaryDark-0d7_KjU ()J
+	public final fun getPrimaryLight-0d7_KjU ()J
+	public final fun getRule-0d7_KjU ()J
+	public final fun getScrimDark-0d7_KjU ()J
+	public final fun getScrimLight-0d7_KjU ()J
+	public final fun getSecondaryContainerDark-0d7_KjU ()J
+	public final fun getSecondaryContainerLight-0d7_KjU ()J
+	public final fun getSecondaryDark-0d7_KjU ()J
+	public final fun getSecondaryLight-0d7_KjU ()J
+	public final fun getSurfaceBrightDark-0d7_KjU ()J
+	public final fun getSurfaceBrightLight-0d7_KjU ()J
+	public final fun getSurfaceContainerDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighLight-0d7_KjU ()J
+	public final fun getSurfaceContainerHighestDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighestLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLowDark-0d7_KjU ()J
+	public final fun getSurfaceContainerLowLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLowestDark-0d7_KjU ()J
+	public final fun getSurfaceContainerLowestLight-0d7_KjU ()J
+	public final fun getSurfaceDark-0d7_KjU ()J
+	public final fun getSurfaceDimDark-0d7_KjU ()J
+	public final fun getSurfaceDimLight-0d7_KjU ()J
+	public final fun getSurfaceLight-0d7_KjU ()J
+	public final fun getSurfaceTintDark-0d7_KjU ()J
+	public final fun getSurfaceTintLight-0d7_KjU ()J
+	public final fun getSurfaceVariantDark-0d7_KjU ()J
+	public final fun getSurfaceVariantLight-0d7_KjU ()J
+	public final fun getTertiaryContainerDark-0d7_KjU ()J
+	public final fun getTertiaryContainerLight-0d7_KjU ()J
+	public final fun getTertiaryDark-0d7_KjU ()J
+	public final fun getTertiaryLight-0d7_KjU ()J
+}
+
+public final class com/androidkit/app/ui/theme/EInkMotion {
+	public static final field $stable I
+	public static final field DURATION_MS I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/EInkMotion;
+	public final fun getEASING ()Landroidx/compose/animation/core/CubicBezierEasing;
+	public final fun spec (Z)Landroidx/compose/animation/core/TweenSpec;
+}
+
+public final class com/androidkit/app/ui/theme/EInkType {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/EInkType;
+	public final fun getAction ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getData ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getDataLabel ()Landroidx/compose/ui/text/TextStyle;
+	public final fun getDataSmall ()Landroidx/compose/ui/text/TextStyle;
+}
+
+public final class com/androidkit/app/ui/theme/ExtendedColors {
+	public static final field $stable I
+	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1-0d7_KjU ()J
+	public final fun component10-0d7_KjU ()J
+	public final fun component2-0d7_KjU ()J
+	public final fun component3-0d7_KjU ()J
+	public final fun component4-0d7_KjU ()J
+	public final fun component5-0d7_KjU ()J
+	public final fun component6-0d7_KjU ()J
+	public final fun component7-0d7_KjU ()J
+	public final fun component8-0d7_KjU ()J
+	public final fun component9-0d7_KjU ()J
+	public final fun copy--K518z4 (JJJJJJJJJJ)Lcom/androidkit/app/ui/theme/ExtendedColors;
+	public static synthetic fun copy--K518z4$default (Lcom/androidkit/app/ui/theme/ExtendedColors;JJJJJJJJJJILjava/lang/Object;)Lcom/androidkit/app/ui/theme/ExtendedColors;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getAiAccent-0d7_KjU ()J
+	public final fun getAiContainer-0d7_KjU ()J
+	public final fun getOnAiContainer-0d7_KjU ()J
+	public final fun getOnSuccess-0d7_KjU ()J
+	public final fun getOnWarning-0d7_KjU ()J
+	public final fun getStar-0d7_KjU ()J
+	public final fun getSuccess-0d7_KjU ()J
+	public final fun getSuccessContainer-0d7_KjU ()J
+	public final fun getWarning-0d7_KjU ()J
+	public final fun getWarningContainer-0d7_KjU ()J
+	public fun hashCode ()I
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/theme/Importance : java/lang/Enum {
+	public static final field HIGH Lcom/androidkit/app/ui/theme/Importance;
+	public static final field LOW Lcom/androidkit/app/ui/theme/Importance;
+	public static final field MEDIUM Lcom/androidkit/app/ui/theme/Importance;
+	public static fun getEntries ()Lkotlin/enums/EnumEntries;
+	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/theme/Importance;
+	public static fun values ()[Lcom/androidkit/app/ui/theme/Importance;
+}
+
+public final class com/androidkit/app/ui/theme/M3Motion {
+	public static final field $stable I
+	public static final field EXIT_FADE I
+	public static final field FADE_THROUGH_IN I
+	public static final field FADE_THROUGH_INITIAL_SCALE F
+	public static final field FLOAT_INITIAL_SCALE F
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/M3Motion;
+	public static final field LONG1 I
+	public static final field LONG2 I
+	public static final field MEDIUM1 I
+	public static final field MEDIUM2 I
+	public static final field MEDIUM3 I
+	public static final field MEDIUM4 I
+	public static final field SHORT1 I
+	public static final field SHORT2 I
+	public static final field SHORT3 I
+	public static final field SHORT4 I
+	public final fun appear (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/EnterTransition;
+	public final fun collapseSection (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ExitTransition;
+	public final fun defaultEffects (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun defaultSpatial (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun disappear (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ExitTransition;
+	public final fun expandSection (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/EnterTransition;
+	public final fun expressiveSpatial (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun fadeThrough (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ContentTransform;
+	public final fun fastEffects (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun fastSpatial (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun floatEnter-tprY5ME (JLandroidx/compose/runtime/Composer;I)Landroidx/compose/animation/EnterTransition;
+	public final fun floatExit-tprY5ME (JLandroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ExitTransition;
+	public final fun getEmphasized ()Landroidx/compose/animation/core/Easing;
+	public final fun getEmphasizedAccelerate ()Landroidx/compose/animation/core/Easing;
+	public final fun getEmphasizedDecelerate ()Landroidx/compose/animation/core/Easing;
+	public final fun getSHARED_AXIS_OFFSET-D9Ej5fM ()F
+	public final fun itemPlacement (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public final fun pagerScroll (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+}
+
+public final class com/androidkit/app/ui/theme/MacOS {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/MacOS;
 	public final fun getBackgroundDark-0d7_KjU ()J
 	public final fun getBackgroundLight-0d7_KjU ()J
 	public final fun getErrorContainerDark-0d7_KjU ()J
@@ -1782,6 +2490,8 @@ public final class com/androidkit/app/ui/theme/Bitmap {
 	public final fun getSecondaryContainerLight-0d7_KjU ()J
 	public final fun getSecondaryDark-0d7_KjU ()J
 	public final fun getSecondaryLight-0d7_KjU ()J
+	public final fun getSelectionDark-0d7_KjU ()J
+	public final fun getSelectionLight-0d7_KjU ()J
 	public final fun getSurfaceBrightDark-0d7_KjU ()J
 	public final fun getSurfaceBrightLight-0d7_KjU ()J
 	public final fun getSurfaceContainerDark-0d7_KjU ()J
@@ -1798,92 +2508,24 @@ public final class com/androidkit/app/ui/theme/Bitmap {
 	public final fun getSurfaceDimDark-0d7_KjU ()J
 	public final fun getSurfaceDimLight-0d7_KjU ()J
 	public final fun getSurfaceLight-0d7_KjU ()J
+	public final fun getSurfaceTintDark-0d7_KjU ()J
+	public final fun getSurfaceTintLight-0d7_KjU ()J
 	public final fun getSurfaceVariantDark-0d7_KjU ()J
 	public final fun getSurfaceVariantLight-0d7_KjU ()J
 	public final fun getTertiaryContainerDark-0d7_KjU ()J
 	public final fun getTertiaryContainerLight-0d7_KjU ()J
 	public final fun getTertiaryDark-0d7_KjU ()J
 	public final fun getTertiaryLight-0d7_KjU ()J
+	public final fun getVibrancyDark-0d7_KjU ()J
+	public final fun getVibrancyLight-0d7_KjU ()J
 }
 
-public final class com/androidkit/app/ui/theme/ColorKt {
-	public static final fun getAchievementGold ()J
-	public static final fun getExtendedColors (Landroidx/compose/material3/MaterialTheme;Landroidx/compose/runtime/Composer;I)Lcom/androidkit/app/ui/theme/ExtendedColors;
-	public static final fun getLocalExtendedColors ()Landroidx/compose/runtime/ProvidableCompositionLocal;
-	public static final fun getScrim ()J
-	public static final fun importanceColor (Landroidx/compose/material3/MaterialTheme;Lcom/androidkit/app/ui/theme/Importance;Landroidx/compose/runtime/Composer;I)J
-	public static final fun importanceColor (Lcom/androidkit/app/ui/theme/Importance;)J
-}
-
-public final class com/androidkit/app/ui/theme/ExtendedColors {
+public final class com/androidkit/app/ui/theme/MacOSMotion {
 	public static final field $stable I
-	public synthetic fun <init> (JJJJJJJJJJLkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public final fun component1-0d7_KjU ()J
-	public final fun component10-0d7_KjU ()J
-	public final fun component2-0d7_KjU ()J
-	public final fun component3-0d7_KjU ()J
-	public final fun component4-0d7_KjU ()J
-	public final fun component5-0d7_KjU ()J
-	public final fun component6-0d7_KjU ()J
-	public final fun component7-0d7_KjU ()J
-	public final fun component8-0d7_KjU ()J
-	public final fun component9-0d7_KjU ()J
-	public final fun copy--K518z4 (JJJJJJJJJJ)Lcom/androidkit/app/ui/theme/ExtendedColors;
-	public static synthetic fun copy--K518z4$default (Lcom/androidkit/app/ui/theme/ExtendedColors;JJJJJJJJJJILjava/lang/Object;)Lcom/androidkit/app/ui/theme/ExtendedColors;
-	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAiAccent-0d7_KjU ()J
-	public final fun getAiContainer-0d7_KjU ()J
-	public final fun getOnAiContainer-0d7_KjU ()J
-	public final fun getOnSuccess-0d7_KjU ()J
-	public final fun getOnWarning-0d7_KjU ()J
-	public final fun getStar-0d7_KjU ()J
-	public final fun getSuccess-0d7_KjU ()J
-	public final fun getSuccessContainer-0d7_KjU ()J
-	public final fun getWarning-0d7_KjU ()J
-	public final fun getWarningContainer-0d7_KjU ()J
-	public fun hashCode ()I
-	public fun toString ()Ljava/lang/String;
-}
-
-public final class com/androidkit/app/ui/theme/Importance : java/lang/Enum {
-	public static final field HIGH Lcom/androidkit/app/ui/theme/Importance;
-	public static final field LOW Lcom/androidkit/app/ui/theme/Importance;
-	public static final field MEDIUM Lcom/androidkit/app/ui/theme/Importance;
-	public static fun getEntries ()Lkotlin/enums/EnumEntries;
-	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/theme/Importance;
-	public static fun values ()[Lcom/androidkit/app/ui/theme/Importance;
-}
-
-public final class com/androidkit/app/ui/theme/M3Motion {
-	public static final field $stable I
-	public static final field EXIT_FADE I
-	public static final field FLOAT_INITIAL_SCALE F
-	public static final field INSTANCE Lcom/androidkit/app/ui/theme/M3Motion;
-	public static final field LONG1 I
-	public static final field LONG2 I
-	public static final field MEDIUM1 I
-	public static final field MEDIUM2 I
-	public static final field MEDIUM3 I
-	public static final field MEDIUM4 I
-	public static final field SHORT1 I
-	public static final field SHORT2 I
-	public static final field SHORT3 I
-	public static final field SHORT4 I
-	public final fun appear (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/EnterTransition;
-	public final fun collapseSection (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ExitTransition;
-	public final fun defaultEffects (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
-	public final fun defaultSpatial (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
-	public final fun disappear (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ExitTransition;
-	public final fun expandSection (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/EnterTransition;
-	public final fun fadeThrough (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ContentTransform;
-	public final fun fastEffects (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
-	public final fun fastSpatial (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
-	public final fun floatEnter-tprY5ME (JLandroidx/compose/runtime/Composer;I)Landroidx/compose/animation/EnterTransition;
-	public final fun floatExit-tprY5ME (JLandroidx/compose/runtime/Composer;I)Landroidx/compose/animation/ExitTransition;
-	public final fun getEmphasized ()Landroidx/compose/animation/core/Easing;
-	public final fun getEmphasizedAccelerate ()Landroidx/compose/animation/core/Easing;
-	public final fun getEmphasizedDecelerate ()Landroidx/compose/animation/core/Easing;
-	public final fun itemPlacement (Landroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public static final field DURATION_MS I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/MacOSMotion;
+	public final fun getEASING ()Landroidx/compose/animation/core/CubicBezierEasing;
+	public final fun spec (Z)Landroidx/compose/animation/core/TweenSpec;
 }
 
 public final class com/androidkit/app/ui/theme/Mono {
@@ -1966,16 +2608,184 @@ public final class com/androidkit/app/ui/theme/MotionKt {
 	public static final fun rememberBreathingAlpha (FLandroidx/compose/runtime/Composer;II)F
 }
 
-public final class com/androidkit/app/ui/theme/PixelMotion {
+public final class com/androidkit/app/ui/theme/Notion {
 	public static final field $stable I
-	public static final field FRAME_MS I
-	public static final field INSTANCE Lcom/androidkit/app/ui/theme/PixelMotion;
-	public final fun stepped (ILandroidx/compose/runtime/Composer;I)Landroidx/compose/animation/core/FiniteAnimationSpec;
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/Notion;
+	public final fun getBackgroundDark-0d7_KjU ()J
+	public final fun getBackgroundLight-0d7_KjU ()J
+	public final fun getErrorContainerDark-0d7_KjU ()J
+	public final fun getErrorContainerLight-0d7_KjU ()J
+	public final fun getErrorDark-0d7_KjU ()J
+	public final fun getErrorLight-0d7_KjU ()J
+	public final fun getInverseOnSurfaceDark-0d7_KjU ()J
+	public final fun getInverseOnSurfaceLight-0d7_KjU ()J
+	public final fun getInversePrimaryDark-0d7_KjU ()J
+	public final fun getInversePrimaryLight-0d7_KjU ()J
+	public final fun getInverseSurfaceDark-0d7_KjU ()J
+	public final fun getInverseSurfaceLight-0d7_KjU ()J
+	public final fun getOnBackgroundDark-0d7_KjU ()J
+	public final fun getOnBackgroundLight-0d7_KjU ()J
+	public final fun getOnErrorContainerDark-0d7_KjU ()J
+	public final fun getOnErrorContainerLight-0d7_KjU ()J
+	public final fun getOnErrorDark-0d7_KjU ()J
+	public final fun getOnErrorLight-0d7_KjU ()J
+	public final fun getOnPrimaryContainerDark-0d7_KjU ()J
+	public final fun getOnPrimaryContainerLight-0d7_KjU ()J
+	public final fun getOnPrimaryDark-0d7_KjU ()J
+	public final fun getOnPrimaryLight-0d7_KjU ()J
+	public final fun getOnSecondaryContainerDark-0d7_KjU ()J
+	public final fun getOnSecondaryContainerLight-0d7_KjU ()J
+	public final fun getOnSecondaryDark-0d7_KjU ()J
+	public final fun getOnSecondaryLight-0d7_KjU ()J
+	public final fun getOnSurfaceDark-0d7_KjU ()J
+	public final fun getOnSurfaceLight-0d7_KjU ()J
+	public final fun getOnSurfaceVariantDark-0d7_KjU ()J
+	public final fun getOnSurfaceVariantLight-0d7_KjU ()J
+	public final fun getOnTertiaryContainerDark-0d7_KjU ()J
+	public final fun getOnTertiaryContainerLight-0d7_KjU ()J
+	public final fun getOnTertiaryDark-0d7_KjU ()J
+	public final fun getOnTertiaryLight-0d7_KjU ()J
+	public final fun getOutlineDark-0d7_KjU ()J
+	public final fun getOutlineLight-0d7_KjU ()J
+	public final fun getOutlineVariantDark-0d7_KjU ()J
+	public final fun getOutlineVariantLight-0d7_KjU ()J
+	public final fun getPrimaryContainerDark-0d7_KjU ()J
+	public final fun getPrimaryContainerLight-0d7_KjU ()J
+	public final fun getPrimaryDark-0d7_KjU ()J
+	public final fun getPrimaryLight-0d7_KjU ()J
+	public final fun getScrimDark-0d7_KjU ()J
+	public final fun getScrimLight-0d7_KjU ()J
+	public final fun getSecondaryContainerDark-0d7_KjU ()J
+	public final fun getSecondaryContainerLight-0d7_KjU ()J
+	public final fun getSecondaryDark-0d7_KjU ()J
+	public final fun getSecondaryLight-0d7_KjU ()J
+	public final fun getSurfaceBrightDark-0d7_KjU ()J
+	public final fun getSurfaceBrightLight-0d7_KjU ()J
+	public final fun getSurfaceContainerDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighLight-0d7_KjU ()J
+	public final fun getSurfaceContainerHighestDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighestLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLowDark-0d7_KjU ()J
+	public final fun getSurfaceContainerLowLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLowestDark-0d7_KjU ()J
+	public final fun getSurfaceContainerLowestLight-0d7_KjU ()J
+	public final fun getSurfaceDark-0d7_KjU ()J
+	public final fun getSurfaceDimDark-0d7_KjU ()J
+	public final fun getSurfaceDimLight-0d7_KjU ()J
+	public final fun getSurfaceLight-0d7_KjU ()J
+	public final fun getSurfaceTintDark-0d7_KjU ()J
+	public final fun getSurfaceTintLight-0d7_KjU ()J
+	public final fun getSurfaceVariantDark-0d7_KjU ()J
+	public final fun getSurfaceVariantLight-0d7_KjU ()J
+	public final fun getTertiaryContainerDark-0d7_KjU ()J
+	public final fun getTertiaryContainerLight-0d7_KjU ()J
+	public final fun getTertiaryDark-0d7_KjU ()J
+	public final fun getTertiaryLight-0d7_KjU ()J
 }
 
-public final class com/androidkit/app/ui/theme/PixelMotionKt {
-	public static final fun quantize (FI)F
-	public static final fun steppedProgressState (FILandroidx/compose/runtime/Composer;I)Landroidx/compose/runtime/State;
+public final class com/androidkit/app/ui/theme/NotionMotion {
+	public static final field $stable I
+	public static final field DURATION_MS I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/NotionMotion;
+	public final fun getEASING ()Landroidx/compose/animation/core/CubicBezierEasing;
+	public final fun spec (Z)Landroidx/compose/animation/core/TweenSpec;
+}
+
+public final class com/androidkit/app/ui/theme/ShapesKt {
+	public static final fun themedCircleShape (Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/graphics/Shape;
+	public static final fun themedControlShape (Landroidx/compose/ui/graphics/Shape;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/graphics/Shape;
+	public static final fun themedCorner-8Feqmps (FLandroidx/compose/runtime/Composer;I)Landroidx/compose/ui/graphics/Shape;
+	public static final fun themedStrokeWidth-8Feqmps (FLandroidx/compose/runtime/Composer;I)F
+}
+
+public final class com/androidkit/app/ui/theme/Swiss {
+	public static final field $stable I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/Swiss;
+	public final fun getBackgroundDark-0d7_KjU ()J
+	public final fun getBackgroundLight-0d7_KjU ()J
+	public final fun getErrorContainerDark-0d7_KjU ()J
+	public final fun getErrorContainerLight-0d7_KjU ()J
+	public final fun getErrorDark-0d7_KjU ()J
+	public final fun getErrorLight-0d7_KjU ()J
+	public final fun getInverseOnSurfaceDark-0d7_KjU ()J
+	public final fun getInverseOnSurfaceLight-0d7_KjU ()J
+	public final fun getInversePrimaryDark-0d7_KjU ()J
+	public final fun getInversePrimaryLight-0d7_KjU ()J
+	public final fun getInverseSurfaceDark-0d7_KjU ()J
+	public final fun getInverseSurfaceLight-0d7_KjU ()J
+	public final fun getOnBackgroundDark-0d7_KjU ()J
+	public final fun getOnBackgroundLight-0d7_KjU ()J
+	public final fun getOnErrorContainerDark-0d7_KjU ()J
+	public final fun getOnErrorContainerLight-0d7_KjU ()J
+	public final fun getOnErrorDark-0d7_KjU ()J
+	public final fun getOnErrorLight-0d7_KjU ()J
+	public final fun getOnPrimaryContainerDark-0d7_KjU ()J
+	public final fun getOnPrimaryContainerLight-0d7_KjU ()J
+	public final fun getOnPrimaryDark-0d7_KjU ()J
+	public final fun getOnPrimaryLight-0d7_KjU ()J
+	public final fun getOnSecondaryContainerDark-0d7_KjU ()J
+	public final fun getOnSecondaryContainerLight-0d7_KjU ()J
+	public final fun getOnSecondaryDark-0d7_KjU ()J
+	public final fun getOnSecondaryLight-0d7_KjU ()J
+	public final fun getOnSurfaceDark-0d7_KjU ()J
+	public final fun getOnSurfaceLight-0d7_KjU ()J
+	public final fun getOnSurfaceVariantDark-0d7_KjU ()J
+	public final fun getOnSurfaceVariantLight-0d7_KjU ()J
+	public final fun getOnTertiaryContainerDark-0d7_KjU ()J
+	public final fun getOnTertiaryContainerLight-0d7_KjU ()J
+	public final fun getOnTertiaryDark-0d7_KjU ()J
+	public final fun getOnTertiaryLight-0d7_KjU ()J
+	public final fun getOutlineDark-0d7_KjU ()J
+	public final fun getOutlineLight-0d7_KjU ()J
+	public final fun getOutlineVariantDark-0d7_KjU ()J
+	public final fun getOutlineVariantLight-0d7_KjU ()J
+	public final fun getPrimaryContainerDark-0d7_KjU ()J
+	public final fun getPrimaryContainerLight-0d7_KjU ()J
+	public final fun getPrimaryDark-0d7_KjU ()J
+	public final fun getPrimaryLight-0d7_KjU ()J
+	public final fun getRedBlock-0d7_KjU ()J
+	public final fun getRedInk-0d7_KjU ()J
+	public final fun getRedOnDark-0d7_KjU ()J
+	public final fun getScrimDark-0d7_KjU ()J
+	public final fun getScrimLight-0d7_KjU ()J
+	public final fun getSecondaryContainerDark-0d7_KjU ()J
+	public final fun getSecondaryContainerLight-0d7_KjU ()J
+	public final fun getSecondaryDark-0d7_KjU ()J
+	public final fun getSecondaryLight-0d7_KjU ()J
+	public final fun getSurfaceBrightDark-0d7_KjU ()J
+	public final fun getSurfaceBrightLight-0d7_KjU ()J
+	public final fun getSurfaceContainerDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighLight-0d7_KjU ()J
+	public final fun getSurfaceContainerHighestDark-0d7_KjU ()J
+	public final fun getSurfaceContainerHighestLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLowDark-0d7_KjU ()J
+	public final fun getSurfaceContainerLowLight-0d7_KjU ()J
+	public final fun getSurfaceContainerLowestDark-0d7_KjU ()J
+	public final fun getSurfaceContainerLowestLight-0d7_KjU ()J
+	public final fun getSurfaceDark-0d7_KjU ()J
+	public final fun getSurfaceDimDark-0d7_KjU ()J
+	public final fun getSurfaceDimLight-0d7_KjU ()J
+	public final fun getSurfaceLight-0d7_KjU ()J
+	public final fun getSurfaceTintDark-0d7_KjU ()J
+	public final fun getSurfaceTintLight-0d7_KjU ()J
+	public final fun getSurfaceVariantDark-0d7_KjU ()J
+	public final fun getSurfaceVariantLight-0d7_KjU ()J
+	public final fun getTertiaryContainerDark-0d7_KjU ()J
+	public final fun getTertiaryContainerLight-0d7_KjU ()J
+	public final fun getTertiaryDark-0d7_KjU ()J
+	public final fun getTertiaryLight-0d7_KjU ()J
+}
+
+public final class com/androidkit/app/ui/theme/SwissMotion {
+	public static final field $stable I
+	public static final field DURATION_MS I
+	public static final field INSTANCE Lcom/androidkit/app/ui/theme/SwissMotion;
+	public final fun getEASING ()Landroidx/compose/animation/core/CubicBezierEasing;
+	public final fun spec (Z)Landroidx/compose/animation/core/TweenSpec;
 }
 
 public final class com/androidkit/app/ui/theme/TagColorsKt {
@@ -1986,23 +2796,83 @@ public final class com/androidkit/app/ui/theme/TagColorsKt {
 
 public final class com/androidkit/app/ui/theme/ThemeKt {
 	public static final fun AppTheme (Lcom/androidkit/app/ui/theme/ThemeStyle;ZZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun AppTheme (Lcom/androidkit/app/ui/theme/ThemeTokens;ZLkotlin/jvm/functions/Function2;Landroidx/compose/runtime/Composer;II)V
+	public static final fun eInkThemeTokens (Z)Lcom/androidkit/app/ui/theme/ThemeTokens;
 	public static final fun getLocalIsDarkTheme ()Landroidx/compose/runtime/ProvidableCompositionLocal;
 	public static final fun getLocalThemeStyle ()Landroidx/compose/runtime/ProvidableCompositionLocal;
+	public static final fun macOSThemeTokens (Z)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public static final fun monoThemeTokens (Z)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public static final fun notionThemeTokens (Z)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public static final fun resolveDark (Lcom/androidkit/app/ui/theme/AppearanceMode;Z)Z
+	public static final fun swissThemeTokens (Z)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public static final fun themedElevation-8Feqmps (FLandroidx/compose/runtime/Composer;I)F
 }
 
 public final class com/androidkit/app/ui/theme/ThemeStyle : java/lang/Enum {
-	public static final field Bitmap Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public static final field EInk Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public static final field MacOS Lcom/androidkit/app/ui/theme/ThemeStyle;
 	public static final field Mono Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public static final field Notion Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public static final field Swiss Lcom/androidkit/app/ui/theme/ThemeStyle;
 	public static fun getEntries ()Lkotlin/enums/EnumEntries;
 	public static fun valueOf (Ljava/lang/String;)Lcom/androidkit/app/ui/theme/ThemeStyle;
 	public static fun values ()[Lcom/androidkit/app/ui/theme/ThemeStyle;
 }
 
-public final class com/androidkit/app/ui/theme/TypeBitmapKt {
-	public static final fun bitmapTypography (Landroidx/compose/runtime/Composer;I)Landroidx/compose/material3/Typography;
+public final class com/androidkit/app/ui/theme/ThemeTokens {
+	public static final field $stable I
+	public fun <init> (Landroidx/compose/material3/ColorScheme;Lcom/androidkit/app/ui/theme/ExtendedColors;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;ZLcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/CornerStyle;Ljava/util/Map;)V
+	public synthetic fun <init> (Landroidx/compose/material3/ColorScheme;Lcom/androidkit/app/ui/theme/ExtendedColors;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;ZLcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/CornerStyle;Ljava/util/Map;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public final fun component1 ()Landroidx/compose/material3/ColorScheme;
+	public final fun component2 ()Lcom/androidkit/app/ui/theme/ExtendedColors;
+	public final fun component3 ()Landroidx/compose/material3/Typography;
+	public final fun component4 ()Landroidx/compose/material3/Shapes;
+	public final fun component5 ()Z
+	public final fun component6 ()Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public final fun component7 ()Lcom/androidkit/app/ui/theme/CornerStyle;
+	public final fun component8 ()Ljava/util/Map;
+	public final fun copy (Landroidx/compose/material3/ColorScheme;Lcom/androidkit/app/ui/theme/ExtendedColors;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;ZLcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/CornerStyle;Ljava/util/Map;)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public static synthetic fun copy$default (Lcom/androidkit/app/ui/theme/ThemeTokens;Landroidx/compose/material3/ColorScheme;Lcom/androidkit/app/ui/theme/ExtendedColors;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;ZLcom/androidkit/app/ui/theme/ThemeStyle;Lcom/androidkit/app/ui/theme/CornerStyle;Ljava/util/Map;ILjava/lang/Object;)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public fun equals (Ljava/lang/Object;)Z
+	public final fun getColorScheme ()Landroidx/compose/material3/ColorScheme;
+	public final fun getCornerStyle ()Lcom/androidkit/app/ui/theme/CornerStyle;
+	public final fun getExtendedColors ()Lcom/androidkit/app/ui/theme/ExtendedColors;
+	public final fun getShapes ()Landroidx/compose/material3/Shapes;
+	public final fun getTagColors ()Ljava/util/Map;
+	public final fun getThemeStyle ()Lcom/androidkit/app/ui/theme/ThemeStyle;
+	public final fun getTypography ()Landroidx/compose/material3/Typography;
+	public fun hashCode ()I
+	public final fun isDark ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class com/androidkit/app/ui/theme/ThemeTokensKt {
+	public static final fun themeTokens (Landroidx/compose/material3/ColorScheme;ZLcom/androidkit/app/ui/theme/ExtendedColors;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;Lcom/androidkit/app/ui/theme/CornerStyle;Ljava/util/Map;)Lcom/androidkit/app/ui/theme/ThemeTokens;
+	public static synthetic fun themeTokens$default (Landroidx/compose/material3/ColorScheme;ZLcom/androidkit/app/ui/theme/ExtendedColors;Landroidx/compose/material3/Typography;Landroidx/compose/material3/Shapes;Lcom/androidkit/app/ui/theme/CornerStyle;Ljava/util/Map;ILjava/lang/Object;)Lcom/androidkit/app/ui/theme/ThemeTokens;
+}
+
+public final class com/androidkit/app/ui/theme/TypeEInkKt {
+	public static final fun getEInkTypography ()Landroidx/compose/material3/Typography;
 }
 
 public final class com/androidkit/app/ui/theme/TypeKt {
 	public static final fun getTypography ()Landroidx/compose/material3/Typography;
+}
+
+public final class com/androidkit/app/ui/theme/TypeMacOSKt {
+	public static final fun getMacOSCodeStyle ()Landroidx/compose/ui/text/TextStyle;
+	public static final fun getMacOSTypography ()Landroidx/compose/material3/Typography;
+}
+
+public final class com/androidkit/app/ui/theme/TypeNotionKt {
+	public static final fun getNotionTypography ()Landroidx/compose/material3/Typography;
+}
+
+public final class com/androidkit/app/ui/theme/TypeSwissKt {
+	public static final fun getSwissTypography ()Landroidx/compose/material3/Typography;
+}
+
+public final class com/androidkit/app/ui/theme/WeightsKt {
+	public static final fun themedFontWeight (Landroidx/compose/ui/text/font/FontWeight;Landroidx/compose/runtime/Composer;I)Landroidx/compose/ui/text/font/FontWeight;
 }
 

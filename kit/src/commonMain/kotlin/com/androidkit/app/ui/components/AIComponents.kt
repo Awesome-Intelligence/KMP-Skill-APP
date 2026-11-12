@@ -1,11 +1,14 @@
 package com.androidkit.app.ui.components
 
 import com.androidkit.app.ui.preview.DemoData
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.ThemeStyle
 import com.androidkit.app.ui.theme.AppTheme
 import com.androidkit.app.ui.theme.M3Motion
 import com.androidkit.app.ui.theme.rememberBreathingAlpha
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -17,8 +20,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
+import com.androidkit.app.ui.theme.themedCorner
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Check
@@ -62,6 +64,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.androidkit.app.res.*
 import com.androidkit.app.ui.theme.extendedColors
+import com.androidkit.app.ui.theme.themedCircleShape
+
 
 // ─── AI Accent Colors ────────────────────────────────────────────────────────
 // AI 强调色走 MaterialTheme.extendedColors（aiAccent / aiContainer / onAiContainer），
@@ -99,7 +103,7 @@ fun AIInsightCard(
                 // AI avatar
                 Surface(
                     modifier = Modifier.size(32.dp),
-                    shape = CircleShape,
+                    shape = themedCircleShape(),
                     color = ext.aiAccent.copy(alpha = 0.15f)
                 ) {
                     Box(contentAlignment = Alignment.Center) {
@@ -178,9 +182,25 @@ fun Modifier.aiGlassSurface(shape: Shape = MaterialTheme.shapes.medium): Modifie
     val ext = MaterialTheme.extendedColors
     // drawBehind 的 lambda 不是 composable，颜色必须在外面取
     val glassTint = MaterialTheme.colorScheme.surface.copy(alpha = 0.55f)
+    // 瑞士风格禁止渐变：那边改成一块平涂的 AI 底色
+    val style = LocalThemeStyle.current
+    val swiss = style == ThemeStyle.Swiss
+    // macOS 毛玻璃同样禁渐变、禁发光：平涂一块灰 + 1px 边
+    val macos = style == ThemeStyle.MacOS
+    val flat = MaterialTheme.colorScheme.surfaceContainer
+    val hairline = MaterialTheme.colorScheme.outlineVariant
     return this
         .clip(shape)
+        .then(if (macos) Modifier.border(1.dp, hairline, shape) else Modifier)
         .drawBehind {
+            if (macos) {
+                drawRect(flat)
+                return@drawBehind
+            }
+            if (swiss) {
+                drawRect(ext.aiContainer)
+                return@drawBehind
+            }
             // 玻璃底：中性半透明，向上收拢、向下淡出，不留硬边
             drawRect(
                 Brush.verticalGradient(
@@ -215,7 +235,7 @@ fun AISuggestionBadge(modifier: Modifier = Modifier) {
     Box(
         modifier = modifier
             .size(28.dp)
-            .clip(CircleShape)
+            .clip(themedCircleShape())
             .background(ext.aiAccent.copy(alpha = 0.16f)),
         contentAlignment = Alignment.Center
     ) {
@@ -345,7 +365,7 @@ fun AILoadingSkeleton(
                 Box(
                     modifier = Modifier
                         .size(32.dp)
-                        .clip(CircleShape)
+                        .clip(themedCircleShape())
                         .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha))
                 )
                 Spacer(modifier = Modifier.width(10.dp))
@@ -353,7 +373,7 @@ fun AILoadingSkeleton(
                     modifier = Modifier
                         .height(14.dp)
                         .width(80.dp)
-                        .clip(RoundedCornerShape(4.dp))
+                        .clip(themedCorner(4.dp))
                         .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha))
                 )
             }
@@ -367,7 +387,7 @@ fun AILoadingSkeleton(
                     modifier = Modifier
                         .fillMaxWidth(lastLineWidth)
                         .height(12.dp)
-                        .clip(RoundedCornerShape(4.dp))
+                        .clip(themedCorner(4.dp))
                         .background(MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = alpha))
                 )
                 if (index < lineCount - 1) {

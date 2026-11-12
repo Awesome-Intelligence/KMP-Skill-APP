@@ -2,6 +2,8 @@ package com.androidkit.app.ui.components
 
 import com.androidkit.app.ui.theme.LocalReducedMotion
 import com.androidkit.app.ui.theme.M3Motion
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.ThemeStyle
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
@@ -24,7 +26,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronLeft
@@ -62,6 +63,8 @@ import kotlinx.datetime.isoDayNumber
 import kotlinx.datetime.number
 import kotlinx.datetime.onDay
 import kotlinx.datetime.yearMonth
+import com.androidkit.app.ui.theme.themedCircleShape
+
 
 /**
  * Calendar View Mode
@@ -115,6 +118,8 @@ fun AppCalendar(
     val currentYearMonth = remember(displayedDate) { displayedDate.yearMonth }
     // transitionSpec 是非 @Composable lambda，只能在 Composable 作用域里取值后闭包捕获
     val reducedMotion = LocalReducedMotion.current
+    // macOS 毛玻璃规范：动效只改颜色，不位移
+    val macos = LocalThemeStyle.current == ThemeStyle.MacOS
 
     Column(
         modifier = modifier
@@ -164,7 +169,7 @@ fun AppCalendar(
         AnimatedContent(
             targetState = viewMode to currentYearMonth,
             transitionSpec = {
-                if (reducedMotion) {
+                if (reducedMotion || macos) {
                     EnterTransition.None togetherWith ExitTransition.None
                 } else if (initialState.first != targetState.first) {
                     // 日/周/月视图之间没有空间关系，用 fade through 而非滑动
@@ -472,7 +477,7 @@ private fun CalendarDayCell(
         modifier = modifier
             .aspectRatio(1f)
             .padding(2.dp)
-            .clip(CircleShape)
+            .clip(themedCircleShape())
             .background(
                 when {
                     isSelected -> MaterialTheme.colorScheme.primary

@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.TransformOrigin
 import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 
 /**
  * Material 3 Motion Tokens
@@ -53,6 +54,15 @@ object M3Motion {
     /** 转场退场淡出：M3 规定 90ms —— 退场必须比位移快，注意力才留在新页面 */
     const val EXIT_FADE = 90
 
+    /** Fade Through 进场：M3 规范 210ms（先等 90ms 退场，总 300ms） */
+    const val FADE_THROUGH_IN = 210
+
+    /** Fade Through 进场初始缩放：M3 规范 92% —— 不加缩放就只剩淡入，看不出「换了一层」 */
+    const val FADE_THROUGH_INITIAL_SCALE = 0.92f
+
+    /** Shared Axis X 位移量：M3 规范 30dp（不是整屏宽度） */
+    val SHARED_AXIS_OFFSET = 30.dp
+
     // ── Easing ───────────────────────────────────────────────────────
     // 进场用 decelerate、退场用 accelerate；全项目统一走 emphasized 一族。
     val emphasized: Easing = CubicBezierEasing(0.2f, 0f, 0f, 1f)
@@ -63,12 +73,23 @@ object M3Motion {
     @Composable
     fun <T> fastSpatial(): FiniteAnimationSpec<T> =
         if (LocalReducedMotion.current) snap()
-        else spring(dampingRatio = 0.8f, stiffness = 1400f)
+        else spring(dampingRatio = 0.9f, stiffness = 1400f)
 
     @Composable
     fun <T> defaultSpatial(): FiniteAnimationSpec<T> =
         if (LocalReducedMotion.current) snap()
-        else spring(dampingRatio = 0.8f, stiffness = 700f)
+        else spring(dampingRatio = 0.9f, stiffness = 700f)
+
+    /**
+     * 庆祝 / 强调回弹 —— 唯一允许明显过冲的一档（damping 0.6 / stiffness 800）。
+     * M3 standard spatial 是 damping 0.9，几乎不弹；一次性反馈需要一点回弹才「有回应」。
+     * 只用于「收藏点亮、任务完成」这类**一次性**动作，
+     * **不要**用于常态位移：元件互相压过会显得廉价，连续操作还会发飘。
+     */
+    @Composable
+    fun <T> expressiveSpatial(): FiniteAnimationSpec<T> =
+        if (LocalReducedMotion.current) snap()
+        else spring(dampingRatio = 0.6f, stiffness = 800f)
 
     // ── Effects springs（颜色/透明度，无过冲）───────────────────────
     @Composable
@@ -110,19 +131,32 @@ object M3Motion {
         else fadeOut(tween(SHORT2, easing = emphasizedAccelerate))
 
     /**
-     * Fade Through —— M3 用于「无关联内容整体替换」（切视图模式、切分组）。
-     * 旧内容先淡出（90ms），新内容隔 90ms 再淡入（MEDIUM2），两段不重叠：
-     * 同时在场会看到两层列表叠影，比硬闪更糟。
+     * Fade Through —— M3 用于「无关联内容整体替换」（切视图模式、切分组、切一级页面）。
+     * 旧内容先淡出（90ms），新内容隔 90ms 再淡入（210ms）+ 从 92% 放大，两段不重叠：
+     * 同时在场会看到两层叠影，比硬闪更糟。
      */
     @Composable
-    fun fadeThrough(): ContentTransform =
+    fun fadeThrough(): ContentTransform {
         if (LocalReducedMotion.current) {
-            EnterTransition.None togetherWith ExitTransition.None
-        } else {
-            fadeIn(
-                tween(MEDIUM2, delayMillis = EXIT_FADE, easing = emphasizedDecelerate)
-            ) togetherWith fadeOut(tween(EXIT_FADE, easing = emphasizedAccelerate))
+            return EnterTransition.None togetherWith ExitTransition.None
         }
+        // macOS 毛玻璃规范：转场只改颜色，不缩放 —— 位移/缩放会提醒人「这是个网页」
+        if (LocalThemeStyle.current == ThemeStyle.MacOS) {
+            val fade = tween<Float>(MacOSMotion.DURATION_MS, easing = MacOSMotion.EASING)
+            return fadeIn(fade) togetherWith fadeOut(fade)
+        }
+        val enter = fadeIn(
+            tween(FADE_THROUGH_IN, delayMillis = EXIT_FADE, easing = emphasizedDecelerate)
+        ) + scaleIn(
+            initialScale = FADE_THROUGH_INITIAL_SCALE,
+            animationSpec = tween(
+                FADE_THROUGH_IN,
+                delayMillis = EXIT_FADE,
+                easing = emphasizedDecelerate
+            )
+        )
+        return enter togetherWith fadeOut(tween(EXIT_FADE, easing = emphasizedAccelerate))
+    }
 
     /**
      * 列表项位移：排序变化时项目滑到新位置。
@@ -133,6 +167,16 @@ object M3Motion {
     fun itemPlacement(): FiniteAnimationSpec<IntOffset> =
         if (LocalReducedMotion.current) snap()
         else spring(dampingRatio = 1f, stiffness = 400f)
+
+    /**
+     * Pager 程序化翻页（点页签切换）。整屏内容在动，不允许过冲：
+     * 用 M3 emphasized decelerate + MEDIUM2，与导航转场同一节奏。
+     * 只用于相邻页；跨多页请直接 `scrollToPage`，别横穿中间页。
+     */
+    @Composable
+    fun pagerScroll(): FiniteAnimationSpec<Float> =
+        if (LocalReducedMotion.current) snap()
+        else tween(MEDIUM2, easing = emphasizedDecelerate)
 
     // ── 浮层（菜单 / 消息面板）──────────────────────────────────────
     /**
@@ -150,23 +194,33 @@ object M3Motion {
      * 用 tween + 强调减速，不过冲：浮层回弹会显得廉价。
      */
     @Composable
-    fun floatEnter(transformOrigin: TransformOrigin): EnterTransition =
-        if (LocalReducedMotion.current) EnterTransition.None
-        else scaleIn(
+    fun floatEnter(transformOrigin: TransformOrigin): EnterTransition {
+        if (LocalReducedMotion.current) return EnterTransition.None
+        // macOS：只淡入，不缩放
+        if (LocalThemeStyle.current == ThemeStyle.MacOS) {
+            return fadeIn(tween(MacOSMotion.DURATION_MS, easing = MacOSMotion.EASING))
+        }
+        return scaleIn(
             initialScale = FLOAT_INITIAL_SCALE,
             animationSpec = tween(MEDIUM1, easing = emphasizedDecelerate),
             transformOrigin = transformOrigin
         ) + fadeIn(tween(SHORT4, easing = emphasizedDecelerate))
+    }
 
     /** 浮层退场：缩回锚点 + 淡出，退场比进场快 */
     @Composable
-    fun floatExit(transformOrigin: TransformOrigin): ExitTransition =
-        if (LocalReducedMotion.current) ExitTransition.None
-        else scaleOut(
+    fun floatExit(transformOrigin: TransformOrigin): ExitTransition {
+        if (LocalReducedMotion.current) return ExitTransition.None
+        // macOS：只淡出，不缩放
+        if (LocalThemeStyle.current == ThemeStyle.MacOS) {
+            return fadeOut(tween(MacOSMotion.DURATION_MS, easing = MacOSMotion.EASING))
+        }
+        return scaleOut(
             targetScale = FLOAT_INITIAL_SCALE,
             animationSpec = tween(SHORT2, easing = emphasizedAccelerate),
             transformOrigin = transformOrigin
         ) + fadeOut(tween(SHORT2, easing = emphasizedAccelerate))
+    }
 }
 
 /**
@@ -184,10 +238,13 @@ val LocalReducedMotion = staticCompositionLocalOf { false }
  *
  * 时长/缓动取 M3 effects 规范：LONG1 + emphasized，与骨架屏同源，视觉节奏一致。
  * 减动效（[LocalReducedMotion]）下不闪，直接返回 1f。
+ *
+ * macOS 毛玻璃规范：不做装饰性脉动（脉冲/呼吸），那里动效只改颜色 —— 静态返回 1f。
  */
 @Composable
 fun rememberBreathingAlpha(minAlpha: Float = 0.4f): Float {
     if (LocalReducedMotion.current) return 1f
+    if (LocalThemeStyle.current == ThemeStyle.MacOS) return 1f
     val pulse = rememberInfiniteTransition(label = "breathing_pulse")
     val animated by pulse.animateFloat(
         initialValue = 1f,

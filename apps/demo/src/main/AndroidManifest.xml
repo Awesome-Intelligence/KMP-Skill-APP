@@ -33,9 +33,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AndroidKit"
         android:localeConfig="@xml/locales_config">
+        <!--
+          launchMode=singleTop：从桌面长按菜单点进来时，app 已经在前台就复用这个实例
+          （走 onNewIntent），不往任务栈上再叠一层，也不会出现两个聊天页各存一份状态。
+        -->
         <activity
             android:name=".MainActivity"
             android:exported="true"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AndroidKit.Splash"
             android:windowSoftInputMode="adjustResize">
@@ -43,6 +48,10 @@
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <!-- 桌面图标长按菜单：静态声明，装完 app 就生效（见 res/xml/shortcuts.xml） -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
 
         <!-- 分享文件（长图）用 content:// 授权给外部应用 -->

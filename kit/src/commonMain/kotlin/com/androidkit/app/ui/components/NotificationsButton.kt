@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Close
@@ -57,6 +56,10 @@ import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
 import com.androidkit.app.ui.theme.LocalIsDarkTheme
 import com.androidkit.app.ui.theme.M3Motion
+import com.androidkit.app.ui.theme.themedElevation
+import com.androidkit.app.ui.theme.themedFontWeight
+import com.androidkit.app.ui.theme.themedCircleShape
+
 
 /**
  * 一条消息 —— 任务提醒 / AI 提醒共用
@@ -173,7 +176,7 @@ private fun NotificationsPanel(
             tonalElevation = 0.dp,
             // M3 浮层（菜单）容器 elevation 2 —— 阴影让它从背景里浮起来。
             // 靠色阶分层是底色，阴影才是"浮在内容之上"的线索，浅色下尤其需要。
-            shadowElevation = 2.dp
+            shadowElevation = themedElevation(2.dp)
         ) {
             Column {
                 // 标题行：右侧"清空"只清收件箱消息（面板还可能挂着实时派生的目标提醒）
@@ -269,7 +272,7 @@ private fun NotificationRow(
         Box(
             modifier = Modifier
                 .size(40.dp)
-                .clip(CircleShape)
+                .clip(themedCircleShape())
                 .background(
                     MaterialTheme.colorScheme.primary.copy(alpha = if (isDark) 0.15f else 0.08f)
                 ),
@@ -287,7 +290,7 @@ private fun NotificationRow(
             Text(
                 text = item.title,
                 style = MaterialTheme.typography.titleMedium,
-                fontWeight = if (item.isRead) FontWeight.Normal else FontWeight.SemiBold,
+                fontWeight = themedFontWeight(if (item.isRead) FontWeight.Normal else FontWeight.SemiBold),
                 color = MaterialTheme.colorScheme.onSurface,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

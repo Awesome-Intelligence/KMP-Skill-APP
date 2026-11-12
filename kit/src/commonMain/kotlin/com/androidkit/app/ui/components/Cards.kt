@@ -24,6 +24,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import org.jetbrains.compose.resources.stringResource
 import androidx.compose.ui.unit.Dp
@@ -32,6 +33,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.androidkit.app.res.*
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.ThemeStyle
+import com.androidkit.app.ui.theme.themedElevation
 
 /**
  * App Card - M3 Card（无点击）
@@ -49,10 +53,10 @@ fun AppCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = swissCardContainer()
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
-        border = border
+        border = border ?: macOSCardBorder()
     ) {
         Column(
             modifier = Modifier.padding(contentPadding),
@@ -78,11 +82,12 @@ fun AppCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = swissCardContainer()
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp
-        )
+            defaultElevation = themedElevation(1.dp)
+        ),
+        border = macOSCardBorder()
     ) {
         Column(
             modifier = Modifier.padding(contentPadding),
@@ -133,11 +138,12 @@ fun SmallCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = swissCardContainer()
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp
-        )
+            defaultElevation = themedElevation(1.dp)
+        ),
+        border = macOSCardBorder()
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
@@ -161,11 +167,12 @@ fun SmallCard(
         modifier = modifier,
         shape = MaterialTheme.shapes.medium,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainer
+            containerColor = swissCardContainer()
         ),
         elevation = CardDefaults.cardElevation(
-            defaultElevation = 1.dp
-        )
+            defaultElevation = themedElevation(1.dp)
+        ),
+        border = macOSCardBorder()
     ) {
         Column(
             modifier = Modifier.padding(12.dp),
@@ -222,3 +229,29 @@ private fun SmallCardClickablePreview() {
         } // ponytail: demo data only
     }
 }
+
+/**
+ * 卡片底色 —— 瑞士风格下卡片**不存在**：不铺底色、不加边框，只剩内容和栏线。
+ *
+ * 规范：「Do not wrap content in cards」「Divide with 1px or 2px black rules, not card frames」。
+ * 别的主题照旧用 surfaceContainer 铺一层。
+ */
+@Composable
+private fun swissCardContainer(): Color =
+    if (LocalThemeStyle.current == ThemeStyle.Swiss) {
+        MaterialTheme.colorScheme.background
+    } else {
+        MaterialTheme.colorScheme.surfaceContainer
+    }
+
+/**
+ * macOS 毛玻璃规范：卡片是「深灰底 + 1px 白 8% 边」—— 没有描边就少了一层层次。
+ * 其它风格没有默认描边（沿用 M3）。
+ */
+@Composable
+private fun macOSCardBorder(): BorderStroke? =
+    if (LocalThemeStyle.current == ThemeStyle.MacOS) {
+        BorderStroke(1.dp, MaterialTheme.colorScheme.outlineVariant)
+    } else {
+        null
+    }

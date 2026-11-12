@@ -26,6 +26,13 @@ kotlin {
             version = release(37) { minorApiLevel = 1 }
         }
         minSdk = 26
+
+        // KMP 的 Android 库默认不带 android resources，compose 资源（.cvr）就进不了 assets，
+        // 运行时 stringResource(Res.string.xxx) 直接 MissingResourceException 崩掉。
+        // 开了这个开关，compose 资源才会被打进 assets。
+        androidResources {
+            enable = true
+        }
     }
 
     jvm("desktop") {
@@ -66,9 +73,9 @@ kotlin {
             implementation(libs.coil.compose)
             implementation(libs.coil.network.ktor3)
 
-            // Ktor：只服务 Coil 的网络图（平台引擎在 androidMain / desktopMain / iosMain 分别挂）。
-            // agent 的 HTTP 客户端在 :kit-agent-koog 里（Koog 自带），这边不需要了。
-            implementation(libs.ktor.client.core)
+            // Ktor：Coil 的网络图 + 更新检查的 HTTP 客户端（平台引擎在 androidMain / desktopMain / iosMain 分别挂）。
+            // api：HttpUpdateSource / GitHubReleaseSource 的构造参数就是 HttpClient，下游要看得见这个类型。
+            api(libs.ktor.client.core)
 
             // 文件系统（KMP，替掉 java.io.File）
             implementation(libs.okio)

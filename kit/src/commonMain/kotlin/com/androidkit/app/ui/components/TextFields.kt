@@ -3,10 +3,15 @@ package com.androidkit.app.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.layout.width
+import com.androidkit.app.ui.theme.themedControlShape
+import com.androidkit.app.ui.theme.themedCorner
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.ThemeStyle
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -32,18 +37,26 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.Swiss
 
 /**
  * 项目统一文本输入框圆角参数 - M3 规范 4dp
  */
-internal val TextFieldShape = RoundedCornerShape(4.dp)
+
 
 /**
  * 项目统一文本输入框边框颜色
  */
 @Composable
 internal fun textFieldBorderColors() = OutlinedTextFieldDefaults.colors(
-    focusedBorderColor = MaterialTheme.colorScheme.primary,
+    // macOS 毛玻璃规范：聚焦边框是白 25%，不是主色蓝
+    focusedBorderColor = when (LocalThemeStyle.current) {
+        // macOS 毛玻璃规范：聚焦边框是白 25%，不是主色蓝
+        ThemeStyle.MacOS -> MaterialTheme.colorScheme.onSurface.copy(alpha = 0.25f)
+        // 瑞士规范：聚焦边框是信号红（input recipe: focus:border-red）
+        ThemeStyle.Swiss -> Swiss.redBlock
+        else -> MaterialTheme.colorScheme.primary
+    },
     unfocusedBorderColor = MaterialTheme.colorScheme.outline,
     errorBorderColor = MaterialTheme.colorScheme.error
 )
@@ -81,17 +94,13 @@ fun SimpleTextField(
         label = if (label.isNotEmpty()) { { Text(label) } } else null,
         placeholder = if (placeholder.isNotEmpty()) { { Text(placeholder) } } else null,
         supportingText = supportingText?.let {
-            { Text(it, color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant) }
+            { SupportingHint(it, isError) }
         },
         visualTransformation = visualTransformation,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions,
-        shape = TextFieldShape,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = MaterialTheme.colorScheme.primary,
-            unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-            errorBorderColor = MaterialTheme.colorScheme.error
-        )
+        shape = themedControlShape(themedCorner(4.dp)),
+        colors = textFieldBorderColors()
     )
 }
 
@@ -192,17 +201,13 @@ object TextFields {
             label = if (label.isNotEmpty()) { { Text(label) } } else null,
             placeholder = if (placeholder.isNotEmpty()) { { Text(placeholder) } } else null,
             supportingText = supportingText?.let {
-            { Text(it, color = if (isError) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant) }
+            { SupportingHint(it, isError) }
         },
             visualTransformation = visualTransformation,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
-            shape = TextFieldShape,
-            colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = MaterialTheme.colorScheme.primary,
-                unfocusedBorderColor = MaterialTheme.colorScheme.outline,
-                errorBorderColor = MaterialTheme.colorScheme.error
-            )
+            shape = themedControlShape(themedCorner(4.dp)),
+            colors = textFieldBorderColors()
         )
     }
 }
@@ -229,5 +234,25 @@ private fun TextFieldsSimpleTextFieldPreview() {
             onValueChange = {},
             label = DemoData.Text.TITLE
         ) // ponytail: demo data only
+    }
+}
+
+/**
+ * 字段下方的提示文字 —— 出错时带一个**空心方块标记**。
+ *
+ * 零色相主题（电子纸）里 error 和正文同为墨色，光靠颜色分不出来；
+ * 规范要求「每个状态同时给出形状或文字」—— 那个方块就是形状。
+ * 其它主题保持原来的纯文字。
+ */
+@Composable
+private fun SupportingHint(text: String, isError: Boolean) {
+    val scheme = MaterialTheme.colorScheme
+    val showMark = isError && LocalThemeStyle.current == ThemeStyle.EInk
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        if (showMark) {
+            StatusMark(filled = false, size = 7.dp, color = scheme.onSurface)
+            Spacer(Modifier.width(6.dp))
+        }
+        Text(text, color = if (isError) scheme.error else scheme.onSurfaceVariant)
     }
 }

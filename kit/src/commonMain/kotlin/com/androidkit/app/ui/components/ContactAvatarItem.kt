@@ -27,6 +27,8 @@ import coil3.compose.AsyncImage
 import com.androidkit.app.res.*
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.themedElevation
+import com.androidkit.app.ui.theme.themedFontWeight
 
 /**
  * 人脉条目：48dp 圆形头像 + 下方姓名
@@ -47,7 +49,7 @@ fun ContactAvatarItem(
         Box(
             modifier = Modifier
                 .size(48.dp)
-                .shadow(2.dp, CircleShape)
+                .shadow(themedElevation(2.dp), CircleShape)
                 .clip(CircleShape)
                 .background(MaterialTheme.colorScheme.primaryContainer),
             contentAlignment = Alignment.Center
@@ -71,7 +73,7 @@ fun ContactAvatarItem(
         Text(
             text = name,
             style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Medium,
+            fontWeight = themedFontWeight(FontWeight.Medium),
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
             modifier = Modifier.widthIn(max = 60.dp)

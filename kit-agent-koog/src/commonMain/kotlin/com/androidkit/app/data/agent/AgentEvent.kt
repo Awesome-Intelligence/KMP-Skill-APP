@@ -16,6 +16,17 @@ sealed class AgentEvent {
     data class ToolUse(val name: String, val input: JsonObject) : AgentEvent()
 
     /**
+     * 工具执行完了。
+     *
+     * UI 拿它把折叠条上的那一步标成"完成"，并把结果文案显示出来 ——
+     * 过程折叠成一行，展开才看得到细节。
+     */
+    data class ToolDone(val name: String, val result: String) : AgentEvent()
+
+    /** 工具没跑成：被用户拒绝、参数不对、抛异常…… [message] 是给用户看的一句话。 */
+    data class ToolFailed(val name: String, val message: String) : AgentEvent()
+
+    /**
      * 本轮 send 结束，[text] 是模型的最终回复。
      *
      * UI 注意：最终回复的内容**已经**由 [Text] 事件发过了，这条只用来标记"说完了"，

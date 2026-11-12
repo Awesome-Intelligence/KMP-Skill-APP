@@ -253,17 +253,24 @@
 | 场景 | 用什么 |
 |------|--------|
 | 位置 / 尺寸移动 | `M3Motion.fastSpatial()`（跟手）或 `defaultSpatial()`（常态） |
+| 庆祝 / 强调回弹（收藏点亮、完成） | `M3Motion.expressiveSpatial()` —— **唯一**允许过冲的一档，别用于常态位移 |
 | 颜色 / 透明度 | `M3Motion.fastEffects()` 或 `defaultEffects()` |
 | 展开 / 收起 | `M3Motion.expandSection()` / `collapseSection()` |
 | 出现 / 消失 | `M3Motion.appear()` / `disappear()` |
 | 内容整体替换（无关联） | `M3Motion.fadeThrough()` |
+| **整页替换**（设置页、一级页面） | `AnimatedContent(transitionSpec = { M3Motion.fadeThrough() })` |
+| **层级推进 / 返回**（列表 → 详情） | `ui/navigation/NavTransitions.kt` 的 `sharedAxisIn/Out/PopIn/PopOut(offsetPx)`，位移量取 `M3Motion.SHARED_AXIS_OFFSET`（30dp，不是整屏） |
+| **接 navigation 库时** | NavHost 级用 `sharedAxis*` 做层级推进，同层级目的地用 `fadeThroughIn/Out()` 覆盖 |
 | 列表条目换位 / 删除 | `Modifier.animateItem(fadeInSpec = null, placementSpec = M3Motion.itemPlacement(), fadeOutSpec = M3Motion.fastEffects())` |
+| Pager 程序化翻页（点页签） | `M3Motion.pagerScroll()`（只用于相邻页，跨多页直接 `scrollToPage`） |
 | 加载脉动 | `rememberBreathingAlpha()` |
 
 ### Motion 原则
 - 进入：decelerate；退出：accelerate（M3 emphasized 系）
+- 退场必须比位移快（`EXIT_FADE = 90ms`），注意力才留在新页面
 - 面板类必须有退场动画（`MutableTransitionState` 翻转 targetState，退场播完再移除）
-- 遵循系统"减少动效"设置：`M3Motion` 的 spring 已自动退化为 snap，自写动画用 `LocalReducedMotion` 判断
+- 遵循系统"减少动效"设置：`M3Motion` 的 spring 已自动退化为 snap，自写动画用 `LocalReducedMotion` 判断；
+  `NavTransitions` 的函数不是 @Composable（navigation lambda 里读不到 CompositionLocal），减动效由调用侧传 `reducedMotion`
 
 ---
 

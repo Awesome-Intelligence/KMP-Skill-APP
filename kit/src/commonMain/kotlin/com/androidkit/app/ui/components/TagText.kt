@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
+import com.androidkit.app.ui.theme.themedCorner
+import com.androidkit.app.ui.theme.themedStrokeWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Icon
@@ -24,9 +25,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.themedFontWeight
 
 /** 选中态描边圆角 —— 刻意用小圆角：大圆角空心描边读起来仍是胶囊，小圆角才是勾选框 */
-private val SelectedShape = RoundedCornerShape(6.dp)
+
 
 /**
  * 标签文字 —— 全局唯一的标签渲染形式，不使用胶囊底色
@@ -50,7 +52,7 @@ fun TagText(
 ) {
     Row(
         modifier = modifier
-            .then(if (isSelected) Modifier.border(1.5.dp, color, SelectedShape) else Modifier)
+            .then(if (isSelected) Modifier.border(themedStrokeWidth(1.5.dp), color, themedCorner(6.dp)) else Modifier)
             .then(
                 if (onClick != null) {
                     // ponytail: 32dp 而非 M3 的 48dp —— FlowRow 里 48dp 会把行距撑开
@@ -73,7 +75,7 @@ fun TagText(
             Text(
                 text = "# $text",
                 style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.Medium,
+                fontWeight = themedFontWeight(FontWeight.Medium),
                 color = color
             )
         }

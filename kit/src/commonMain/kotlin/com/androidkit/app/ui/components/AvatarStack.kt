@@ -6,6 +6,9 @@ import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.togetherWith
 import com.androidkit.app.ui.theme.LocalReducedMotion
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.ThemeStyle
+import com.androidkit.app.ui.theme.themedElevation
 import com.androidkit.app.ui.theme.M3Motion
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -95,8 +98,12 @@ fun AvatarStack(
     // 整体 scale 动画（展开时微微放大）—— 缩放不是位置/尺寸，用不过冲的 effects spring
     // transitionSpec 是非 @Composable lambda，只能在 Composable 作用域里取值后闭包捕获
     val reducedMotion = LocalReducedMotion.current
+    // 瑞士风格：网格几何不许被交互扰动 —— 展开不缩放
+    val swiss = LocalThemeStyle.current == ThemeStyle.Swiss
+    // macOS 毛玻璃规范：动效只改颜色，不缩放
+    val macos = LocalThemeStyle.current == ThemeStyle.MacOS
     val scale by animateFloatAsState(
-        targetValue = if (isExpanded) 1.05f else 1f,
+        targetValue = if (isExpanded && !swiss && !macos) 1.05f else 1f,
         animationSpec = M3Motion.defaultEffects(),
         label = "scale"
     )
@@ -131,7 +138,7 @@ fun AvatarStack(
             AnimatedContent(
                 targetState = isExpanded to contacts,
                 transitionSpec = {
-                    if (reducedMotion) {
+                    if (reducedMotion || macos) {
                         EnterTransition.None togetherWith ExitTransition.None
                     } else if (targetState.first) {
                         // 展开：旧内容先滑出，新内容从左滑入
@@ -233,6 +240,7 @@ private fun AvatarItem(
     val clickLabel = if (showRemove) stringResource(Res.string.hide_remove_button) else contact.name
     val avatarDescription = stringResource(Res.string.avatar_content_description, contact.name)
     val reducedMotion = LocalReducedMotion.current
+    val macos = LocalThemeStyle.current == ThemeStyle.MacOS
 
     Box(
         modifier = Modifier
@@ -267,10 +275,10 @@ private fun AvatarItem(
             val removeDescription = stringResource(Res.string.remove)
             AnimatedVisibility(
                 visible = showRemove,
-                enter = if (reducedMotion) EnterTransition.None else scaleIn(
+                enter = if (reducedMotion || macos) EnterTransition.None else scaleIn(
                     animationSpec = M3Motion.defaultSpatial()
                 ) + fadeIn(tween(M3Motion.SHORT2, easing = M3Motion.emphasizedDecelerate)),
-                exit = if (reducedMotion) ExitTransition.None else scaleOut(
+                exit = if (reducedMotion || macos) ExitTransition.None else scaleOut(
                     animationSpec = tween(M3Motion.SHORT2, easing = M3Motion.emphasizedAccelerate)
                 ) + fadeOut(tween(M3Motion.SHORT2, easing = M3Motion.emphasizedAccelerate))
             ) {
@@ -365,7 +373,7 @@ fun ExpandedAvatarRow(
                 modifier = Modifier.clickable { onContactClick(contact) },
                 shape = MaterialTheme.shapes.medium,
                 color = MaterialTheme.colorScheme.surfaceVariant,
-                tonalElevation = 1.dp
+                tonalElevation = themedElevation(1.dp)
             ) {
                 Row(
                     modifier = Modifier.padding(8.dp),

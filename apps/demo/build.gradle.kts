@@ -1,10 +1,12 @@
-// Android 壳工程：只管 manifest / 主题 / 启动 Activity，代码全在 :kit
+// Android 壳工程：只管 manifest / 主题 / 启动 Activity，代码全在 :kit。
+// SDK 版本 / 签名 / release 收缩 / detekt 由 build-logic 的 androidkit.android.app 统一管。
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.plugin.compose")
     // skill 工具的入参用 @Serializable 数据类声明
     id("org.jetbrains.kotlin.plugin.serialization")
     id("io.gitlab.arturbosch.detekt")
+    id("androidkit.android.app")
 }
 
 // API key / 模型：命令行 -PanthropicApiKey=xxx，或环境变量 ANTHROPIC_API_KEY。
@@ -19,6 +21,19 @@ val anthropicModel = providers.gradleProperty("anthropicModel").orNull
     ?: providers.environmentVariable("ANTHROPIC_MODEL").orNull
     ?: "claude-opus-5-5"
 
+// 版本更新检查（kit 的 data/update）：
+//   -PupdateManifestUrl=… 或 UPDATE_MANIFEST_URL → 读静态 JSON 清单（可控制强制更新）
+//   -PupdateGithubRepo=owner/repo 或 UPDATE_GITHUB_REPO → 直接读 GitHub Releases
+// 清单 URL 优先；默认走本仓库的 GitHub Releases（零托管）。两者都配空 = 不检查更新。
+val updateManifestUrl = providers.gradleProperty("updateManifestUrl").orNull
+    ?: providers.environmentVariable("UPDATE_MANIFEST_URL").orNull
+    ?: ""
+val updateGithubRepo = providers.gradleProperty("updateGithubRepo").orNull
+    ?: providers.environmentVariable("UPDATE_GITHUB_REPO").orNull
+    ?: "Awesome-Intelligence/KMP-Skill-APP"
+
+fun String.asBuildConfigString(): String = replace("\\", "\\\\").replace("\"", "\\\"")
+
 // release 包里带 key = 把 key 公开了（谁都能从 APK 里提取出来）。
 // 只警告，不拦构建 —— 本地自测打 release 完全没问题；
 // 真要上架，把 key 挪到服务端代理，APK 里只留 baseUrl。
@@ -31,84 +46,22 @@ if (isReleaseBuild && anthropicApiKey.isNotBlank()) {
     )
 }
 
-// release 签名：CI 里 secret KEYSTORE_BASE64 解码成 release.keystore，三个密码走 secret
-// （KEYSTORE_PASSWORD / KEY_ALIAS / KEY_PASSWORD，见 .github/workflows/release.yml）。
-// 本地没配这些环境变量时整个跳过 —— assembleRelease 照样能跑，产物是 unsigned。
-// ⚠️ 别用 debug 密钥签 release（signingConfigs.getByName("debug")），那是测试用的假设置。
-val releaseKeystore = file(System.getenv("KEYSTORE") ?: "release.keystore")
-val releaseStorePass = System.getenv("KEYSTORE_PASSWORD")
-val releaseKeyAlias = System.getenv("KEY_ALIAS")
-val releaseKeyPass = System.getenv("KEY_PASSWORD")
-val signingReady = releaseKeystore.exists() && releaseStorePass != null && releaseKeyAlias != null
-
 android {
     namespace = "com.androidkit.app"
-    compileSdk = 37
-    compileSdkMinor = 1
 
     defaultConfig {
         applicationId = "com.androidkit.app"
-        minSdk = 26
-        // Google Play 自 2026-08-31 起要求新应用/更新 targetSdk ≥ 36
-        targetSdk = 36
-        versionCode = 1
-        // CI 用 -PVERSION_NAME=1.2.3 覆盖（release.yml 就是这么传的）
-        versionName = (project.findProperty("VERSION_NAME") as String?) ?: "1.0.0"
 
         // agent 的连接配置（值来自 gradle 属性 / 环境变量，见文件头）
         buildConfigField("String", "ANTHROPIC_API_KEY", "\"$anthropicApiKey\"")
         buildConfigField("String", "ANTHROPIC_BASE_URL", "\"$anthropicBaseUrl\"")
         buildConfigField("String", "ANTHROPIC_MODEL", "\"$anthropicModel\"")
+        // 版本更新检查的配置（见文件头）
+        buildConfigField("String", "UPDATE_MANIFEST_URL", "\"${updateManifestUrl.asBuildConfigString()}\"")
+        buildConfigField("String", "UPDATE_GITHUB_REPO", "\"${updateGithubRepo.asBuildConfigString()}\"")
 
         vectorDrawables {
             useSupportLibrary = true
-        }
-    }
-
-    signingConfigs {
-        if (signingReady) {
-            create("release") {
-                storeFile = releaseKeystore
-                storePassword = releaseStorePass
-                keyAlias = releaseKeyAlias
-                keyPassword = releaseKeyPass ?: releaseStorePass
-            }
-        }
-    }
-
-    buildTypes {
-        release {
-            isMinifyEnabled = true
-            isShrinkResources = true
-            // keystore + 密码没配就留在 unsigned —— 发布走 CI，那边四个 secret 必须齐
-            signingConfig = signingConfigs.findByName("release")
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
-
-    compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
-
-    buildFeatures {
-        compose = true
-        buildConfig = true
-    }
-
-    packaging {
-        resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
-        }
-    }
-
-    testOptions {
-        unitTests {
-            isIncludeAndroidResources = true
-            all { it.maxHeapSize = "4g" }
         }
     }
 }
@@ -123,15 +76,11 @@ dependencies {
     // 业务 skill 的工具入参是 @Serializable 数据类
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.coroutines.core)
-}
+    // 检查更新要一个 Ktor 引擎（kit 只给 HttpClient 类型，引擎由 app 挂）
+    implementation(libs.ktor.client.okhttp)
+    // 设置文件落在 app 内部存储（kit 的 SettingsStore 用 okio 写 JSON）
+    implementation(libs.okio)
 
-detekt {
-    // 规则集在 config/detekt/detekt.yml（根目录，共享给所有模块）
-    // buildUponDefaultConfig 只能写在 Gradle 侧：yml 里没这个 key，写进去会被校验判为非法属性
-    buildUponDefaultConfig = true
-    config.setFrom(files("$rootDir/config/detekt/detekt.yml"))
-    // KMP 的源码不在 src/main/java 下，detekt 默认扫不到 —— 手动列出来
-    source.setFrom(
-        fileTree("src") { include("**/kotlin/**/*.kt") },
-    )
+    // 单元测试：shortcuts.xml 和 AppShortcut 枚举的漂移检查（见 shortcuts/AppShortcutSyncTest.kt）
+    testImplementation(libs.junit)
 }

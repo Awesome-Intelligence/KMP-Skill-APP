@@ -2,4 +2,13 @@
 <resources>
     <!-- Android 专属：manifest 的 android:label 用它（其余 UI 文案在 kit/src/commonMain/composeResources） -->
     <string name="app_name">Android-Kit</string>
+
+    <!-- 桌面图标长按菜单（res/xml/shortcuts.xml）。short label 尽量 ≤10 字，长标签会被桌面截断 -->
+    <string name="shortcut_new_todo_short">新建待办</string>
+    <string name="shortcut_new_todo_long">跟助手说一句，记一条待办</string>
+    <string name="shortcut_ask_short">问助手</string>
+    <string name="shortcut_ask_long">直接问助手一个问题</string>
+    <string name="shortcut_settings_short">设置</string>
+    <string name="shortcut_settings_long">打开设置</string>
+    <string name="shortcut_disabled">这个快捷方式现在用不了</string>
 </resources>

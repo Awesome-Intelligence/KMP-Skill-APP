@@ -20,9 +20,9 @@ class SkillToolTest {
         typeToken<SearchArgs>(), "search", "搜索本地数据",
     ) {
         var seen: SearchArgs? = null
-        override suspend fun doExecute(args: SearchArgs): String {
+        override suspend fun doExecute(args: SearchArgs): ToolOutput {
             seen = args
-            return "ok:${args.query}"
+            return ToolOutput.Text("ok:${args.query}")
         }
     }
 
@@ -36,7 +36,7 @@ class SkillToolTest {
     @Test
     fun 不放行_工具不执行() {
         val tool = SearchTool()
-        tool.bind(ToolApprover { _, _ -> false })
+        tool.bind(ToolApprover { _, _ -> ToolApproval.Deny })
 
         assertFailsWith<ToolException.ValidationFailure> {
             runBlocking { tool.execute(SearchArgs("kotlin"), ToolCallMetadata.EMPTY) }
@@ -52,12 +52,12 @@ class SkillToolTest {
         tool.bind(ToolApprover { name, input ->
             approvedName = name
             approvedQuery = input["query"]?.jsonPrimitive?.content
-            true
+            ToolApproval.Allow
         })
 
         val result = runBlocking { tool.execute(SearchArgs("kotlin", 3), ToolCallMetadata.EMPTY) }
 
-        assertEquals("ok:kotlin", result)
+        assertEquals("ok:kotlin", result.text)
         assertEquals("search", approvedName)
         assertEquals("kotlin", approvedQuery)
         assertEquals(3, tool.seen?.limit)

@@ -3,6 +3,7 @@ package com.androidkit.app.demo
 import ai.koog.serialization.typeToken
 import com.androidkit.app.data.agent.SkillDefinition
 import com.androidkit.app.data.agent.SkillTool
+import com.androidkit.app.data.agent.ToolOutput
 import kotlinx.serialization.Serializable
 
 // ── 工具的入参：@Serializable 数据类 → Koog 自动生成 input_schema，不用手写 JSON Schema ──
@@ -34,21 +35,21 @@ const val TOOL_DELETE_TODO = "delete_todo"
 class ListTodosTool(private val store: TodoStore) : SkillTool<ListTodosArgs>(
     typeToken<ListTodosArgs>(), "list_todos", "列出本机所有待办事项",
 ) {
-    override suspend fun doExecute(args: ListTodosArgs): String = store.summary()
+    override suspend fun doExecute(args: ListTodosArgs): ToolOutput = ToolOutput.Text(store.summary())
 }
 
 /** 写工具：新增一条待办。 */
 class AddTodoTool(private val store: TodoStore) : SkillTool<AddTodoArgs>(
     typeToken<AddTodoArgs>(), "add_todo", "新增一条待办事项，参数 title 是待办内容",
 ) {
-    override suspend fun doExecute(args: AddTodoArgs): String = store.add(args.title)
+    override suspend fun doExecute(args: AddTodoArgs): ToolOutput = ToolOutput.Text(store.add(args.title))
 }
 
 /** 危险工具：删待办。执行前会被 ToolApprover 拦一道，用户不点头就不删。 */
 class DeleteTodoTool(private val store: TodoStore) : SkillTool<DeleteTodoArgs>(
     typeToken<DeleteTodoArgs>(), TOOL_DELETE_TODO, "删除一条待办事项，参数 id 是待办 id（用 list_todos 查）",
 ) {
-    override suspend fun doExecute(args: DeleteTodoArgs): String = store.remove(args.id)
+    override suspend fun doExecute(args: DeleteTodoArgs): ToolOutput = ToolOutput.Text(store.remove(args.id))
 }
 
 /**

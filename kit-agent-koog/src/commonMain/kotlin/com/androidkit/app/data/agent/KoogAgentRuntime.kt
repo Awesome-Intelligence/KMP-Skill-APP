@@ -17,6 +17,9 @@ import ai.koog.prompt.llm.LLMProvider
 import ai.koog.prompt.llm.LLModel
 import ai.koog.prompt.message.MessagePart
 import ai.koog.prompt.params.LLMParams
+import ai.koog.serialization.JSONElement
+import ai.koog.serialization.JSONObject
+import ai.koog.serialization.JSONPrimitive
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.channelFlow
@@ -63,9 +66,31 @@ internal class KoogAgentSession(
     approver: ToolApprover,
 ) : AgentSession {
 
+    /**
+     * 用户点过「本任务免确认」的工具名。
+     *
+     * 放在 session 里而不是 tool 里：免确认的范围是**这一轮对话**，
+     * 换个 session（换 skill、换 app 重启）就该重新问。
+     */
+    private val alwaysAllowed = mutableSetOf<String>()
+
+    /**
+     * 包一层的 approver：命中免确认名单的直接放行，
+     * 用户新点了「本任务免确认」就把工具名记进名单。
+     */
+    private val effectiveApprover = ToolApprover { name, input ->
+        if (name in alwaysAllowed) {
+            ToolApproval.Allow
+        } else {
+            approver.approve(name, input).also {
+                if (it == ToolApproval.AllowAlways) alwaysAllowed += name
+            }
+        }
+    }
+
     init {
         // 闸门注入工具：危险工具执行前先过 approver
-        skill.tools.forEach { it.bind(approver) }
+        skill.tools.forEach { it.bind(effectiveApprover) }
     }
 
     /** 事件出口。Koog 的事件钩子在 agent 跑的时候触发，这里转给当前这次 send 的消费者。 */
@@ -102,6 +127,14 @@ internal class KoogAgentSession(
                         }
                     }
                 }
+                // 工具跑完了：结果给 UI（折叠条上那一步标成"完成"）
+                onToolCallCompleted { ctx ->
+                    sink?.invoke(AgentEvent.ToolDone(ctx.toolName, ctx.toolResult?.textOrEmpty() ?: ""))
+                }
+                // 工具没跑成：被拒绝、参数不对、抛异常
+                onToolCallFailed { ctx ->
+                    sink?.invoke(AgentEvent.ToolFailed(ctx.toolName, ctx.message))
+                }
             }
         },
     )
@@ -125,6 +158,14 @@ internal class KoogAgentSession(
         }
     }
 }
+
+/**
+ * 工具结果 JSON 里的文本 —— 我们自己的 [SkillTool.encodeResult] 存的就是 `{"text":"..."}`。
+ *
+ * 拿不到就返回空串：这一步只是给 UI 显示"工具干了什么"，不值得为它抛异常。
+ */
+private fun JSONElement.textOrEmpty(): String =
+    (this as? JSONObject)?.entries?.get("text")?.let { (it as? JSONPrimitive)?.content } ?: ""
 
 /**
  * 模型 id → Koog 的 LLModel。

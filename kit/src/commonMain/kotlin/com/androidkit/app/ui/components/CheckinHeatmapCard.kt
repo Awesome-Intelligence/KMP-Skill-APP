@@ -14,7 +14,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import com.androidkit.app.ui.theme.themedCorner
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -199,7 +199,7 @@ private fun HeatmapGrid(
                             Box(
                                 modifier = Modifier
                                     .size(cellSize)
-                                    .clip(RoundedCornerShape(2.dp))
+                                    .clip(themedCorner(2.dp))
                                     .background(cellColor)
                             )
                         }
@@ -225,7 +225,7 @@ private fun HeatmapGrid(
                         Box(
                             modifier = Modifier
                                 .size(10.dp)
-                                .clip(RoundedCornerShape(2.dp))
+                                .clip(themedCorner(2.dp))
                                 .background(color)
                         )
                     }

@@ -9,7 +9,7 @@ import ai.koog.prompt.message.Message
 import ai.koog.prompt.streaming.StreamFrame
 import ai.koog.prompt.streaming.toMessageResponse
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.flow.collect
 
 /**
  * 流式 executor：把"整段返回"换成"边收边发"。
@@ -33,8 +33,26 @@ internal class StreamingExecutor(
         model: LLModel,
         tools: List<ToolDescriptor>,
     ): Message.Assistant {
-        val frames = delegate.executeStreaming(prompt, model, tools).toList()
-        emitText(frames)
+        val frames = ArrayList<StreamFrame>()
+        var streamedDelta = false
+
+        // 边收边发：必须在 collect 里就回调。先 toList() 再遍历等于把整条流攒完才发，
+        // 打字机效果会退化成「等十几秒，然后整段一次糊上来」。
+        delegate.executeStreaming(prompt, model, tools).collect { frame ->
+            frames += frame
+            if (frame is StreamFrame.TextDelta && frame.text.isNotEmpty()) {
+                streamedDelta = true
+                onText(frame.text)
+            }
+        }
+
+        // provider 不给增量帧、只给完整文本时兜底发一次
+        if (!streamedDelta) {
+            frames.filterIsInstance<StreamFrame.TextComplete>().lastOrNull()?.text
+                ?.takeIf { it.isNotEmpty() }
+                ?.let { onText(it) }
+        }
+
         return frames.toMessageResponse()
     }
 
@@ -48,17 +66,4 @@ internal class StreamingExecutor(
         delegate.moderate(prompt, model)
 
     override fun close() = delegate.close()
-
-    /** 文本增量逐块发出去；provider 不给增量帧就整段发一次。 */
-    private suspend fun emitText(frames: List<StreamFrame>) {
-        val deltas = frames.filterIsInstance<StreamFrame.TextDelta>()
-        if (deltas.isNotEmpty()) {
-            deltas.forEach { onText(it.text) }
-            return
-        }
-        // ponytail: 兜底 —— 有些 provider 只给完整文本，没有增量帧
-        frames.filterIsInstance<StreamFrame.TextComplete>().lastOrNull()?.text
-            ?.takeIf { it.isNotEmpty() }
-            ?.let { onText(it) }
-    }
 }

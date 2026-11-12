@@ -13,6 +13,10 @@ plugins {
     id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
 }
 
+// 约定插件（androidkit.android.app / androidkit.kmp.library）。
+// 独立 included build：不污染主构建的插件 classpath，也不跟着 app 的模块数膨胀。
+includeBuild("build-logic")
+
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -35,6 +39,7 @@ dependencyResolutionManagement {
 rootProject.name = "Android-Kit"
 include(":kit")
 include(":kit-agent-koog")
+include(":kit-membership")
 include(":chat-demo")
 
 // apps/ 下每个带 build.gradle.kts 的目录自动成为模块（:apps:<目录名>）。

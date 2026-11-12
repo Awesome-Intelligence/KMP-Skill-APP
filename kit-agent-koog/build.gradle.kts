@@ -36,6 +36,12 @@ kotlin {
 
     sourceSets {
         commonMain.dependencies {
+            // 聊天消息模型 + 聊天 UI 在 :kit（通用组件，不含 agent 逻辑）：
+            // ChatLog 要把 agent 事件映射成可渲染的消息列表，所以这层依赖 :kit。
+            api(project(":kit"))
+
+            // 网关运行时的 HTTP/SSE 客户端。api：GatewayAgentRuntime 的公开构造参数就是 HttpClient
+            api(libs.ktor.client.core)
             // Koog 1.3.0：agent loop + Anthropic 客户端 + 事件钩子
             api(libs.koog.agents.core)
             api(libs.koog.agents.tools)
@@ -59,6 +65,13 @@ kotlin {
         }
 
         val desktopMain by getting {
+            dependencies {
+                implementation(libs.ktor.client.okhttp)
+            }
+        }
+
+        // 端到端测试要真起一个 HTTP SSE 端点：桌面端用 OkHttp 引擎
+        val desktopTest by getting {
             dependencies {
                 implementation(libs.ktor.client.okhttp)
             }

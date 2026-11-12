@@ -2,15 +2,8 @@ package com.androidkit.app.ui.theme
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
-
-@Composable
-private fun tagColorPalette(): Map<String, Color> =
-    if (LocalThemeStyle.current == ThemeStyle.Bitmap) {
-        if (LocalIsDarkTheme.current) BitmapDarkTagColors else BitmapLightTagColors
-    } else {
-        if (LocalIsDarkTheme.current) DarkTagColors else LightTagColors
-    }
 
 /**
  * 标签色板 — M3 Tonal Palette 精简版，仅 6 个核心色调。
@@ -36,6 +29,25 @@ private val DarkTagColors = mapOf(
     "slate" to Color(0xFFA0B8C8)     // Soft slate
 )
 
+/** 按「像素风格 + 明暗」取底座色板；品牌主题可在 [ThemeTokens.tagColors] 里覆盖。 */
+internal fun tagColorsFor(style: ThemeStyle, isDark: Boolean): Map<String, Color> = when (style) {
+    ThemeStyle.Swiss -> if (isDark) SwissDarkTagColors else SwissLightTagColors
+    ThemeStyle.Notion -> if (isDark) NotionDarkTagColors else NotionLightTagColors
+    ThemeStyle.EInk -> if (isDark) EInkDarkTagColors else EInkLightTagColors
+    ThemeStyle.MacOS -> if (isDark) MacOSDarkTagColors else MacOSLightTagColors
+    ThemeStyle.Mono -> if (isDark) DarkTagColors else LightTagColors
+}
+
+/**
+ * 当前标签色板；由 [AppTheme] 注入（tokens 留空时回落到 [tagColorsFor]）。
+ *
+ * 内部实现，业务代码用 [tagColor] / [rememberTagColor]，别直接读它。
+ */
+internal val LocalTagColors = staticCompositionLocalOf { LightTagColors }
+
+@Composable
+private fun tagColorPalette(): Map<String, Color> = LocalTagColors.current
+
 @Composable
 fun tagColor(name: String): Color {
     val palette = tagColorPalette()
@@ -49,7 +61,7 @@ fun tagColor(name: String): Color {
 @Composable
 fun rememberTagColor(name: String): Color {
     val palette = tagColorPalette()
-    return remember(name) { palette[name.lowercase()] ?: palette.getValue("primary") }
+    return remember(name, palette) { palette[name.lowercase()] ?: palette.getValue("neutral") }
 }
 
 /**

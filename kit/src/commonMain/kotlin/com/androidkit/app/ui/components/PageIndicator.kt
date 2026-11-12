@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
+import com.androidkit.app.ui.theme.themedCorner
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -49,7 +49,7 @@ fun PageIndicator(
                 modifier = Modifier
                     .width(6.dp)
                     .height(if (isActive) 16.dp else 6.dp)
-                    .clip(RoundedCornerShape(3.dp))
+                    .clip(themedCorner(3.dp))
                     .background(
                         if (isActive) MaterialTheme.colorScheme.primary
                         else MaterialTheme.colorScheme.outlineVariant

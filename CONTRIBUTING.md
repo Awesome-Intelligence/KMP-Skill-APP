@@ -19,26 +19,38 @@
 
 ## 加一个新 app
 
-1. 照抄 `apps/demo/` → `apps/<name>/`，改四处：`build.gradle.kts` 的 namespace / applicationId、`strings.xml` 的 app_name、主题名。
-   `settings.gradle.kts` **自动 include `apps/` 下所有模块**，CI 自动逐个构建 —— 不用注册。
-2. 引用 `kit/`（要 agent 再加 `kit-agent-koog/`），为每个功能写一个 `SkillDefinition`。
-3. 给 skill 配 5-10 个黄金样例对话（输入 → 期望行为）—— skill 化没有编译期保障，样例就是它的「类型检查」。
-4. UI collect 事件流渲染。
+最快的一条路：`python scripts/new_app.py <name>` —— 生成可编译的壳（含一条壳自检单测），
+`settings.gradle.kts` **自动 include `apps/` 下所有模块**，CI 自动逐个构建 —— 不用注册。
+
+1. 引用 `kit/`（要 agent 再加 `kit-agent-koog/`），为每个功能写一个 `SkillDefinition`。
+2. 给 skill 配黄金样例 —— **skill 化没有编译期保障，样例就是它的「类型检查」**：
+   - `skill.violations()`：静态体检（工具名、描述、重名、limit）
+   - `skill.runSamples(...)`：工具样例（工具名 + 入参 JSON + 期望返回里的一段话）
+
+   照抄 `apps/demo/src/test/kotlin/com/androidkit/app/demo/TodoSkillTest.kt`。
+3. UI collect 事件流渲染。
 
 详见 `ARCHITECTURE.md`「写一个新 app 的步骤」。
 
-## 提交前
+## 质量门禁
+
+门禁逻辑**不在 workflow 里** —— 全在 `scripts/ci.sh`，CI 和本地跑的是同一份。
+workflow 只负责「在什么环境跑哪道门禁」。
 
 ```bash
-./gradlew :kit:desktopTest :kit-agent-koog:desktopTest   # 真测试在这两个任务里
-./gradlew :kit:detekt :kit-agent-koog:detekt             # 静态检查（规则集在 config/detekt/）
-./gradlew :kit:apiCheck :kit-agent-koog:apiCheck         # 公开 API 的二进制兼容性
-./gradlew lintDebug                                     # Android lint
-python scripts/verify-kit.py                            # import / Res.string / DemoData 断裂
-python scripts/verify-skills.py                         # skill 工具有没有把业务逻辑写进 tool
+bash scripts/ci.sh all        # 提交前跑这个：detekt + api + verify + test
+bash scripts/ci.sh detekt     # 静态规则（命名 / 复杂度 / 吞异常…）
+bash scripts/ci.sh api        # 公开 API 二进制兼容
+bash scripts/ci.sh verify     # 自带脚本 + scripts/checks/ 下的自定义门禁
+bash scripts/ci.sh test       # 单元测试（kit / kit-agent-koog / apps/*）
+bash scripts/ci.sh lint       # Android lint
+bash scripts/ci.sh backend    # agent 网关自检（不花钱、不连网）
 ```
 
-CI 跑的就是这些（`apps/*` 的 `testDebugUnitTest` 目前是空的，但 fork 的 app 加了单测就自动进来）。
+**加一道自己的门禁**：往 `scripts/checks/` 放一个 `.sh`，退出码非 0 = 失败。
+`ci.sh verify` 会自动跑它 —— 不用改 `ci.sh`，也不用改 `.github/workflows/`。
+上游只往那个目录加**自己命名的文件** —— 你用别的文件名，`git pull upstream` 就不会冲掉你那份。
+详见 `scripts/checks/README.md`。
 
 **改了 `kit/` 的公开 API**（公开类/函数的签名）—— `apiCheck` 会失败，这是故意的：
 确认是有意为之之后，跑 `./gradlew :kit:apiDump` 更新 `api/*.api` 基线，一起提交。

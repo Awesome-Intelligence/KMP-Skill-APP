@@ -4,9 +4,8 @@ import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.M3Motion
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -58,8 +57,16 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.Swiss
+import com.androidkit.app.ui.theme.ThemeStyle
+import com.androidkit.app.ui.theme.themedControlShape
+import com.androidkit.app.ui.theme.themedElevation
 import com.androidkit.app.ui.theme.LocalReducedMotion
 import com.androidkit.app.ui.theme.extendedColors
+import com.androidkit.app.ui.theme.themedCircleShape
+import com.androidkit.app.ui.theme.themedDisabledContentColor
+
 
 /**
  * Primary Button - M3 实心按钮
@@ -72,11 +79,14 @@ fun PrimaryButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true
 ) {
+    val swiss = LocalThemeStyle.current == ThemeStyle.Swiss
     Button(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         enabled = enabled,
-        shape = MaterialTheme.shapes.medium,
+        shape = themedControlShape(MaterialTheme.shapes.medium),
+        // M3 Button 的 hover 走 state layer（只叠一层半透明），不换底色 —— 不加位移
+        colors = ButtonDefaults.buttonColors(disabledContentColor = themedDisabledContentColor()),
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
@@ -96,11 +106,19 @@ fun SecondaryButton(
     enabled: Boolean = true,
     icon: ImageVector? = null
 ) {
+    // 瑞士规范次级按钮：白底黑字黑边（不是色调色块）——「只用黑白原色」
+    val swiss = LocalThemeStyle.current == ThemeStyle.Swiss
     FilledTonalButton(
         onClick = onClick,
         modifier = modifier.height(48.dp),
         enabled = enabled,
-        shape = MaterialTheme.shapes.medium,
+        shape = themedControlShape(MaterialTheme.shapes.medium),
+        colors = ButtonDefaults.filledTonalButtonColors(
+            disabledContentColor = themedDisabledContentColor(),
+            containerColor = if (swiss) MaterialTheme.colorScheme.background else MaterialTheme.colorScheme.secondaryContainer,
+            contentColor = if (swiss) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onSecondaryContainer,
+        ),
+        border = if (swiss) BorderStroke(1.dp, MaterialTheme.colorScheme.onSurface) else null,
         contentPadding = PaddingValues(horizontal = 24.dp, vertical = 12.dp)
     ) {
         if (icon != null) {
@@ -126,7 +144,8 @@ fun SmallSecondaryButton(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = MaterialTheme.shapes.medium,
+        shape = themedControlShape(MaterialTheme.shapes.medium),
+        colors = ButtonDefaults.outlinedButtonColors(disabledContentColor = themedDisabledContentColor()),
         contentPadding = ButtonDefaults.TextButtonContentPadding
     ) {
         Text(text = text, style = MaterialTheme.typography.labelLarge)
@@ -192,7 +211,7 @@ fun ScaleIconButton(
     Box(
         modifier = modifier
             .size(40.dp)
-            .clip(CircleShape)
+            .clip(themedCircleShape())
             .background(
                 if (isActive) MaterialTheme.colorScheme.primaryContainer else Color.Transparent
             )
@@ -247,7 +266,7 @@ fun SmallScaleIconButton(
     Box(
         modifier = modifier
             .size(32.dp)
-            .clip(CircleShape)
+            .clip(themedCircleShape())
             .background(stateLayer)
             .clickable(
                 interactionSource = interactionSource,
@@ -363,11 +382,12 @@ fun AddFab(
         containerColor = containerColor,
         contentColor = contentColor,
         elevation = FloatingActionButtonDefaults.elevation(
-            defaultElevation = 3.dp,
-            pressedElevation = 6.dp,
-            hoveredElevation = 4.dp
+            defaultElevation = themedElevation(3.dp),
+            pressedElevation = themedElevation(6.dp),
+            hoveredElevation = themedElevation(4.dp)
         ),
-        shape = CircleShape
+        // 瑞士风格无圆角 —— 只有这一颗按钮改成直角
+        shape = if (LocalThemeStyle.current == ThemeStyle.Swiss) RoundedCornerShape(0.dp) else CircleShape
     ) {
         Icon(
             imageVector = Icons.Outlined.Add,
@@ -417,17 +437,19 @@ fun StarFavoriteButton(
 ) {
     val scale = remember { Animatable(1f) }
     val reducedMotion = LocalReducedMotion.current
+    // macOS 毛玻璃规范：不做缩放回弹 —— 只换图标
+    // 瑞士风格同理：Rational Restraint —— 交互不许加 scale
+    val macos = LocalThemeStyle.current == ThemeStyle.MacOS
+    val swiss = LocalThemeStyle.current == ThemeStyle.Swiss
+    // 这三种情况都不许加 scale
+    val noScale = reducedMotion || macos || swiss
+    // 令牌是 @Composable（要读 LocalReducedMotion），只能在组合期取，LaunchedEffect 里只是消费
+    val reclaim = M3Motion.expressiveSpatial<Float>()
     LaunchedEffect(isFavorite) {
         // 快速连点时打断回弹，先归位再起下一拍
-        if (isFavorite && !reducedMotion) {
+        if (isFavorite && !noScale) {
             scale.animateTo(0.6f, tween(M3Motion.SHORT1, easing = M3Motion.emphasizedAccelerate))
-            scale.animateTo(
-                1f,
-                spring(
-                    dampingRatio = Spring.DampingRatioMediumBouncy,
-                    stiffness = Spring.StiffnessMediumLow
-                )
-            )
+            scale.animateTo(1f, reclaim)
         } else {
             scale.snapTo(1f)
         }
@@ -464,14 +486,21 @@ fun DeleteButton(
     text: String = stringResource(Res.string.delete),
     contentDescription: String = stringResource(Res.string.delete)
 ) {
+    // 零色相主题（电子纸）里 error 和 primary 同为墨色 —— 墨底墨字的「删除」按钮
+    // 和主按钮长得一模一样，等于没有危险标记。改成纸底 + 墨边 + 墨字：
+    // 靠填充/描边区分，不靠色相（规范：状态由形状扛）。
+    val eink = LocalThemeStyle.current == ThemeStyle.EInk
     Button(
         onClick = onClick,
         modifier = modifier,
         enabled = enabled,
-        shape = MaterialTheme.shapes.medium,
+        shape = themedControlShape(MaterialTheme.shapes.medium),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.error
-        )
+            containerColor = if (eink) MaterialTheme.colorScheme.surface else MaterialTheme.colorScheme.error,
+            contentColor = if (eink) MaterialTheme.colorScheme.onSurface else MaterialTheme.colorScheme.onError,
+            disabledContentColor = themedDisabledContentColor()
+        ),
+        border = if (eink) BorderStroke(1.dp, MaterialTheme.colorScheme.primary) else null
     ) {
         Icon(
             imageVector = Icons.Outlined.Delete,
@@ -498,7 +527,8 @@ fun TextActionButton(
     TextButton(
         onClick = onClick,
         modifier = modifier,
-        enabled = enabled
+        enabled = enabled,
+        colors = ButtonDefaults.textButtonColors(disabledContentColor = themedDisabledContentColor())
     ) {
         if (icon != null) {
             Icon(imageVector = icon, contentDescription = null, modifier = Modifier.size(18.dp))

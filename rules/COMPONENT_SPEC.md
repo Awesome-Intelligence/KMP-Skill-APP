@@ -950,30 +950,70 @@ data class MenuItem<T>(
 
 ## 11. 动画规范
 
-### 11.1 动画时间
+动效**全部**来自 `kit/src/commonMain/kotlin/com/androidkit/app/ui/theme/Motion.kt` 的 `M3Motion`。
+页面/组件里**不许手写** `tween` / `spring` 的时长与 easing 字面量 —— 需要新节奏就先加 token。
 
-| 类型 | 时长 |
-|------|------|
-| 快速反馈 | 100ms |
-| 标准过渡 | 300ms |
-| 弹性效果 | 400ms |
-| 渐入渐出 | 200ms |
+选型表（什么场景用哪个预设）在 `rules/GOOGLE_STYLE.md` §动效，**这里不重复**：两处维护必然漂移，
+（这条规矩本身就是因为本文件曾长期写着一段代码里并不存在的 `AppAnimations` 才立的）。
 
-### 11.2 预设动画
+### 11.1 Duration（M3 标准值）
 
-```kotlin
-object AppAnimations {
-    val snappy = spring(dampingRatio = 1f, response = 0.3f)
-    val bouncy = spring(dampingRatio = 0.8f, response = 0.4f)
-    val gesture = spring(dampingRatio = 0.9f, response = 0.28f)
-    val cardAppear = spring(dampingRatio = 0.85f, response = 0.35f)
-    val sheetPresent = spring(dampingRatio = 0.8f, response = 0.3f)
-    val fadeIn = tween(durationMillis = 200, easing = FastOutSlowInEasing)
-    val fadeOut = tween(durationMillis = 150, easing = FastOutLinearInEasing)
-    val scaleAppear = spring(dampingRatio = 0.7f, response = 0.25f)
-    val pressFeedback = spring(dampingRatio = 0.9f, response = 0.15f)
-}
-```
+| Token | 值 | 用途 |
+|---|---|---|
+| `SHORT1` | 50ms | 选中 / 取消选中 |
+| `SHORT2` | 100ms | 简单状态切换 |
+| `SHORT3` | 150ms | 小组件出现 |
+| `SHORT4` | 200ms | 标准交互 |
+| `MEDIUM1` | 250ms | 面板展开 |
+| `MEDIUM2` | 300ms | 标准转场 |
+| `MEDIUM3` | 350ms | 复杂转场 |
+| `MEDIUM4` | 400ms | 全屏转场（启动页） |
+| `LONG1` | 450ms | 强调动画 |
+| `LONG2` | 500ms | 复杂强调 |
+| `EXIT_FADE` | 90ms | 转场退场淡出（必须比位移快） |
+| `FADE_THROUGH_IN` | 210ms | Fade Through 进场（叠 90ms 退场 = 300ms） |
+| `FADE_THROUGH_INITIAL_SCALE` | 0.92 | Fade Through 进场初始缩放 |
+| `SHARED_AXIS_OFFSET` | 30dp | Shared Axis X 位移量（不是整屏宽度） |
+| `FLOAT_INITIAL_SCALE` | 0.8 | 浮层从锚点长出的初始缩放 |
+
+### 11.2 Easing
+
+| Token | 曲线 | 用途 |
+|---|---|---|
+| `emphasized` | cubic-bezier(0.2, 0, 0, 1) | 强调 |
+| `emphasizedDecelerate` | cubic-bezier(0.05, 0.7, 0.1, 1) | 进场 |
+| `emphasizedAccelerate` | cubic-bezier(0.3, 0, 0.8, 0.15) | 退场 |
+
+### 11.3 Spring
+
+| Token | damping / stiffness | 用途 |
+|---|---|---|
+| `fastSpatial()` | 0.9 / 1400 | 跟手位移、尺寸 |
+| `defaultSpatial()` | 0.9 / 700 | 常态位移、尺寸 |
+| `expressiveSpatial()` | 0.6 / 800 | 庆祝 / 强调回弹（唯一允许过冲的一档，别用于常态位移） |
+| `fastEffects()` | 1.0 / 3800 | 颜色、透明度（不过冲） |
+| `defaultEffects()` | 1.0 / 1600 | 同上，常态 |
+| `itemPlacement()` | 1.0 / 400 | 列表条目换位（不过冲，项不会互相压过） |
+| `pagerScroll()` | tween MEDIUM2 + 强调减速 | Pager 程序化翻页（只用于相邻页） |
+
+### 11.4 页面级转场
+
+组件内部用 `M3Motion`，**整页之间**用 `kit/src/commonMain/kotlin/com/androidkit/app/ui/navigation/NavTransitions.kt`：
+
+| 场景 | 用什么 |
+|---|---|
+| 同层级、无空间关系（设置页、一级页面） | `M3Motion.fadeThrough()`（`AnimatedContent` 里）或 `NavTransitions.fadeThroughIn/Out()` |
+| 层级推进 / 返回（列表 → 详情） | `NavTransitions.sharedAxisIn/Out/PopIn/PopOut(offsetPx)`，`offsetPx` 取 `sharedAxisOffsetPx()` |
+
+### 11.5 减动效
+
+系统「移除动画」（开发者选项 → 动画时长缩放 = 0）命中时，**所有** spec 退化为 `snap()`、
+所有转场退化为 `None`：
+
+- `AppTheme(reducedMotion = …)` 注入 `LocalReducedMotion`，`M3Motion` 内部自动判断；
+- `NavTransitions` 的函数不是 `@Composable`（navigation 的转场 lambda 读不到 CompositionLocal），
+  减动效由调用侧显式传 `reducedMotion`。
+
 
 ---
 
@@ -1033,45 +1073,6 @@ fun AppTheme(
 }
 ```
 
-### 12.2 位图（Bitmap）主题
-
-底座预置第二套视觉风格。**一个 `ThemeStyle` 参数同时切颜色/形状/排版/动效四个轴**：
-
-```kotlin
-AppTheme(style = ThemeStyle.Bitmap, darkTheme = false) { /* ... */ }
-```
-
-| 轴 | Mono（默认） | Bitmap |
-|---|---|---|
-| 颜色 | 暖中性单色 | 冷灰白底 + 点阵网格纹理；primary 为墨色（浅色近黑 / 深色近白），橙色只作强调 |
-| 形状 | M3 默认圆角 4/8/12/16/28 | 全直角 |
-| 排版 | 系统字体 | fusion-pixel 12px 缝合像素字体（OFL） |
-| 动效 | spring / emphasized | 按帧跳变（60ms/帧），零平滑过渡 |
-
-- `primary` = 墨色（浅 `#17191E` / 深 `#F2F3F6`）：按钮、选中芯片、选中日期、进度条格子。
-- 橙色只出现在扩展色 `star` / `aiAccent`（光标、图表前沿点、收藏星标）。
-
-- 浅色 + 深色两套配色（`BitmapLightColorScheme` / `BitmapDarkColorScheme`）。
-- **kit 不带设置页** —— 选哪套、存不存，全由 App 层决定。
-- 组件内部用 `LocalThemeStyle` 分发（如 `tagColorPalette()` 切色板）。
-
-#### 12.2.1 位图组件
-
-| 组件 | 文件 | 说明 |
-|------|------|------|
-| `DotMatrixNumber` | `ui/components/DotMatrixNumber.kt` | 5×7 点阵数字，更新时逐位上下翻滚（个位先停、高位后停） |
-| `DotMatrixBarChart` | `ui/components/DotMatrixBarChart.kt` | 小圆点自下而上、从左到右逐点点亮，最新点用橙色 |
-| `PixelDissolve` | `ui/components/PixelDissolve.kt` | `target` 变化时随机逐格消失 + 逐格出现，总时长 400ms |
-| `Modifier.pixelDitherHover()` | `ui/components/PixelEffects.kt` | 悬停用四档渐变网点代替透明度，移开逐档退回 |
-| `Modifier.pixelDotGrid()` | `ui/components/PixelEffects.kt` | 页面底纹点阵网格 |
-| `TypewriterText` | `ui/components/TypewriterText.kt` | 橙色方块光标闪 2 次 → 逐字输出，数字高亮，完稿光标消失 |
-| `PixelProgressBar` | `ui/components/PixelProgressBar.kt` | 20 格按帧点亮，百分比同步跳变，完成显示像素对勾 |
-| `PixelCheck` | `ui/components/PixelProgressBar.kt` | 5×7 点阵画的完成对勾 |
-
-**帧制规则（写新组件时必须遵守）**：动效用 `PixelMotion.stepped(durationMs)`（线性 tween，
-时长向上取整到整帧），进度**必须过 `quantize(value, steps)` 再画** —— 中间值出现在画面上就破功了。
-`LocalReducedMotion` 为真时全部退化成 `snap()`。
-
 ---
 
 ## 附录：组件索引
@@ -1094,10 +1095,5 @@ AppTheme(style = ThemeStyle.Bitmap, darkTheme = false) { /* ... */ }
 | `AddFab` | `ui/components/Buttons.kt` |
 | `Header` | `ui/components/Header.kt` |
 | `LinearProgressBar` / `CircularProgressIndicatorWithText` | `ui/components/Progress.kt` |
-| `DotMatrixNumber` / `DotMatrixBarChart` | `ui/components/DotMatrixNumber.kt`、`DotMatrixBarChart.kt` |
-| `PixelDissolve` / `PixelCheck` / `PixelProgressBar` | `ui/components/PixelDissolve.kt`、`PixelProgressBar.kt` |
-| `TypewriterText` | `ui/components/TypewriterText.kt` |
-| `Modifier.pixelDitherHover()` / `Modifier.pixelDotGrid()` | `ui/components/PixelEffects.kt` |
 | 设计令牌（尺寸） | `res/values/dimens.xml` |
-| 颜色 / 排版 / 主题 | `ui/theme/Color.kt`、`ColorMono.kt`、`ColorBitmap.kt`、`Type.kt`、`TypeBitmap.kt`、`Theme.kt` |
-| 帧制动效 | `ui/theme/PixelMotion.kt` |
+| 颜色 / 排版 / 主题 | `ui/theme/Color.kt`、`ColorMono.kt`、`Type.kt`、`Theme.kt` |

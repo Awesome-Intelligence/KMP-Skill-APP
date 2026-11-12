@@ -4,10 +4,13 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +28,9 @@ import com.androidkit.app.ui.theme.AppTheme
  * 布局：[leading1][leading2] [标题] [action1][action2][menu]
  *
  * 64dp 高度，标题垂直居中，无额外空行
+ *
+ * 状态栏内边距在组件内部处理（内容下移、背景仍铺到屏幕顶）——
+ * app 开了 edge-to-edge 的话，标题和按钮不会被状态栏/系统栏盖住。
  */
 @Composable
 fun Header(
@@ -42,48 +48,56 @@ fun Header(
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(64.dp)
-            .background(MaterialTheme.colorScheme.surface),
+            // 背景在前、内边距在后：底色铺满状态栏区域，内容往下避开它
+            .background(MaterialTheme.colorScheme.surface)
+            .windowInsetsPadding(WindowInsets.statusBars),
         contentAlignment = Alignment.Center
     ) {
-        // 左侧图标（向左对齐，垂直居中）
-        Row(
+        Box(
             modifier = Modifier
-                .align(Alignment.CenterStart)
-                .padding(start = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
+                .fillMaxWidth()
+                .height(64.dp),
+            contentAlignment = Alignment.Center
         ) {
-            leading1?.invoke()
-            leading2?.invoke()
-        }
+            // 左侧图标（向左对齐，垂直居中）
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterStart)
+                    .padding(start = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                leading1?.invoke()
+                leading2?.invoke()
+            }
 
-        // 标题（绝对居中）；onTitleClick 提供时整块可点（如详情页点标题重命名）
-        Row(
-            modifier = Modifier
-                .align(Alignment.Center)
-                .clickable(enabled = onTitleClick != null) { onTitleClick?.invoke() },
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            titleIcon?.invoke()
-            Text(
-                text = truncateTitle(title, maxChars),
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onSurface,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-        }
+            // 标题（绝对居中）；onTitleClick 提供时整块可点（如详情页点标题重命名）
+            Row(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .clickable(enabled = onTitleClick != null) { onTitleClick?.invoke() },
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                titleIcon?.invoke()
+                Text(
+                    text = truncateTitle(title, maxChars),
+                    style = MaterialTheme.typography.titleLarge,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
 
-        // 右侧图标（向右对齐，垂直居中）
-        Row(
-            modifier = Modifier
-                .align(Alignment.CenterEnd)
-                .padding(end = 4.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            action1?.invoke()
-            action2?.invoke()
-            menu?.invoke()
+            // 右侧图标（向右对齐，垂直居中）
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 4.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                action1?.invoke()
+                action2?.invoke()
+                menu?.invoke()
+            }
         }
     }
 }

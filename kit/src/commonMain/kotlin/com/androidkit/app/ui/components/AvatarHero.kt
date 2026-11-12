@@ -17,12 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.androidkit.app.ui.preview.DemoData
 import com.androidkit.app.ui.theme.AppTheme
+import com.androidkit.app.ui.theme.LocalThemeStyle
+import com.androidkit.app.ui.theme.ThemeStyle
 import coil3.compose.AsyncImage
 
 /**
@@ -45,13 +48,22 @@ fun AvatarHero(
     avatarSize: Dp = 96.dp,
     contentDescription: String? = null
 ) {
+    // macOS 毛玻璃 / 瑞士风格：禁渐变 —— 平涂一层底色
+    val swiss = LocalThemeStyle.current == ThemeStyle.Swiss
+    val macos = LocalThemeStyle.current == ThemeStyle.MacOS
+    // 瑞士的栏线是 1px 黑白，不容许 1.5dp 这种半档
+    val hairline = if (macos || swiss) 1.dp else 1.5.dp
     Box(
         modifier = modifier
             .fillMaxWidth()
             .background(
-                Brush.verticalGradient(
-                    listOf(fallbackColor.copy(alpha = 0.20f), Color.Transparent)
-                )
+                when {
+                    swiss -> SolidColor(fallbackColor.copy(alpha = 0.20f))
+                    macos -> SolidColor(MaterialTheme.colorScheme.surfaceContainer)
+                    else -> Brush.verticalGradient(
+                        listOf(fallbackColor.copy(alpha = 0.20f), Color.Transparent)
+                    )
+                }
             )
     ) {
         Column(
@@ -72,7 +84,7 @@ fun AvatarHero(
                         modifier = Modifier
                             .size(avatarSize)
                             .clip(CircleShape)
-                            .border(1.5.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                            .border(hairline, MaterialTheme.colorScheme.outlineVariant, CircleShape)
                             .clickable(onClick = onClick)
                     )
                 } else {
@@ -80,7 +92,7 @@ fun AvatarHero(
                         modifier = Modifier
                             .size(avatarSize)
                             .clip(CircleShape)
-                            .border(1.5.dp, MaterialTheme.colorScheme.outlineVariant, CircleShape)
+                            .border(hairline, MaterialTheme.colorScheme.outlineVariant, CircleShape)
                             .background(Color.Black)
                             .clickable(onClick = onClick),
                         contentAlignment = Alignment.Center
