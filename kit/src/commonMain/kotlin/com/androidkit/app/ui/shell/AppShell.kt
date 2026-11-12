@@ -117,7 +117,7 @@ fun AppShell(
 
 @Preview(showBackground = true, widthDp = 360, heightDp = 640)
 @Composable
-private fun AppShellPreview() {
+internal fun AppShellPreview() {
     AppTheme {
         AppShell(
             topBar = { Header(title = "页面标题") },

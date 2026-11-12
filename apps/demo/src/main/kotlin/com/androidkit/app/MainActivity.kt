@@ -142,11 +142,8 @@ class MainActivity : ComponentActivity() {
                                     onBackClick = { showSettings = false },
                                 )
                             } else {
-                                TodoChatPage(
-                                    onSettingsClick = { showSettings = true },
-                                    composerRequest = composerRequest,
-                                    onComposerRequestHandled = { composerRequest = null },
-                                )
+                                // TEMP-SHOT: 临时切到 kit 的组件目录页截图
+                                App()
                             }
                         }
                     }

@@ -110,7 +110,7 @@ fun ToolApprovalCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun ToolApprovalCardPreview() {
+internal fun ToolApprovalCardPreview() {
     AppTheme {
         ToolApprovalCard(
             tool = "delete_todo",

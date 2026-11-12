@@ -92,7 +92,7 @@ fun TagText(
 
 @Preview(showBackground = true)
 @Composable
-private fun TagTextPreview() {
+internal fun TagTextPreview() {
     AppTheme {
         TagText(
             text = DemoData.Text.TAG,

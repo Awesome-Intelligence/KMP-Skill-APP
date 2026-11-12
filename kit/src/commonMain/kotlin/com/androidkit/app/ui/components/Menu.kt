@@ -166,7 +166,7 @@ fun ActionMenuRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun SimpleMenuButtonPreview() {
+internal fun SimpleMenuButtonPreview() {
     AppTheme {
         SimpleMenuButton(
             items = DemoData.Components.menuItems, // ponytail: demo data only
@@ -177,7 +177,7 @@ private fun SimpleMenuButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ActionMenuRowPreview() {
+internal fun ActionMenuRowPreview() {
     AppTheme {
         ActionMenuRow(onEdit = {}, onDelete = {})
     }

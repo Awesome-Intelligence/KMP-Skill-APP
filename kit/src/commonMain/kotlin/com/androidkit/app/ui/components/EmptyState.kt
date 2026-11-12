@@ -160,7 +160,7 @@ object EmptyStates {
 
 @Preview(showBackground = true)
 @Composable
-private fun IllustratedEmptyStatePreview() {
+internal fun IllustratedEmptyStatePreview() {
     AppTheme {
         IllustratedEmptyState(
             icon = Icons.Default.Flag,
@@ -174,7 +174,7 @@ private fun IllustratedEmptyStatePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun EmptyStatesContactsPreview() {
+internal fun EmptyStatesContactsPreview() {
     AppTheme {
         EmptyStates.Contacts() // ponytail: demo data only
     }
@@ -182,7 +182,7 @@ private fun EmptyStatesContactsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun EmptyStatesGoalsPreview() {
+internal fun EmptyStatesGoalsPreview() {
     AppTheme {
         EmptyStates.Goals() // ponytail: demo data only
     }
@@ -190,7 +190,7 @@ private fun EmptyStatesGoalsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun EmptyStatesRecordsPreview() {
+internal fun EmptyStatesRecordsPreview() {
     AppTheme {
         EmptyStates.Records() // ponytail: demo data only
     }
@@ -198,7 +198,7 @@ private fun EmptyStatesRecordsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun EmptyStatesNoSearchResultsPreview() {
+internal fun EmptyStatesNoSearchResultsPreview() {
     AppTheme {
         EmptyStates.NoSearchResults(query = DemoData.Text.KEYWORD) // ponytail: demo data only
     }

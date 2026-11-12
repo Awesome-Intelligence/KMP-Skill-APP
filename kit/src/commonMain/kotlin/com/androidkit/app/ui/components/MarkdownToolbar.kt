@@ -234,7 +234,7 @@ private fun ToolbarDivider() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun MarkdownToolbarPreview() {
+internal fun MarkdownToolbarPreview() {
     AppTheme {
         MarkdownToolbar(canUndo = true, onBoldClick = {}, onTogglePreview = {}) // ponytail: demo data only
     }

@@ -192,7 +192,7 @@ private fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
 
 @Preview(showBackground = true)
 @Composable
-private fun SettingsScreenPreview() {
+internal fun SettingsScreenPreview() {
     AppTheme {
         SettingsScreen(
             settings = AppSettings(),

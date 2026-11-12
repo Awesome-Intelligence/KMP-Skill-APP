@@ -169,7 +169,7 @@ private fun FilterChipItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun ActiveFiltersBarPreview() {
+internal fun ActiveFiltersBarPreview() {
     AppTheme {
         ActiveFiltersBar(
             filters = DemoData.Components.activeFilters,

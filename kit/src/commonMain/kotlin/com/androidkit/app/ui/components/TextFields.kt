@@ -214,7 +214,7 @@ object TextFields {
 
 @Preview(showBackground = true)
 @Composable
-private fun SimpleTextFieldPreview() {
+internal fun SimpleTextFieldPreview() {
     AppTheme {
         SimpleTextField(
             value = DemoData.Text.INPUT_CONTENT,
@@ -227,7 +227,7 @@ private fun SimpleTextFieldPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TextFieldsSimpleTextFieldPreview() {
+internal fun TextFieldsSimpleTextFieldPreview() {
     AppTheme {
         TextFields.SimpleTextField(
             value = DemoData.Text.INPUT_CONTENT,

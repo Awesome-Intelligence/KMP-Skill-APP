@@ -363,7 +363,7 @@ internal class PanelPositionProvider(private val density: Float) : PopupPosition
 
 @Preview(showBackground = true)
 @Composable
-private fun NotificationsButtonPreview() {
+internal fun NotificationsButtonPreview() {
     AppTheme {
         NotificationsButton(
             items = DemoData.Components.notificationsTwo

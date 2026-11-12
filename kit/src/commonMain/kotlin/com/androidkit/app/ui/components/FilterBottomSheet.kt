@@ -405,7 +405,7 @@ fun FilterBottomSheet(
 
 @Preview(showBackground = true)
 @Composable
-private fun FilterSectionPreview() {
+internal fun FilterSectionPreview() {
     AppTheme {
         FilterSection(
             title = DemoData.Text.PRIORITY,
@@ -421,7 +421,7 @@ private fun FilterSectionPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SingleSelectFilterChipsPreview() {
+internal fun SingleSelectFilterChipsPreview() {
     AppTheme {
         SingleSelectFilterChips(
             options = listOf(DemoData.Text.ALL, DemoData.Text.HIGH, DemoData.Text.MEDIUM, DemoData.Text.LOW),
@@ -433,7 +433,7 @@ private fun SingleSelectFilterChipsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun MultiSelectFilterChipsPreview() {
+internal fun MultiSelectFilterChipsPreview() {
     AppTheme {
         MultiSelectFilterChips(
             options = listOf(DemoData.Text.WORK, DemoData.Text.LIFE, DemoData.Text.STUDY),
@@ -445,7 +445,7 @@ private fun MultiSelectFilterChipsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ImportanceFilterChipsPreview() {
+internal fun ImportanceFilterChipsPreview() {
     AppTheme {
         ImportanceFilterChips(
             options = listOf(
@@ -461,7 +461,7 @@ private fun ImportanceFilterChipsPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TagFilterChipsPreview() {
+internal fun TagFilterChipsPreview() {
     AppTheme {
         TagFilterChips(
             tags = listOf(DemoData.Text.WORK, DemoData.Text.LIFE, DemoData.Text.STUDY),
@@ -478,7 +478,7 @@ private fun TagFilterChipsPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun DateRangeFilterPreview() {
+internal fun DateRangeFilterPreview() {
     AppTheme {
         DateRangeFilter(
             startDate = DemoData.Value.DATE_RANGE_START,
@@ -492,7 +492,7 @@ private fun DateRangeFilterPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun MoodFilterChipsPreview() {
+internal fun MoodFilterChipsPreview() {
     AppTheme {
         MoodFilterChips(
             moods = listOf(DemoData.Text.HAPPY, DemoData.Text.CALM, DemoData.Text.TIRED),
@@ -504,7 +504,7 @@ private fun MoodFilterChipsPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun FilterBottomSheetPreview() {
+internal fun FilterBottomSheetPreview() {
     AppTheme {
         FilterBottomSheet(
             title = DemoData.Text.FILTER,

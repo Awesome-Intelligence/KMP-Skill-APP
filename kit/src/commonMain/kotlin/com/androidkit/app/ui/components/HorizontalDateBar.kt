@@ -265,7 +265,7 @@ private fun DateCell(
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun HorizontalDateBarPreview() {
+internal fun HorizontalDateBarPreview() {
     AppTheme {
         HorizontalDateBar(
             selectedDate = DemoData.Value.DATE_TODAY,

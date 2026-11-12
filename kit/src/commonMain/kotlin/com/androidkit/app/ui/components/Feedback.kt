@@ -126,7 +126,7 @@ fun CenteredLoading(
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun AppSnackbarPreview() {
+internal fun AppSnackbarPreview() {
     AppTheme {
         AppSnackbar(message = DemoData.Text.SAVED, isSuccess = true) // ponytail: demo data only
     }
@@ -134,7 +134,7 @@ private fun AppSnackbarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun LoadingIndicatorPreview() {
+internal fun LoadingIndicatorPreview() {
     AppTheme {
         LoadingIndicator() // ponytail: demo data only
     }
@@ -142,7 +142,7 @@ private fun LoadingIndicatorPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun LoadingOverlayPreview() {
+internal fun LoadingOverlayPreview() {
     AppTheme {
         LoadingOverlay(
             isLoading = true,
@@ -158,7 +158,7 @@ private fun LoadingOverlayPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CenteredLoadingPreview() {
+internal fun CenteredLoadingPreview() {
     AppTheme {
         CenteredLoading() // ponytail: demo data only
     }

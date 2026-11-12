@@ -132,7 +132,7 @@ data class BottomNavItem(
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun AppBottomNavigationPreview() {
+internal fun AppBottomNavigationPreview() {
     AppTheme {
         AppBottomNavigation(
             items = DemoData.Components.bottomNavItems,

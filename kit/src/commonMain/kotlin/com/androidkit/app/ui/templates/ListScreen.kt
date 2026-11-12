@@ -149,7 +149,10 @@ fun <T> ListScreen(
             action2 = action2
         )
 
-        Column {
+        // weight(1f)：这一栏里的 LazyColumn / LazyVerticalGrid 必须有确定的高度上限。
+        // 不加 weight 的话外层 Column 量它时给的是「无限高」，懒列表会直接抛
+        // "Vertically scrollable component was measured with an infinity maximum height constraints"。
+        Column(modifier = Modifier.weight(1f)) {
             // 搜索区域（含 headerContentTop）
             Column(
                 modifier = Modifier

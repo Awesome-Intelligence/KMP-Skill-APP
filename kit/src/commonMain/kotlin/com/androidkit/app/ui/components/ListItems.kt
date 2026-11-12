@@ -246,7 +246,7 @@ fun AddListItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun AppListItemPreview() {
+internal fun AppListItemPreview() {
     AppTheme {
         AppListItem(
             headlineText = DemoData.Text.READ_30_MIN_TASK,
@@ -261,7 +261,7 @@ private fun AppListItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddListItemPreview() {
+internal fun AddListItemPreview() {
     AppTheme {
         AddListItem(text = DemoData.Text.ADD_GOAL, onClick = {})
     }

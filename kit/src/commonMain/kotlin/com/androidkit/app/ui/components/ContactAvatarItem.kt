@@ -83,7 +83,7 @@ fun ContactAvatarItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun ContactAvatarItemPreview() {
+internal fun ContactAvatarItemPreview() {
     AppTheme {
         ContactAvatarItem(
             name = DemoData.Text.ZHANG_SAN,

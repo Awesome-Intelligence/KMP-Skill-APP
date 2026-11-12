@@ -81,7 +81,7 @@ fun ToggleRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun ToggleRowPreview() {
+internal fun ToggleRowPreview() {
     AppTheme {
         ToggleRow(
             title = DemoData.Text.DARK_MODE,

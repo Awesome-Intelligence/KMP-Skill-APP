@@ -531,7 +531,7 @@ fun AIActionButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun AIInsightCardPreview() {
+internal fun AIInsightCardPreview() {
     AppTheme {
         AIInsightCard(
             title = DemoData.Text.AI_INSIGHT,
@@ -543,7 +543,7 @@ private fun AIInsightCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AISuggestionBadgePreview() {
+internal fun AISuggestionBadgePreview() {
     AppTheme {
         AISuggestionBadge() // ponytail: demo data only
     }
@@ -551,7 +551,7 @@ private fun AISuggestionBadgePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AISuggestionItemPreview() {
+internal fun AISuggestionItemPreview() {
     AppTheme {
         AISuggestionItem {
             Text(text = DemoData.Text.SPLIT_WEEKLY_REPORT)
@@ -561,7 +561,7 @@ private fun AISuggestionItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AISuggestionChipPreview() {
+internal fun AISuggestionChipPreview() {
     AppTheme {
         AISuggestionChip(
             text = DemoData.Text.DECOMPOSE_SUGGESTION,
@@ -573,7 +573,7 @@ private fun AISuggestionChipPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AILoadingSkeletonPreview() {
+internal fun AILoadingSkeletonPreview() {
     AppTheme {
         AILoadingSkeleton() // ponytail: demo data only
     }
@@ -581,7 +581,7 @@ private fun AILoadingSkeletonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun BreathingIconPreview() {
+internal fun BreathingIconPreview() {
     AppTheme {
         BreathingIcon(
             imageVector = Icons.Default.AutoAwesome,
@@ -592,7 +592,7 @@ private fun BreathingIconPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun GoalAIButtonPreview() {
+internal fun GoalAIButtonPreview() {
     AppTheme {
         GoalAIButton(
             menuItems = listOf(
@@ -605,7 +605,7 @@ private fun GoalAIButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AIActionButtonPreview() {
+internal fun AIActionButtonPreview() {
     AppTheme {
         AIActionButton(
             text = DemoData.Text.AI_SMART_DECOMPOSE,

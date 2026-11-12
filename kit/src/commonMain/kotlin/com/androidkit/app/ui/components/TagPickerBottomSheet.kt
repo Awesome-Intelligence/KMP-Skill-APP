@@ -231,7 +231,7 @@ private fun TagPickerChip(
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun TagPickerBottomSheetPreview() {
+internal fun TagPickerBottomSheetPreview() {
     AppTheme {
         TagPickerBottomSheet(
             existingTags = listOf(

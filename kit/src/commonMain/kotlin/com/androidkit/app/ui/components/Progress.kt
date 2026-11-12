@@ -97,7 +97,7 @@ fun CircularProgressIndicatorWithText(
 
 @Preview(showBackground = true)
 @Composable
-private fun LinearProgressBarPreview() {
+internal fun LinearProgressBarPreview() {
     AppTheme {
         LinearProgressBar(progress = DemoData.Home.favoriteQuarterly.progress) // ponytail: demo data only
     }
@@ -105,7 +105,7 @@ private fun LinearProgressBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CircularProgressIndicatorWithTextPreview() {
+internal fun CircularProgressIndicatorWithTextPreview() {
     AppTheme {
         CircularProgressIndicatorWithText(progress = DemoData.Value.PROGRESS_075)
     }

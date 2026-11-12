@@ -439,7 +439,7 @@ data class ContactItem(
 
 @Preview(showBackground = true)
 @Composable
-private fun AvatarStackPreview() {
+internal fun AvatarStackPreview() {
     AppTheme {
         AvatarStack(
             contacts = DemoData.Components.avatarStackFour,
@@ -451,7 +451,7 @@ private fun AvatarStackPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ExpandedAvatarRowPreview() {
+internal fun ExpandedAvatarRowPreview() {
     AppTheme {
         ExpandedAvatarRow(
             contacts = DemoData.Components.avatarStackThree,

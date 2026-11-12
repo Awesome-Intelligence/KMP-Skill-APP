@@ -354,7 +354,7 @@ fun LoadingDialog(
 
 @Preview(showBackground = true)
 @Composable
-private fun ConfirmDialogPreview() {
+internal fun ConfirmDialogPreview() {
     AppTheme {
         ConfirmDialog(
             title = DemoData.Text.DELETE_GOAL,
@@ -367,7 +367,7 @@ private fun ConfirmDialogPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectDialogPreview() {
+internal fun SelectDialogPreview() {
     AppTheme {
         SelectDialog(
             title = DemoData.Text.SORT_BY,
@@ -381,7 +381,7 @@ private fun SelectDialogPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun DeleteConfirmDialogPreview() {
+internal fun DeleteConfirmDialogPreview() {
     AppTheme {
         DeleteConfirmDialog(onConfirm = {}, onDismiss = {}) // ponytail: demo data only
     }
@@ -389,7 +389,7 @@ private fun DeleteConfirmDialogPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun InputDialogPreview() {
+internal fun InputDialogPreview() {
     AppTheme {
         InputDialog(
             title = DemoData.Text.RENAME_TAG,
@@ -403,7 +403,7 @@ private fun InputDialogPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun LoadingDialogPreview() {
+internal fun LoadingDialogPreview() {
     AppTheme {
         LoadingDialog(onDismiss = {}, message = DemoData.Text.LOADING) // ponytail: demo data only
     }

@@ -324,7 +324,7 @@ private fun calculateLongestStreak(records: List<LocalDate>): Int {
 
 @Preview(showBackground = true)
 @Composable
-private fun CheckinHeatmapCardPreview() {
+internal fun CheckinHeatmapCardPreview() {
     AppTheme {
         CheckinHeatmapCard(
             checkInRecords = listOf(

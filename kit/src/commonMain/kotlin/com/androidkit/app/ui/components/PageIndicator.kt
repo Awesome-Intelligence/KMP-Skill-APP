@@ -61,7 +61,7 @@ fun PageIndicator(
 
 @Preview(showBackground = true)
 @Composable
-private fun PageIndicatorPreview() {
+internal fun PageIndicatorPreview() {
     AppTheme {
         PageIndicator(
             pageCount = DemoData.Value.INT_FOUR,

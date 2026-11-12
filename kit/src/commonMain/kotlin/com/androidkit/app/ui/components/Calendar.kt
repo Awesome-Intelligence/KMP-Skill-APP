@@ -599,7 +599,7 @@ private fun generateWeekDays(selectedDate: LocalDate): List<CalendarDay> {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun AppCalendarPreview() {
+internal fun AppCalendarPreview() {
     AppTheme {
         AppCalendar(
             selectedDate = Clock.System.todayIn(TimeZone.currentSystemDefault()),

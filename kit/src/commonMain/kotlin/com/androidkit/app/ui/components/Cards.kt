@@ -184,7 +184,7 @@ fun SmallCard(
 
 @Preview(showBackground = true)
 @Composable
-private fun AppCardPreview() {
+internal fun AppCardPreview() {
     AppTheme {
         AppCard {
             Text(text = DemoData.Text.NORMAL_CARD_TEXT)
@@ -194,7 +194,7 @@ private fun AppCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AppCardClickablePreview() {
+internal fun AppCardClickablePreview() {
     AppTheme {
         AppCard(onClick = {}) {
             Text(text = DemoData.Text.CLICKABLE_CARD)
@@ -204,7 +204,7 @@ private fun AppCardClickablePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CardTitlePreview() {
+internal fun CardTitlePreview() {
     AppTheme {
         CardTitle(icon = Icons.Outlined.Flag, title = DemoData.Text.CHECKIN_RECORDS) // ponytail: demo data only
     }
@@ -212,7 +212,7 @@ private fun CardTitlePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SmallCardPreview() {
+internal fun SmallCardPreview() {
     AppTheme {
         SmallCard {
             Text(text = DemoData.Text.SMALL_CARD_TEXT)
@@ -222,7 +222,7 @@ private fun SmallCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SmallCardClickablePreview() {
+internal fun SmallCardClickablePreview() {
     AppTheme {
         SmallCard(onClick = {}) {
             Text(text = DemoData.Text.CLICKABLE_SMALL_CARD)

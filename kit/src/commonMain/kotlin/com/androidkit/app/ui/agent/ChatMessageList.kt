@@ -211,7 +211,7 @@ private fun ChatStepStatus.color(): Color = when (this) {
 
 @Preview(showBackground = true)
 @Composable
-private fun ChatMessageListPreview() {
+internal fun ChatMessageListPreview() {
     AppTheme {
         ChatMessageList(
             messages = listOf(

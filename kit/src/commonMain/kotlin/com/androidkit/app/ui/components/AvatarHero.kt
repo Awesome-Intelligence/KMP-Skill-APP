@@ -111,7 +111,7 @@ fun AvatarHero(
 
 @Preview(showBackground = true)
 @Composable
-private fun AvatarHeroPreview() {
+internal fun AvatarHeroPreview() {
     AppTheme {
         AvatarHero(
             name = DemoData.Text.ZHANG_SAN,

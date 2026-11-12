@@ -542,7 +542,7 @@ fun TextActionButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun PrimaryButtonPreview() {
+internal fun PrimaryButtonPreview() {
     AppTheme {
         PrimaryButton(text = DemoData.Text.SAVE, onClick = {}) // ponytail: demo data only
     }
@@ -550,7 +550,7 @@ private fun PrimaryButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SecondaryButtonPreview() {
+internal fun SecondaryButtonPreview() {
     AppTheme {
         SecondaryButton(text = DemoData.Text.CANCEL, onClick = {}) // ponytail: demo data only
     }
@@ -558,7 +558,7 @@ private fun SecondaryButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SmallSecondaryButtonPreview() {
+internal fun SmallSecondaryButtonPreview() {
     AppTheme {
         SmallSecondaryButton(text = DemoData.Text.VIEW_ALL, onClick = {}) // ponytail: demo data only
     }
@@ -566,7 +566,7 @@ private fun SmallSecondaryButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun FilledIconButtonPreview() {
+internal fun FilledIconButtonPreview() {
     AppTheme {
         FilledIconButton(
             icon = Icons.Outlined.Edit,
@@ -578,7 +578,7 @@ private fun FilledIconButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ScaleIconButtonPreview() {
+internal fun ScaleIconButtonPreview() {
     AppTheme {
         ScaleIconButton(
             icon = Icons.Outlined.Add,
@@ -591,7 +591,7 @@ private fun ScaleIconButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SmallScaleIconButtonPreview() {
+internal fun SmallScaleIconButtonPreview() {
     AppTheme {
         SmallScaleIconButton(
             icon = Icons.Outlined.Edit,
@@ -603,7 +603,7 @@ private fun SmallScaleIconButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CircleIconButtonPreview() {
+internal fun CircleIconButtonPreview() {
     AppTheme {
         CircleIconButton(
             icon = Icons.Outlined.Delete,
@@ -615,7 +615,7 @@ private fun CircleIconButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun EditButtonPreview() {
+internal fun EditButtonPreview() {
     AppTheme {
         EditButton(onClick = {}) // ponytail: demo data only
     }
@@ -623,7 +623,7 @@ private fun EditButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddButtonPreview() {
+internal fun AddButtonPreview() {
     AppTheme {
         AddButton(onClick = {}) // ponytail: demo data only
     }
@@ -631,7 +631,7 @@ private fun AddButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddFabPreview() {
+internal fun AddFabPreview() {
     AppTheme {
         AddFab(onClick = {}) // ponytail: demo data only
     }
@@ -639,7 +639,7 @@ private fun AddFabPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ExpandButtonPreview() {
+internal fun ExpandButtonPreview() {
     AppTheme {
         ExpandButton(expanded = false, onClick = {}) // ponytail: demo data only
     }
@@ -647,7 +647,7 @@ private fun ExpandButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun DeleteButtonPreview() {
+internal fun DeleteButtonPreview() {
     AppTheme {
         DeleteButton(onClick = {}) // ponytail: demo data only
     }
@@ -655,7 +655,7 @@ private fun DeleteButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun TextActionButtonPreview() {
+internal fun TextActionButtonPreview() {
     AppTheme {
         TextActionButton(text = DemoData.Text.MORE_FIELDS, onClick = {}) // ponytail: demo data only
     }
@@ -663,7 +663,7 @@ private fun TextActionButtonPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun StarFavoriteButtonPreview() {
+internal fun StarFavoriteButtonPreview() {
     AppTheme {
         var favorite by remember { mutableStateOf(true) }
         StarFavoriteButton(isFavorite = favorite, onToggle = { favorite = !favorite })

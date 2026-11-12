@@ -115,7 +115,7 @@ private fun truncateTitle(title: String, maxChars: Int): String {
 
 @Preview(showBackground = true)
 @Composable
-private fun HeaderPreview() {
+internal fun HeaderPreview() {
     AppTheme {
         Header(title = DemoData.Text.GOAL_LIST) // ponytail: demo data only
     }

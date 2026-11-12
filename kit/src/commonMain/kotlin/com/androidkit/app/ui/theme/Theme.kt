@@ -593,16 +593,29 @@ fun themedElevation(default: Dp): Dp =
  */
 @Composable
 fun AppTheme(
-    /** 主题风格，默认单色（历史行为不变） */
-    style: ThemeStyle = ThemeStyle.Mono,
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    /**
+     * 主题风格。
+     *
+     * 默认**继承外层**（[LocalThemeStyle]）—— 外层套了 AppTheme 时，嵌套调用不再硬切回 Mono。
+     * 最外层没有主题时还是 Mono（[LocalThemeStyle] 的默认值），历史行为不变。
+     */
+    style: ThemeStyle = LocalThemeStyle.current,
+    /**
+     * 深浅色。
+     *
+     * 嵌套时继承外层（[LocalIsDarkTheme]），最外层才读系统设置 ——
+     * 理由同 style：套在外层主题里的 AppTheme 不该把用户的深色选择重置掉。
+     */
+    darkTheme: Boolean = defaultDarkTheme(),
     /**
      * 系统是否关掉了动画（无障碍设置）。
      *
      * ponytail: 读系统开关是平台活儿（Android 读 Settings.Global，iOS 读 UIKit），
      * 公共层不碰平台 API —— 由各端启动时读出来传进来。
+     *
+     * 默认继承外层（[LocalReducedMotion]），最外层是 false。
      */
-    reducedMotion: Boolean = false,
+    reducedMotion: Boolean = LocalReducedMotion.current,
     content: @Composable () -> Unit
 ) {
     val tokens = when (style) {
@@ -628,7 +641,7 @@ fun AppTheme(
 @Composable
 fun AppTheme(
     tokens: ThemeTokens,
-    reducedMotion: Boolean = false,
+    reducedMotion: Boolean = LocalReducedMotion.current,
     content: @Composable () -> Unit
 ) {
     // 标签色板留空 = 跟随主题风格取底座色板；品牌有自己的色板就在 tokens 里传
@@ -641,6 +654,7 @@ fun AppTheme(
         LocalExtendedColors provides tokens.extendedColors,
         LocalTagColors provides tagColors,
         LocalCornerStyle provides tokens.cornerStyle,
+        LocalThemeDepth provides LocalThemeDepth.current + 1,
     ) {
         MaterialTheme(
             colorScheme = tokens.colorScheme,
@@ -653,6 +667,26 @@ fun AppTheme(
 
 /** 当前主题风格，位图组件/色板分发用；预览/测试默认 Mono */
 val LocalThemeStyle = staticCompositionLocalOf { ThemeStyle.Mono }
+
+/**
+ * AppTheme 的嵌套层数 —— 0 = 当前不在任何 AppTheme 里。
+ *
+ * 用来区分「外面没有主题，按默认值来」和「外面有主题，继承它」：
+ * [LocalIsDarkTheme] 的默认值是 false，意思是「浅色」，没法用真假区分这两种情况。
+ *
+ * internal：只有主题装配自己要用，不进公开 API 基线。
+ */
+internal val LocalThemeDepth = staticCompositionLocalOf { 0 }
+
+/**
+ * 深浅色的默认值：套在主题里就继承外层，最外层才读系统设置。
+ *
+ * 分开写是因为 [LocalIsDarkTheme] 默认 false = 浅色，直接拿它当默认会让最外层的
+ * AppTheme() 永远浅色 —— 系统深色就丢了。
+ */
+@Composable
+private fun defaultDarkTheme(): Boolean =
+    if (LocalThemeDepth.current > 0) LocalIsDarkTheme.current else isSystemInDarkTheme()
 
 /**
  * 当前生效的深浅色（已包含用户在设置里强制浅色/深色的选择）。

@@ -346,7 +346,7 @@ internal fun collapsingHeaderConnection(
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun CollapsingHeaderPreview() {
+internal fun CollapsingHeaderPreview() {
     AppTheme {
         val state = rememberCollapsingHeaderState(expandedHeight = 200.dp)
         CollapsingHeader(

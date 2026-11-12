@@ -42,7 +42,7 @@ fun QuotaPaywall(
 
 @Preview(showBackground = true)
 @Composable
-private fun QuotaPaywallPreview() {
+internal fun QuotaPaywallPreview() {
     AppTheme {
         QuotaPaywall(
             reason = QuotaReason.AI,

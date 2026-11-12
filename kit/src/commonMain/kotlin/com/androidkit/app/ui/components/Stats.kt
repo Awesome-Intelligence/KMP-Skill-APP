@@ -111,7 +111,7 @@ data class StatItemData(
 
 @Preview(showBackground = true)
 @Composable
-private fun StatItemPreview() {
+internal fun StatItemPreview() {
     AppTheme {
         StatItem(
             title = DemoData.Components.statInProgress.title,
@@ -124,7 +124,7 @@ private fun StatItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun StatsCardPreview() {
+internal fun StatsCardPreview() {
     AppTheme {
         StatsCard(
             stats = DemoData.Components.stats // ponytail: demo data only

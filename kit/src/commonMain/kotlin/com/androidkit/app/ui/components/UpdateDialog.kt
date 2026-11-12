@@ -178,7 +178,7 @@ fun UpdateDialog(
 
 @Preview(showBackground = true)
 @Composable
-private fun UpdateDialogPreview() {
+internal fun UpdateDialogPreview() {
     AppTheme {
         UpdateDialog(
             latestVersion = "1.4.0",
@@ -193,7 +193,7 @@ private fun UpdateDialogPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun UpdateDialogMandatoryPreview() {
+internal fun UpdateDialogMandatoryPreview() {
     AppTheme {
         UpdateDialog(
             latestVersion = "2.0.0",

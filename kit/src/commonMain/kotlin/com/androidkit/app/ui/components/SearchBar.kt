@@ -202,7 +202,7 @@ fun SearchToggleButton(
 
 @Preview(showBackground = true)
 @Composable
-private fun SearchBarPreview() {
+internal fun SearchBarPreview() {
     AppTheme {
         SearchBar(
             query = DemoData.Text.GOAL,
@@ -216,7 +216,7 @@ private fun SearchBarPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SearchToggleButtonPreview() {
+internal fun SearchToggleButtonPreview() {
     AppTheme {
         SearchToggleButton(isSearchActive = false, onToggle = {}) // ponytail: demo data only
     }

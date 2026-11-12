@@ -443,7 +443,7 @@ fun ColorDotRow(
 
 @Preview(showBackground = true)
 @Composable
-private fun FilterChipPreview() {
+internal fun FilterChipPreview() {
     AppTheme {
         FilterChip(title = DemoData.Text.ALL, isSelected = true, onClick = {}) // ponytail: demo data only
     }
@@ -451,7 +451,7 @@ private fun FilterChipPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AddTagChipPreview() {
+internal fun AddTagChipPreview() {
     AppTheme {
         AddTagChip(onClick = {}) // ponytail: demo data only
     }
@@ -459,7 +459,7 @@ private fun AddTagChipPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun FilterChipRowPreview() {
+internal fun FilterChipRowPreview() {
     AppTheme {
         FilterChipRow(
             options = listOf(DemoData.Text.ALL, DemoData.Text.IN_PROGRESS, DemoData.Text.COMPLETED),
@@ -471,7 +471,7 @@ private fun FilterChipRowPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun FilterChipRowTypedPreview() {
+internal fun FilterChipRowTypedPreview() {
     AppTheme {
         FilterChipRow(
             options = listOf(DemoData.Text.HIGH, DemoData.Text.MEDIUM, DemoData.Text.LOW),
@@ -484,7 +484,7 @@ private fun FilterChipRowTypedPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun FilterChipRowDotPreview() {
+internal fun FilterChipRowDotPreview() {
     AppTheme {
         FilterChipRow(
             options = listOf(DemoData.Text.HIGH, DemoData.Text.MEDIUM, DemoData.Text.LOW),
@@ -502,7 +502,7 @@ private fun FilterChipRowDotPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectableTagPreview() {
+internal fun SelectableTagPreview() {
     AppTheme {
         SelectableTag(text = DemoData.Text.WORK, isSelected = true, onClick = {}) // ponytail: demo data only
     }
@@ -510,7 +510,7 @@ private fun SelectableTagPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AppBadgePreview() {
+internal fun AppBadgePreview() {
     AppTheme {
         AppBadge(text = DemoData.Text.RECORD_COUNT_3) // ponytail: demo data only
     }
@@ -518,7 +518,7 @@ private fun AppBadgePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun CheckboxPreview() {
+internal fun CheckboxPreview() {
     AppTheme {
         Checkbox(isChecked = true, onCheckedChange = {}) // ponytail: demo data only
     }
@@ -526,7 +526,7 @@ private fun CheckboxPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun ColorDotPreview() {
+internal fun ColorDotPreview() {
     AppTheme {
         ColorDot(
             color = DemoData.Palette.rose,
@@ -539,7 +539,7 @@ private fun ColorDotPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun ColorDotRowPreview() {
+internal fun ColorDotRowPreview() {
     AppTheme {
         ColorDotRow(
             colorNames = listOf(

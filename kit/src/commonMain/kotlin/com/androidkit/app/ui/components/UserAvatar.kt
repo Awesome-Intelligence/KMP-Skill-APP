@@ -59,7 +59,7 @@ fun UserAvatar(
 
 @Preview(showBackground = true)
 @Composable
-private fun UserAvatarPreview() {
+internal fun UserAvatarPreview() {
     AppTheme {
         UserAvatar(
             avatar = null,

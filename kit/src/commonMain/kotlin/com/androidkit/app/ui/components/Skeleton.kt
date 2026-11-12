@@ -454,7 +454,7 @@ fun ContactDetailSkeleton(
 
 @Preview(showBackground = true)
 @Composable
-private fun SkeletonTextLinePreview() {
+internal fun SkeletonTextLinePreview() {
     AppTheme {
         SkeletonTextLine(width = 160.dp) // ponytail: demo data only
     }
@@ -462,7 +462,7 @@ private fun SkeletonTextLinePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SkeletonRectPreview() {
+internal fun SkeletonRectPreview() {
     AppTheme {
         SkeletonRect(width = 160.dp) // ponytail: demo data only
     }
@@ -470,7 +470,7 @@ private fun SkeletonRectPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SkeletonCirclePreview() {
+internal fun SkeletonCirclePreview() {
     AppTheme {
         SkeletonCircle() // ponytail: demo data only
     }
@@ -478,7 +478,7 @@ private fun SkeletonCirclePreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SkeletonListItemPreview() {
+internal fun SkeletonListItemPreview() {
     AppTheme {
         SkeletonListItem() // ponytail: demo data only
     }
@@ -486,7 +486,7 @@ private fun SkeletonListItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SkeletonCardPreview() {
+internal fun SkeletonCardPreview() {
     AppTheme {
         SkeletonCard {
             SkeletonTextLine()
@@ -497,7 +497,7 @@ private fun SkeletonCardPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun SkeletonGridItemPreview() {
+internal fun SkeletonGridItemPreview() {
     AppTheme {
         SkeletonGridItem() // ponytail: demo data only
     }
@@ -505,7 +505,7 @@ private fun SkeletonGridItemPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun HomeFavoriteGoalsSkeletonPreview() {
+internal fun HomeFavoriteGoalsSkeletonPreview() {
     AppTheme {
         HomeFavoriteGoalsSkeleton() // ponytail: demo data only
     }
@@ -513,7 +513,7 @@ private fun HomeFavoriteGoalsSkeletonPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun HomeScreenSkeletonPreview() {
+internal fun HomeScreenSkeletonPreview() {
     AppTheme {
         HomeScreenSkeleton() // ponytail: demo data only
     }
@@ -521,7 +521,7 @@ private fun HomeScreenSkeletonPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun GoalListSkeletonPreview() {
+internal fun GoalListSkeletonPreview() {
     AppTheme {
         GoalListSkeleton() // ponytail: demo data only
     }
@@ -529,7 +529,7 @@ private fun GoalListSkeletonPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun RecordListSkeletonPreview() {
+internal fun RecordListSkeletonPreview() {
     AppTheme {
         RecordListSkeleton() // ponytail: demo data only
     }
@@ -537,7 +537,7 @@ private fun RecordListSkeletonPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun ContactListSkeletonPreview() {
+internal fun ContactListSkeletonPreview() {
     AppTheme {
         ContactListSkeleton() // ponytail: demo data only
     }
@@ -545,7 +545,7 @@ private fun ContactListSkeletonPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun GoalDetailSkeletonPreview() {
+internal fun GoalDetailSkeletonPreview() {
     AppTheme {
         GoalDetailSkeleton() // ponytail: demo data only
     }
@@ -553,7 +553,7 @@ private fun GoalDetailSkeletonPreview() {
 
 @Preview(showBackground = true, widthDp = 360)
 @Composable
-private fun ContactDetailSkeletonPreview() {
+internal fun ContactDetailSkeletonPreview() {
     AppTheme {
         ContactDetailSkeleton() // ponytail: demo data only
     }

@@ -397,7 +397,7 @@ private fun extractInlineImages(
 
 @Preview(showBackground = true)
 @Composable
-private fun MarkdownEditorPreview() {
+internal fun MarkdownEditorPreview() {
     AppTheme {
         MarkdownEditor(
             content = DemoData.Text.MARKDOWN_EDITOR, // ponytail: demo data only
@@ -408,7 +408,7 @@ private fun MarkdownEditorPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun MarkdownPreviewPreview() {
+internal fun MarkdownPreviewPreview() {
     AppTheme {
         MarkdownPreview(
             content = DemoData.Text.MARKDOWN_PREVIEW, // ponytail: demo data only

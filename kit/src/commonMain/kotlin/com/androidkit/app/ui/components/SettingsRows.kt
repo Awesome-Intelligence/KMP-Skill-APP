@@ -148,7 +148,7 @@ fun AppIconTile(
 
 @Preview(showBackground = true)
 @Composable
-private fun AppSettingsIconPreview() {
+internal fun AppSettingsIconPreview() {
     AppTheme {
         AppSettingsIcon(
             icon = Icons.Outlined.Settings,
@@ -159,7 +159,7 @@ private fun AppSettingsIconPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AppSettingsRowPreview() {
+internal fun AppSettingsRowPreview() {
     AppTheme {
         AppSettingsRow(
             title = DemoData.Text.SETTING_ITEM,
@@ -172,7 +172,7 @@ private fun AppSettingsRowPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AppIconTilePreview() {
+internal fun AppIconTilePreview() {
     AppTheme {
         AppIconTile(
             icon = Icons.Outlined.Settings,

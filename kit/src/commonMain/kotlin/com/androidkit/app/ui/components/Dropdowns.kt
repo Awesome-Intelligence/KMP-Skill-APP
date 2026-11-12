@@ -114,7 +114,7 @@ data class DropdownOption<T>(
 
 @Preview(showBackground = true)
 @Composable
-private fun SelectDropdownPreview() {
+internal fun SelectDropdownPreview() {
     AppTheme {
         SelectDropdown(
             options = DemoData.Components.dropdownOptions, // ponytail: demo data only
